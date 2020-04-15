@@ -7,6 +7,8 @@ public class MenuController : MonoBehaviour {
 
 	public List<Animator> GUIHideComponentAnimators = new List<Animator>();
 
+	public GameObject MainMenu;
+	public float MainMenuWaitTime = 0.5f;
 	public Animator StartMenu;
 	public float StartMenuWaitTime = 0.5f;
 	public Animator CreateMenu;
@@ -21,14 +23,41 @@ public class MenuController : MonoBehaviour {
 	public float SettingsMenuWaitTime = 0.5f;
 
 	void Start() {
-
+		MainMenu.gameObject.SetActive(true);
+		StartMenu.gameObject.SetActive(true);
+		CreateMenu.gameObject.SetActive(true);
+		JoinMenu.gameObject.SetActive(true);
+		RulebookMenu.gameObject.SetActive(true);
+		// LevelEditorMenu.gameObject.SetActive(true);
+		SettingsMenu.gameObject.SetActive(true);
 	}
 
 	void Update() {
+		
+	}
 
+	public void PressedBackToMain() {
+		Hide();
+		new DelayAction(this, MainMenuWaitTime, () => {
+			foreach(Animator animator in MainMenu.GetComponentsInChildren<Animator>()) {
+				animator.ResetTrigger("Hide");
+				animator.SetTrigger("Idle");
+			}
+			foreach(Button button in MainMenu.GetComponentsInChildren<Button>()) {
+				button.interactable = true;
+			}
+		});
 	}
 
 	public void PressedStart() {
+		Hide();
+		new DelayAction(this, StartMenuWaitTime, () => {
+			StartMenu.ResetTrigger("Hide");
+			StartMenu.SetTrigger("Show");
+		});
+	}
+
+	public void PressedBackToStart() {
 		Hide();
 		new DelayAction(this, StartMenuWaitTime, () => {
 			StartMenu.ResetTrigger("Hide");
@@ -41,14 +70,6 @@ public class MenuController : MonoBehaviour {
 		new DelayAction(this, CreateMenuWaitTime, () => {
 			CreateMenu.ResetTrigger("Hide");
 			CreateMenu.SetTrigger("Show");
-		});
-	}
-
-	public void PressedBackToStart() {
-		Hide();
-		new DelayAction(this, CreateMenuWaitTime, () => {
-			StartMenu.ResetTrigger("Hide");
-			StartMenu.SetTrigger("Show");
 		});
 	}
 
@@ -97,6 +118,11 @@ public class MenuController : MonoBehaviour {
 			if(animator == null)
 				continue;
 			if(animator.gameObject.GetComponent<Button>() != null) {
+				if(animator.gameObject.GetComponent<Button>().interactable == false)
+					continue;
+				int i = 0;
+				animator.gameObject.SetActive(false);
+				animator.gameObject.SetActive(true);
 				animator.gameObject.GetComponent<Button>().interactable = false;
 			} else {
 				animator.SetTrigger("Hide");
