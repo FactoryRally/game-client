@@ -1,11 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 public class Map {
 
+	[JsonProperty]
 	private Tile[,] Tiles; // Columns | Rows => Tiles[0][2] = 0 | 2
+	[JsonProperty]
 	private int ColumnCount = 10;
+	[JsonProperty]
 	private int RowCount = 10;
 
 	public Map(int columnCount = 10, int rowCount = 10) {
