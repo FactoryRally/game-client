@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MenuController : MonoBehaviour {
+public class MainMenuController : MonoBehaviour {
 
 	public List<Animator> GUIHideComponentAnimators = new List<Animator>();
 
@@ -17,8 +18,6 @@ public class MenuController : MonoBehaviour {
 	public float JoinMenuWaitTime = 0.5f;
 	public Animator RulebookMenu;
 	public float RulebookMenuWaitTime = 0.5f;
-	public Animator LevelEditorMenu;
-	public float LevelEditorMenuWaitTime = 0.5f;
 	public Animator SettingsMenu;
 	public float SettingsMenuWaitTime = 0.5f;
 
@@ -28,7 +27,6 @@ public class MenuController : MonoBehaviour {
 		CreateMenu.gameObject.SetActive(true);
 		JoinMenu.gameObject.SetActive(true);
 		RulebookMenu.gameObject.SetActive(true);
-		// LevelEditorMenu.gameObject.SetActive(true);
 		SettingsMenu.gameObject.SetActive(true);
 	}
 
@@ -95,10 +93,8 @@ public class MenuController : MonoBehaviour {
 
 	public void PressedLevelEditor() {
 		Hide();
-		new DelayAction(this, LevelEditorMenuWaitTime, () => {
-			LevelEditorMenu.ResetTrigger("Hide");
-			LevelEditorMenu.SetTrigger("Show");
-		});
+		SceneManager.LoadScene(2);
+		SceneManager.LoadScene(1, LoadSceneMode.Additive);
 	}
 
 	public void PressedSettings() {
