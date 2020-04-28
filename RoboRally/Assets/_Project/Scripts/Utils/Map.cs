@@ -2,29 +2,42 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+ using System.Runtime.Serialization;
+[DataContract]
+ public class Map {
 
-public class Map {
-
-	[JsonProperty]
+	[DataMember]
 	private Tile[,] Tiles; // Columns | Rows => Tiles[0][2] = 0 | 2
-	[JsonProperty]
+	
+	[DataMember]
 	private int ColumnCount = 10;
-	[JsonProperty]
+	
+	[DataMember]
 	private int RowCount = 10;
 
+
+	public Tile this[int x,int y]
+	{
+		get { return Tiles[x,y]; }
+		set
+		{
+			if(value.Type == TileType.PrioCore && PrioCoreCount() > 0)
+				throw new ArgumentException("Only one Prio Core per Map allowed");
+			Tiles[x, y] = value;
+		}
+	}
+
 	public Map(int columnCount = 10, int rowCount = 10) {
-		this.ColumnCount = columnCount;
-		this.RowCount = rowCount;
-		Tiles = EmptyMap();
+		Tiles = GetEmptyMap(columnCount,rowCount);
 	}
 
-	public Tile[,] EmptyMap(int columnCount, int rowCount) {
+	public Tile[,] GetEmptyMap(int columnCount, int rowCount) {
 		this.ColumnCount = columnCount;
 		this.RowCount = rowCount;
-		return EmptyMap();
+		return GetEmptyMap();
 	}
 
-	public Tile[,] EmptyMap() {
+	public Tile[,] GetEmptyMap() {
 		Tile[,] tiles = new Tile[ColumnCount, RowCount];
 
 		for(int c = 0; c < ColumnCount; c++) {
@@ -36,22 +49,6 @@ public class Map {
 		return tiles;
 	}
 
-	public Tile GetTile(int x, int y) {
-		if(ColumnCount <= x || RowCount <= y)
-			return null;
-
-		return Tiles[x, y];
-	}
-
-	public bool SetTile(int x, int y, Tile tile) {
-		if(ColumnCount <= x || RowCount <= y)
-			return false;
-		if(tile.Type == TileType.PrioCore && PrioCoreCount() > 0)
-			return false;
-
-		Tiles[x, y] = tile;
-		return true;
-	}
 
 	public bool AddColumn(int index) {
 		if(index < 0 || index > ColumnCount)
