@@ -20,14 +20,16 @@ public class Keybinding {
 	private double DownTimeNegative = 0;
 
 	public Keybinding(string name) {
-		PositiveButton = (KeyCode) PlayerPrefs.GetInt("Binding" + Name + "Positive", (int) PositiveButton);
-		NegativeButton = (KeyCode) PlayerPrefs.GetInt("Binding" + Name + "Negative", (int) NegativeButton);
-		AltPositiveButton = (KeyCode) PlayerPrefs.GetInt("Binding" + Name + "AltPositive", (int) AltPositiveButton);
-		AltNegativeButton = (KeyCode) PlayerPrefs.GetInt("Binding" + Name + "AltNegative", (int) AltNegativeButton);
-		Gravity = PlayerPrefs.GetFloat("Binding" + Name + "Gravity", Gravity);
-		Sensitivity = PlayerPrefs.GetFloat("Binding" + Name + "Sensitivity", Sensitivity);
-		Snap = PlayerPrefs.GetInt("Binding" + Name + "Snap", Snap ? 1 : 0) == 1 ? true : false;
+		this.Name = name;
+		PositiveButton = (KeyCode) PlayerPrefs.GetInt("Binding." + Name + ".Positive", (int) PositiveButton);
+		NegativeButton = (KeyCode) PlayerPrefs.GetInt("Binding." + Name + ".Negative", (int) NegativeButton);
+		AltPositiveButton = (KeyCode) PlayerPrefs.GetInt("Binding." + Name + ".AltPositive", (int) AltPositiveButton);
+		AltNegativeButton = (KeyCode) PlayerPrefs.GetInt("Binding." + Name + ".AltNegative", (int) AltNegativeButton);
+		Gravity = PlayerPrefs.GetFloat("Binding." + Name + ".Gravity", Gravity);
+		Sensitivity = PlayerPrefs.GetFloat("Binding." + Name + ".Sensitivity", Sensitivity);
+		Snap = PlayerPrefs.GetInt("Binding." + Name + ".Snap", Snap ? 1 : 0) == 1 ? true : false;
 	}
+
 
 	public float GetAxis() {
 		float value = AxisValue;
@@ -75,14 +77,40 @@ public class Keybinding {
 		return value;
 	}
 
+	public bool GetButton() {
+		return Input.GetKey(NegativeButton) || Input.GetKey(AltNegativeButton)
+			|| Input.GetKey(PositiveButton) || Input.GetKey(AltPositiveButton);
+	}
+
+	public bool GetButtonDown() {
+		return Input.GetKeyDown(NegativeButton) || Input.GetKeyDown(AltNegativeButton)
+			|| Input.GetKeyDown(PositiveButton) || Input.GetKeyDown(AltPositiveButton);
+	}
+
+	public bool GetButtonUp() {
+		return Input.GetKeyUp(NegativeButton) || Input.GetKeyUp(AltNegativeButton)
+			|| Input.GetKeyUp(PositiveButton) || Input.GetKeyUp(AltPositiveButton);
+	}
+
 	public void Save() {
-		PlayerPrefs.SetInt("Binding" + Name + "Positive", (int) PositiveButton);
-		PlayerPrefs.SetInt("Binding" + Name + "Negative", (int) NegativeButton);
-		PlayerPrefs.SetInt("Binding" + Name + "AltPositive", (int) AltPositiveButton);
-		PlayerPrefs.SetInt("Binding" + Name + "AltNegative", (int) AltNegativeButton);
-		PlayerPrefs.SetFloat("Binding" + Name + "Gravity", Gravity);
-		PlayerPrefs.SetFloat("Binding" + Name + "Sensitivity", Sensitivity);
-		PlayerPrefs.SetInt("Binding" + Name + "Snap", Snap ? 1 : 0);
+		PlayerPrefs.SetInt("Binding." + Name + ".Positive", (int) PositiveButton);
+		PlayerPrefs.SetInt("Binding." + Name + ".Negative", (int) NegativeButton);
+		PlayerPrefs.SetInt("Binding." + Name + ".AltPositive", (int) AltPositiveButton);
+		PlayerPrefs.SetInt("Binding." + Name + ".AltNegative", (int) AltNegativeButton);
+		PlayerPrefs.SetFloat("Binding." + Name + ".Gravity", Gravity);
+		PlayerPrefs.SetFloat("Binding." + Name + ".Sensitivity", Sensitivity);
+		PlayerPrefs.SetInt("Binding." + Name + ".Snap", Snap ? 1 : 0);
+		PlayerPrefs.Save();
+	}
+
+	public static void Delete(string bindingname) {
+		PlayerPrefs.DeleteKey("Binding." + bindingname + ".Positive");
+		PlayerPrefs.DeleteKey("Binding." + bindingname + ".Negative");
+		PlayerPrefs.DeleteKey("Binding." + bindingname + ".AltPositive");
+		PlayerPrefs.DeleteKey("Binding." + bindingname + ".AltNegative");
+		PlayerPrefs.DeleteKey("Binding." + bindingname + ".Gravity");
+		PlayerPrefs.DeleteKey("Binding." + bindingname + ".Sensitivity");
+		PlayerPrefs.DeleteKey("Binding." + bindingname + ".Snap");
 		PlayerPrefs.Save();
 	}
 

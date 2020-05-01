@@ -2224,7 +2224,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Anti-Aliasing
+  m_text: VSync
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c1993e3a4f68af4ba022d6b71f83778, type: 2}
   m_sharedMaterial: {fileID: -1905601823817105621, guid: 5c1993e3a4f68af4ba022d6b71f83778,
@@ -2298,7 +2298,7 @@ MonoBehaviour:
   m_margin: {x: 10, y: 10, z: 10, w: 10}
   m_textInfo:
     textComponent: {fileID: 120660570}
-    characterCount: 13
+    characterCount: 5
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
@@ -2895,7 +2895,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.00012207031, y: 0}
   m_SizeDelta: {x: 1600, y: 70}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &152062026
@@ -6371,9 +6371,9 @@ MonoBehaviour:
     will deal 2 damage to the robot. Further more a robot will stay stomped for this
     register phase so that it always has the least priority. The tiles activate only
     in the register that corresponds to the number on them.</indent></indent>\n<indent=4%>\u2022<indent=7%><u>Lasers:</u>
-    will deal 1 damage to a robot. (See more at &quot;Laser&quot;)</indent></indent>\n\n<b><size=108%>End
-    of turn elements</size></b>\n<indent=4%>\u2022<indent=7%><u>Radiation:</u> A robot
-    on a radiation space takes 1 point of damage.</indent></indent>\n<indent=4%>\u2022<indent=7%><u>Repair
+    will deal 1 damage to a robot.</indent></indent>\n\n<b><size=108%>End of turn
+    elements</size></b>\n<indent=4%>\u2022<indent=7%><u>Radiation:</u> A robot on
+    a radiation space takes 1 point of damage.</indent></indent>\n<indent=4%>\u2022<indent=7%><u>Repair
     sites:</u> A robot on a repair site repairs damage points depending on how strong
     the repair field is. (1 or 2)</indent></indent>\n<indent=4%>\u2022<indent=7%><u>Checkpoints:</u>
     A robot on a flag repairs 1 point of damage.</indent></indent>\n\n<b><size=108%>Always
@@ -11662,7 +11662,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0.000061035156, y: 0}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0}
   m_SizeDelta: {x: 800, y: 70}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &852686912
@@ -23969,7 +23969,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0.000061035156, y: 0}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0}
   m_SizeDelta: {x: 800, y: 70}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1692434758
@@ -24838,7 +24838,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1746797728}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.1144438, y: 0.83950543, z: -0.9742656}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -24861,11 +24861,27 @@ MonoBehaviour:
   BindingColor: {r: 0.24502365, g: 0.21693665, b: 0.7075472, a: 0.83137256}
   MouseClickPreventer: {fileID: 0}
   Keybindings:
-  - Name: Horizontal
-    PositiveButton: 119
-    NegativeButton: 115
-    AltPositiveButton: 273
-    AltNegativeButton: 274
+  - Name: EditorFocus
+    PositiveButton: 102
+    NegativeButton: 0
+    AltPositiveButton: 0
+    AltNegativeButton: 0
+    Gravity: 5
+    Sensitivity: 2.5
+    Snap: 1
+  - Name: EditorDeselectTile
+    PositiveButton: 118
+    NegativeButton: 0
+    AltPositiveButton: 0
+    AltNegativeButton: 0
+    Gravity: 5
+    Sensitivity: 2.5
+    Snap: 1
+  - Name: EditorRotate
+    PositiveButton: 114
+    NegativeButton: 0
+    AltPositiveButton: 0
+    AltNegativeButton: 0
     Gravity: 5
     Sensitivity: 2.5
     Snap: 1
@@ -27213,7 +27229,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.00012207031, y: 0}
   m_SizeDelta: {x: 1600, y: 70}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1862442541

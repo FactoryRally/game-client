@@ -9,14 +9,14 @@ public enum TileType {
 	PrioCore,
 	Conveyor,
 	TrapDoor,
-    Stomper,
-    Radioactive,
-    RepairSite,
-    Button,
-    OneWayWall,
-    Puddle,
-    Pit,
-    Ramp
+	Stomper,
+	Radioactive,
+	RepairSite,
+	Button,
+	OneWayWall,
+	Puddle,
+	Pit,
+	Ramp
 }
 
 public enum Direction {
@@ -27,6 +27,17 @@ public enum Direction {
 }
 
 public class Tile {
+
+	public Tile() {
+
+	}
+
+	public Tile(TileType type, bool isEmpty, Direction tileDirection, Direction rotaterDirection) {
+		Type = type;
+		IsEmpty = isEmpty;
+		TileDirection = tileDirection;
+		RotatorDirection = rotaterDirection;
+	}
 
 	public TileType Type = TileType.Normal;
 	public bool IsEmpty = true;

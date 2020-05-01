@@ -12,7 +12,6 @@ public class KeybindingsController : MonoBehaviour {
 	public GameObject BindingsContainer;
 	public Color DefaultColor;
 	public Color BindingColor;
-
 	public GameObject MouseClickPreventer;
 
 	private GameObject CurrentButton;
@@ -20,14 +19,23 @@ public class KeybindingsController : MonoBehaviour {
 	public static List<Keybinding> keybindings = new List<Keybinding>();
 	public List<Keybinding> Keybindings = new List<Keybinding>();
 
+	private List<String> LastNames = new List<String>();
+
 	void Start() {
 		SetDefault();
 		LoadBindings();
+		Keybindings = keybindings;
 	}
 
 	void Update() {
 		if(Application.isEditor) {
-			SaveBindings();
+			keybindings = Keybindings;
+			if(IsBindingChanged()) {
+				DeleteBindings();
+				SaveBindings();
+			}
+		} else {
+			Keybindings = keybindings;
 		}
 	}
 
@@ -90,6 +98,30 @@ public class KeybindingsController : MonoBehaviour {
 		return 0;
 	}
 
+	public static bool GetButton(string keybindingName) {
+		foreach(Keybinding binding in keybindings) {
+			if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
+				return binding.GetButton();
+		}
+		return false;
+	}
+
+	public static bool GetButtonDown(string keybindingName) {
+		foreach(Keybinding binding in keybindings) {
+			if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
+				return binding.GetButtonDown();
+		}
+		return false;
+	}
+
+	public static bool GetButtonUp(string keybindingName) {
+		foreach(Keybinding binding in keybindings) {
+			if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
+				return binding.GetButtonUp();
+		}
+		return false;
+	}
+
 	#endregion
 
 	#region GUI Methods
@@ -116,12 +148,33 @@ public class KeybindingsController : MonoBehaviour {
 		PlayerPrefs.Save();
 	}
 
+	public void DeleteBindings() {
+		string[] bindingNames = PlayerPrefs.GetString("Bindings", "").Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+		foreach(string bindingName in bindingNames) {
+			Keybinding.Delete(bindingName);
+		}
+	}
+
 	public void LoadBindings() {
 		string[] bindingNames = PlayerPrefs.GetString("Bindings", "").Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 		keybindings = new List<Keybinding>();
 		foreach(string bindingName in bindingNames) {
 			keybindings.Add(new Keybinding(bindingName));
 		}
+	}
+
+	public bool IsBindingChanged() {
+		string[] bindingNames = PlayerPrefs.GetString("Bindings", "").Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+		foreach(string bindingName in bindingNames) {
+			for(int i = 0; i < keybindings.Count; i++) {
+				if(bindingName != keybindings[i].Name)
+					continue;
+				if(new Keybinding(bindingName).Equals(keybindings[i]))
+					break;
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void SetDefault() {

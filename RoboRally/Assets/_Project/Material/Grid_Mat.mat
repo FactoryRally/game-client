@@ -22,7 +22,11 @@ Material:
     m_TexEnvs: []
     m_Floats:
     - Vector1_80968CE7: 0.05
+    - _LineThickness: 0.05
     m_Colors:
     - Color_A20100C7: {r: 0.4214066, g: 0.4336538, b: 0.6077428, a: 1}
     - Vector2_17B3C2CB: {r: 0, g: 0, b: 0, a: 0}
     - Vector2_C0595334: {r: 10, g: 10, b: 0, a: 0}
+    - _GridColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Tiling: {r: 10, g: 10, b: 0, a: 0}

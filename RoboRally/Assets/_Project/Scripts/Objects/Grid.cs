@@ -11,6 +11,8 @@ public class Grid : MonoBehaviour {
 
 	public float TileUnitSize = 1;
 
+	public bool IsFocused;
+
 	private Vector3 LastScale;
 
 	void Awake() {
@@ -45,5 +47,19 @@ public class Grid : MonoBehaviour {
 			transform.localScale = new Vector3(x, y, z);
 		}
 		LastScale = transform.localScale;
+
+		transform.position = new Vector3(
+			transform.localScale.x / 2 - 0.5f, 
+			0, 
+			transform.localScale.z / 2 - 0.5f
+		);
+	}
+
+	private void OnMouseOver() {
+		IsFocused = true;
+	}
+
+	private void OnMouseExit() {
+		IsFocused = false;
 	}
 }

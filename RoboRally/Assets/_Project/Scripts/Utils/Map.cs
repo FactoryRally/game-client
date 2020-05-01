@@ -2,33 +2,44 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
- using System.Runtime.Serialization;
+using System.Runtime.Serialization;
+
 [DataContract]
- public class Map {
+public class Map {
 
 	[DataMember]
 	private Tile[,] Tiles; // Columns | Rows => Tiles[0][2] = 0 | 2
-	
+
 	[DataMember]
+	public int columnCount {
+		get {
+			return ColumnCount;
+		}
+		set { }
+	}
 	private int ColumnCount = 10;
-	
+
 	[DataMember]
+	public int rowCount {
+		get {
+			return RowCount;
+		}
+		set { }
+	}
 	private int RowCount = 10;
 
 
-	public Tile this[int x,int y]
-	{
-		get { return Tiles[x,y]; }
-		set
-		{
+	public Tile this[int c, int r] {
+		get { return Tiles[c, r]; }
+		set {
 			if(value.Type == TileType.PrioCore && PrioCoreCount() > 0)
 				throw new ArgumentException("Only one Prio Core per Map allowed");
-			Tiles[x, y] = value;
+			Tiles[c, r] = value;
 		}
 	}
 
 	public Map(int columnCount = 10, int rowCount = 10) {
-		Tiles = GetEmptyMap(columnCount,rowCount);
+		Tiles = GetEmptyMap(columnCount, rowCount);
 	}
 
 	public Tile[,] GetEmptyMap(int columnCount, int rowCount) {
