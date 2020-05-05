@@ -211,7 +211,9 @@ public class LevelEditorBuilder : MonoBehaviour {
 	}
 
 	public void Save() {
+		if(CurrentMap.IsValid()) {
 
+		}
 	}
 
 	public static Direction QuaternionToDirection(Quaternion quaternion) {

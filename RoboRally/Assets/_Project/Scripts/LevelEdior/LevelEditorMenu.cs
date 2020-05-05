@@ -37,6 +37,8 @@ public class LevelEditorMenu : MonoBehaviour {
 	public TMP_InputField RemoveRowAtInput;
 	public Slider RemoveRowAtSlider;
 
+	public TMP_Text ValidText;
+
 
 
 	void Awake() {
@@ -126,6 +128,13 @@ public class LevelEditorMenu : MonoBehaviour {
 			leb.RotaterDirection = (Direction) RotationDropdown.value;
 		}
 		LastRotaterDirectionValue = leb.RotaterDirection;
+
+		// Set Validation Text
+		if(leb.CurrentMap.IsValid()) {
+			ValidText.text = "";
+		} else {
+			ValidText.text = "Map is not Valid";
+		}
 	}
 
 	public void AddColumn() {
