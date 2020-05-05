@@ -5,40 +5,41 @@ using UnityEngine;
 public class LevelEditorController : MonoBehaviour {
 
 	public LevelEditorCameraController MainCamera;
-	public Transform FocusPoint;
 
 	public LevelEditorBuilder leb;
 
+	void Awake() {
+		leb = GetComponent<LevelEditorBuilder>();
+	}
+
 	public void Start() {
-		FocusCamera();
+		MainCamera.Focus();
 	}
 
 	public void Update() {
 		HandleInputs();
 
-		MainCamera.CanMove = leb.CurrentTileIndex == -1;
+		MainCamera.CanMove = leb.MoveSelected;
 	}
 
 	public void HandleInputs() {
 		bool isShift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 		if(KeybindingsController.GetButtonDown("EditorFocus")) {
-			FocusCamera();
+			MainCamera.Focus();
 		}
 		if(KeybindingsController.GetButtonDown("EditorDeselectTile")) {
-			Debug.Log("EditorDeselectTile");
 			leb.CurrentTileIndex = -1;
 		}
 		if(KeybindingsController.GetButtonDown("EditorRotate")) {
 			leb.RotateTile(isShift);
 		}
-	}
-
-	public void FocusCamera() {
-		MainCamera.transform.position = new Vector3(
-			FocusPoint.position.x,
-			MainCamera.transform.position.y,
-			FocusPoint.position.z
-		);
+		if(KeybindingsController.GetButtonDown("EditorLevel")) {
+			if(KeybindingsController.GetAxis("EditorLevel") > 0) {
+				leb.TileLevel++;
+			} else if(KeybindingsController.GetAxis("EditorLevel") < 0) {
+				leb.TileLevel--;
+			}
+		} 
 	}
 
 }

@@ -32,6 +32,10 @@ public class Map {
 	public Tile this[int c, int r] {
 		get { return Tiles[c, r]; }
 		set {
+			if(value == null) {
+				Tiles[c, r] = value;
+				return;
+			}
 			if(value.Type == TileType.PrioCore && PrioCoreCount() > 0)
 				throw new ArgumentException("Only one Prio Core per Map allowed");
 			Tiles[c, r] = value;
@@ -93,7 +97,7 @@ public class Map {
 			for(int r = 0; r < RowCount; r++) {
 				if(c < index) {
 					tiles[c, r] = Tiles[c, r];
-				} else if(c < index) {
+				} else if(c > index) {
 					tiles[c, r] = Tiles[c + 1, r];
 				} else {
 					tiles[c, r] = new Tile();
