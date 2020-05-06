@@ -16,14 +16,14 @@ public enum TileType {
 	OneWayWall,
 	Puddle,
 	Pit,
-	Ramp
+	Ramp,
 }
 
 public enum Direction {
 	Up,
+	Right,
 	Down,
 	Left,
-	Right
 }
 
 public class Tile {
@@ -32,17 +32,18 @@ public class Tile {
 
 	}
 
-	public Tile(TileType type, bool isEmpty, Direction tileDirection, Direction rotaterDirection) {
+	public Tile(TileType type, bool isEmpty, Direction tileDirection, Direction rotaterDirection, int level) {
 		Type = type;
 		IsEmpty = isEmpty;
 		TileDirection = tileDirection;
 		RotatorDirection = rotaterDirection;
+		Level = level;
 	}
 
 	public TileType Type = TileType.Normal;
 	public bool IsEmpty = true;
 	public Direction TileDirection = Direction.Up;
 	public Direction RotatorDirection = Direction.Left;
-
+	public int Level = 0;
 
 }

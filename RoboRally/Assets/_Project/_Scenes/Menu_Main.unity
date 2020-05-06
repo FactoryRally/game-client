@@ -24885,6 +24885,14 @@ MonoBehaviour:
     Gravity: 5
     Sensitivity: 2.5
     Snap: 1
+  - Name: EditorLevel
+    PositiveButton: 273
+    NegativeButton: 274
+    AltPositiveButton: 0
+    AltNegativeButton: 0
+    Gravity: 5
+    Sensitivity: 2.5
+    Snap: 1
 --- !u!1 &1754796114
 GameObject:
   m_ObjectHideFlags: 0

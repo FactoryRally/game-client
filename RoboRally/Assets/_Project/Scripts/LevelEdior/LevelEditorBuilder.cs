@@ -16,109 +16,191 @@ public class LevelEditorBuilder : MonoBehaviour {
 	public List<GameObject> Tiles;
 	public int CurrentTileIndex;
 
+	[MyBox.Separator("Map")]
+	public int minSize = 10;
+	public int maxSize = 50;
+
 	[MyBox.Separator("Coloring")]
 	public Material DefaultMaterial;
 	public Material HoverMaterial; // Gets shown if it is possible to place
 	public Material RestrictedMaterial; // Gets shown if it is not possible to place
 
-	[MyBox.Separator("Cursor")]
-	public Texture2D HandOpenCursor;
-	public Texture2D HandClosedCursor;
-
 	private Vector3 GridPos;
+	private Vector2 MapPos;
 	private GameObject CurrentTile;
-	protected Quaternion TileRotation = Quaternion.identity;
-	protected Direction RotaterDirection = Direction.Left;
-	protected int TileLevel = 0;
+	private GameObject[,] GridObjects;
+
+	[MyBox.ReadOnly]
+	public Quaternion TileRotation = Quaternion.identity;
+	[MyBox.ReadOnly]
+	public Direction RotaterDirection = Direction.Left;
+	[MyBox.ReadOnly]
+	public int TileLevel = 0;
+
+	[MyBox.ReadOnly]
+	public bool MoveSelected;
+	[MyBox.ReadOnly]
+	public bool MouseOverGUI;
+	private bool MouseOverGUIHolded;
+
+
+	void Awake() {
+		lec = GetComponent<LevelEditorController>();
+	}
 
 	void Start() {
 		CurrentMap = new Map();
+		GridObjects = new GameObject[CurrentMap.columnCount, CurrentMap.rowCount];
+		UpdateMap();
 	}
 
 
 	void Update() {
-		if(LevelGrid.IsFocused)
-			UpdateGridPos();
-
+		UpdateGridPos();
+		UpdateMouseState();
 		UpdateHoverEffect();
 
-		if(Input.GetMouseButtonDown(0) && CurrentTile != null) {
+		LevelGrid.transform.localScale = new Vector3(CurrentMap.columnCount, 1, CurrentMap.rowCount);
+
+		if(Input.GetMouseButton(0) && CurrentTile != null) {
 			TileType type = CurrentTile.GetComponent<TileObject>().TileType;
 			Direction direction = QuaternionToDirection(TileRotation);
-			CurrentMap[(int) (GridPos.z / LevelGrid.TileUnitSize), (int) (GridPos.x / LevelGrid.TileUnitSize)] = new Tile(
-				type, 
-				true,
-				direction,
-				RotaterDirection
+			CurrentMap[(int) MapPos.x, (int) MapPos.y] = new Tile(
+					type,
+					true,
+					direction,
+					RotaterDirection,
+					TileLevel
 			);
+			UpdateMap();
+		}
+		if(Input.GetMouseButton(1) && CurrentTile != null) {
+			CurrentMap[(int) MapPos.x, (int) MapPos.y] = null;
 			UpdateMap();
 		}
 	}
 
-	private void UpdateMap() {
-		for(int i = 0; i < GridChilds.transform.childCount; i++) {
-			Destroy(GridChilds.transform.GetChild(i).gameObject);
-		}
-		for(int c = 0; c < CurrentMap.columnCount; c++) {
-			for(int r = 0; r < CurrentMap.rowCount; r++) {
-				for(int i = 0; i < Tiles.Count; i++) {
-					if(Tiles[i].GetComponent<TileObject>().TileType == CurrentMap[c, r].Type) {
-						GameObject gj = Instantiate(
-							Tiles[i], 
-							new Vector3(r, TileLevel + 1, c), 
+	public void UpdateMap() {
+		if(GridObjects.GetLength(0) == CurrentMap.columnCount && GridObjects.GetLength(1) == CurrentMap.rowCount) {
+			for(int c = 0; c < CurrentMap.columnCount; c++) {
+				for(int r = 0; r < CurrentMap.rowCount; r++) {
+					if(CurrentMap[c, r] == null) {
+						if(GridObjects[c, r] != null)
+							Destroy(GridObjects[c, r]);
+						GridObjects[c, r] = null;
+						continue;
+					}
+					if(GridObjects[c, r] == null ||
+							GridObjects[c, r].GetComponent<TileObject>().TileType != CurrentMap[c, r].Type) {
+						GameObject tile = GetTileFromType(CurrentMap[c, r].Type);
+						Destroy(GridObjects[c, r]);
+						GridObjects[c, r] = Instantiate(
+							tile,
+							new Vector3(c, CurrentMap[c, r].Level + 1, CurrentMap.rowCount - r - 1),
 							DirectionToQuaternion(CurrentMap[c, r].TileDirection)
 						);
-						gj.transform.parent = GridChilds.transform;
+						GridObjects[c, r].transform.parent = GridChilds.transform;
 					}
 				}
 			}
+		} else {
+			for(int c = 0; c < GridObjects.GetLength(0); c++) {
+				for(int r = 0; r < GridObjects.GetLength(1); r++) {
+					if(GridObjects[c, r] != null)
+						Destroy(GridObjects[c, r]);
+				}
+			}
+			GridObjects = new GameObject[CurrentMap.columnCount, CurrentMap.rowCount];
+			for(int c = 0; c < CurrentMap.columnCount; c++) {
+				for(int r = 0; r < CurrentMap.rowCount; r++) {
+					if(CurrentMap[c, r] == null)
+						continue;
+					GameObject tile = GetTileFromType(CurrentMap[c, r].Type);
+					if(tile == null)
+						continue;
+					GridObjects[c, r] = Instantiate(
+						tile,
+						new Vector3(c, CurrentMap[c, r].Level + 1, CurrentMap.rowCount - r - 1),
+						DirectionToQuaternion(CurrentMap[c, r].TileDirection)
+					);
+					GridObjects[c, r].transform.parent = GridChilds.transform;
+				}
+			}
 		}
+	}
+
+	public GameObject GetTileFromType(TileType type) {
+		for(int i = 0; i < Tiles.Count; i++) {
+			if(Tiles[i] == null)
+				continue;
+			if(Tiles[i].GetComponent<TileObject>().TileType == type) {
+				return Tiles[i];
+			}
+		}
+		return null;
 	}
 
 	private void UpdateGridPos() {
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit hit;
 
+		// , Mathf.Infinity, 1 << 9
 		if(Physics.Raycast(ray, out hit)) {
 			GridPos = new Vector3(
 					Mathf.Round(hit.point.x / LevelGrid.TileUnitSize) * LevelGrid.TileUnitSize,
-					Mathf.Round(hit.point.y / LevelGrid.TileUnitSize) * LevelGrid.TileUnitSize + 1,
+					1,
 					Mathf.Round(hit.point.z / LevelGrid.TileUnitSize) * LevelGrid.TileUnitSize
+				);
+			MapPos = new Vector2(
+					GridPos.x,
+					(CurrentMap.rowCount - 1) - GridPos.z
 				);
 		}
 	}
 
-	private void UpdateHoverEffect() {
+	private void UpdateMouseState() {
 		EventSystem eve = EventSystem.current;
+		if(Input.GetMouseButtonDown(0) && eve.IsPointerOverGameObject() || MouseOverGUIHolded)
+			MouseOverGUIHolded = true;
+		if(Input.GetMouseButtonUp(0))
+			MouseOverGUIHolded = false;
+		MouseOverGUI = eve.IsPointerOverGameObject() || MouseOverGUIHolded;
+		MoveSelected = false;
+	}
 
-		if(eve.IsPointerOverGameObject()) { // Is GUI focused
+	private void UpdateHoverEffect() {
+		if(MouseOverGUI) { // Is GUI focused
 			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 			if(CurrentTile != null) {
 				Destroy(CurrentTile);
 				CurrentTile = null;
 			}
 		} else if(CurrentTileIndex == -1) {  // If no Tile is selected
+			MoveSelected = true;
 			if(CurrentTile != null) {
 				Destroy(CurrentTile);
 				CurrentTile = null;
-			}
-			if(Input.GetMouseButton(0)) {
-				Cursor.SetCursor(HandClosedCursor, Vector2.zero, CursorMode.Auto);
-			} else {
-				Cursor.SetCursor(HandOpenCursor, Vector2.zero, CursorMode.Auto);
 			}
 		} else { // If a tile is selected
 			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 			if(CurrentTile != null)
 				Destroy(CurrentTile);
-			if(eve.IsPointerOverGameObject()) // If GUI is focused 
+			if(MouseOverGUI) // If GUI is focused 
 				return;
+
+			GridPos = new Vector3(
+					GridPos.x,
+					TileLevel + 1,
+					GridPos.z
+				);
 			CurrentTile = Instantiate(Tiles[CurrentTileIndex], GridPos, TileRotation);
 		}
 	}
 
 	public void SelectTile(int index) {
-		CurrentTileIndex = index;
+		if(index == -1 || (index < Tiles.Count && Tiles[index] != null)) {
+			CurrentTileIndex = index;
+		}
 	}
 
 	public void RotateTile(bool left) {
@@ -129,7 +211,13 @@ public class LevelEditorBuilder : MonoBehaviour {
 		}
 	}
 
-	public Direction QuaternionToDirection(Quaternion quaternion) {
+	public void Save() {
+		if(CurrentMap.IsValid()) {
+
+		}
+	}
+
+	public static Direction QuaternionToDirection(Quaternion quaternion) {
 		float y = quaternion.eulerAngles.y;
 		switch(y) {
 			case 0:
@@ -146,7 +234,7 @@ public class LevelEditorBuilder : MonoBehaviour {
 		}
 	}
 
-	public Quaternion DirectionToQuaternion(Direction direction) {
+	public static Quaternion DirectionToQuaternion(Direction direction) {
 		switch(direction) {
 			case Direction.Up:
 				return Quaternion.Euler(0, 0, 0);
