@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public enum GameMenuControllerAction {
 	Continue,
@@ -15,6 +16,7 @@ public enum GameMenuControllerAction {
 public class GameMenuController : MonoBehaviour {
 
 	public List<MenuComponent> MenuComponents = new List<MenuComponent>();
+	public Image Background;
 
 	public AudioClip ClipOnShow;
 	public AudioSource Source;
@@ -32,10 +34,12 @@ public class GameMenuController : MonoBehaviour {
 
 	void Update() {
 		if(Input.GetKeyDown(KeyCode.Escape) && !IsLoaded) {
+			Background.enabled = true;
 			Source.PlayOneShot(ClipOnShow);
 			Show("Main");
 			IsLoaded = true;
 		} else if (Input.GetKeyDown(KeyCode.Escape) && IsLoaded) {
+			Background.enabled = false;
 			Hide();
 			IsLoaded = false;
 		}
@@ -45,17 +49,11 @@ public class GameMenuController : MonoBehaviour {
 		GameMenuControllerAction gmcAction = (GameMenuControllerAction) action;
 		switch(gmcAction) {
 			case GameMenuControllerAction.Continue:
-				new DelayAction(this, 0.3f, () => {
+				new DelayAction(this, 0.1f, () => {
 					Hide();
 				});
-				new DelayAction(this, 1f, () => {
-					if(SceneManager.GetSceneByBuildIndex(2).isLoaded) {
-						SceneManager.UnloadSceneAsync(1);
-					} else if(SceneManager.GetSceneByBuildIndex(3).isLoaded) {
-						SceneManager.UnloadSceneAsync(1);
-					}
-					IsLoaded = false;
-				});
+				Background.enabled = false;
+				IsLoaded = false;
 				break;
 
 			case GameMenuControllerAction.Settings:

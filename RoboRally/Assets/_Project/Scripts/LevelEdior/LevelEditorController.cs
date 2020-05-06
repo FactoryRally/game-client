@@ -19,7 +19,8 @@ public class LevelEditorController : MonoBehaviour {
 	public void Update() {
 		HandleInputs();
 
-		MainCamera.CanMove = leb.MoveSelected;
+		MainCamera.MoveSelected = leb.MoveSelected;
+		MainCamera.MouseOverGUI = leb.MouseOverGUI;
 	}
 
 	public void HandleInputs() {

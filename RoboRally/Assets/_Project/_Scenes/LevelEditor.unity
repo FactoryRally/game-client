@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1095,11 +1095,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Cam: {fileID: 138138052}
   Grid: {fileID: 1633134087}
-  CanMove: 0
   speed: 8
+  MouseOverGUI: 0
+  MoveSelected: 0
   minZoom: 6
   maxZoom: 55
   sensitivity: 18
+  HandOpenCursor: {fileID: 2800000, guid: 7d194afefb171ec4480c33ff396a711c, type: 3}
+  HandClosedCursor: {fileID: 2800000, guid: 8e3b4a869e8252d4b8a0a34cb78d8fe1, type: 3}
 --- !u!224 &156425209 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4281428468793403126, guid: 1773141451e98aa4c859a5275eba3208,
@@ -1815,12 +1818,11 @@ MonoBehaviour:
   DefaultMaterial: {fileID: 0}
   HoverMaterial: {fileID: 2100000, guid: 2697c2c2cc652c746bd3ddcdc347c5fc, type: 2}
   RestrictedMaterial: {fileID: 2100000, guid: b26a5321f21605547b3383e0b6243f66, type: 2}
-  HandOpenCursor: {fileID: 2800000, guid: 7d194afefb171ec4480c33ff396a711c, type: 3}
-  HandClosedCursor: {fileID: 2800000, guid: 8e3b4a869e8252d4b8a0a34cb78d8fe1, type: 3}
   TileRotation: {x: 0, y: 0, z: 0, w: 1}
   RotaterDirection: 2
   TileLevel: 0
   MoveSelected: 0
+  MouseOverGUI: 0
 --- !u!114 &285680355
 MonoBehaviour:
   m_ObjectHideFlags: 0

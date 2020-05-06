@@ -25,10 +25,6 @@ public class LevelEditorBuilder : MonoBehaviour {
 	public Material HoverMaterial; // Gets shown if it is possible to place
 	public Material RestrictedMaterial; // Gets shown if it is not possible to place
 
-	[MyBox.Separator("Cursor")]
-	public Texture2D HandOpenCursor;
-	public Texture2D HandClosedCursor;
-
 	private Vector3 GridPos;
 	private Vector2 MapPos;
 	private GameObject CurrentTile;
@@ -43,6 +39,9 @@ public class LevelEditorBuilder : MonoBehaviour {
 
 	[MyBox.ReadOnly]
 	public bool MoveSelected;
+	[MyBox.ReadOnly]
+	public bool MouseOverGUI;
+	private bool MouseOverGUIHolded;
 
 
 	void Awake() {
@@ -58,7 +57,7 @@ public class LevelEditorBuilder : MonoBehaviour {
 
 	void Update() {
 		UpdateGridPos();
-
+		UpdateMouseState();
 		UpdateHoverEffect();
 
 		LevelGrid.transform.localScale = new Vector3(CurrentMap.columnCount, 1, CurrentMap.rowCount);
@@ -159,11 +158,18 @@ public class LevelEditorBuilder : MonoBehaviour {
 		}
 	}
 
-	private void UpdateHoverEffect() {
+	private void UpdateMouseState() {
 		EventSystem eve = EventSystem.current;
+		if(Input.GetMouseButtonDown(0) && eve.IsPointerOverGameObject() || MouseOverGUIHolded)
+			MouseOverGUIHolded = true;
+		if(Input.GetMouseButtonUp(0))
+			MouseOverGUIHolded = false;
+		MouseOverGUI = eve.IsPointerOverGameObject() || MouseOverGUIHolded;
 		MoveSelected = false;
+	}
 
-		if(eve.IsPointerOverGameObject()) { // Is GUI focused
+	private void UpdateHoverEffect() {
+		if(MouseOverGUI) { // Is GUI focused
 			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 			if(CurrentTile != null) {
 				Destroy(CurrentTile);
@@ -175,16 +181,11 @@ public class LevelEditorBuilder : MonoBehaviour {
 				Destroy(CurrentTile);
 				CurrentTile = null;
 			}
-			if(Input.GetMouseButton(0)) {
-				Cursor.SetCursor(HandClosedCursor, Vector2.zero, CursorMode.Auto);
-			} else {
-				Cursor.SetCursor(HandOpenCursor, Vector2.zero, CursorMode.Auto);
-			}
 		} else { // If a tile is selected
 			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 			if(CurrentTile != null)
 				Destroy(CurrentTile);
-			if(eve.IsPointerOverGameObject()) // If GUI is focused 
+			if(MouseOverGUI) // If GUI is focused 
 				return;
 
 			GridPos = new Vector3(
