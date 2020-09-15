@@ -16,26 +16,30 @@ public class KeybindingsController : MonoBehaviour {
 
 	private GameObject CurrentButton;
 
-	public static List<Keybinding> keybindings = new List<Keybinding>();
+	public static List<Keybinding> Bindings = new List<Keybinding>();
 	public List<Keybinding> Keybindings = new List<Keybinding>();
 
 	private List<String> LastNames = new List<String>();
 
+	private void Awake() {
+		SetDefault();
+		LoadBindings();
+		Keybindings = Bindings;
+		DontDestroyOnLoad(this.gameObject);
+	}
+
 	void Start() {
 		SetDefault();
 		LoadBindings();
-		Keybindings = keybindings;
+		Keybindings = Bindings;
 	}
 
 	void Update() {
-		if(Application.isEditor) {
-			keybindings = Keybindings;
+		if(!Application.isPlaying) {
 			if(IsBindingChanged()) {
 				DeleteBindings();
 				SaveBindings();
 			}
-		} else {
-			Keybindings = keybindings;
 		}
 	}
 
@@ -91,7 +95,7 @@ public class KeybindingsController : MonoBehaviour {
 	#region Key Methods
 
 	public static float GetAxis(string keybindingName) {
-		foreach(Keybinding binding in keybindings) {
+		foreach(Keybinding binding in Bindings) {
 			if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 				return binding.GetAxis();
 		}
@@ -99,7 +103,7 @@ public class KeybindingsController : MonoBehaviour {
 	}
 
 	public static bool GetButton(string keybindingName) {
-		foreach(Keybinding binding in keybindings) {
+		foreach(Keybinding binding in Bindings) {
 			if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 				return binding.GetButton();
 		}
@@ -107,7 +111,7 @@ public class KeybindingsController : MonoBehaviour {
 	}
 
 	public static bool GetButtonDown(string keybindingName) {
-		foreach(Keybinding binding in keybindings) {
+		foreach(Keybinding binding in Bindings) {
 			if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 				return binding.GetButtonDown();
 		}
@@ -115,7 +119,7 @@ public class KeybindingsController : MonoBehaviour {
 	}
 
 	public static bool GetButtonUp(string keybindingName) {
-		foreach(Keybinding binding in keybindings) {
+		foreach(Keybinding binding in Bindings) {
 			if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 				return binding.GetButtonUp();
 		}
@@ -140,7 +144,7 @@ public class KeybindingsController : MonoBehaviour {
 
 	public void SaveBindings() {
 		string bindingNames = "";
-		foreach(Keybinding binding in keybindings) {
+		foreach(Keybinding binding in Bindings) {
 			binding.Save();
 			bindingNames += binding.Name + ", ";
 		}
@@ -157,19 +161,19 @@ public class KeybindingsController : MonoBehaviour {
 
 	public void LoadBindings() {
 		string[] bindingNames = PlayerPrefs.GetString("Bindings", "").Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-		keybindings = new List<Keybinding>();
+		Bindings = new List<Keybinding>();
 		foreach(string bindingName in bindingNames) {
-			keybindings.Add(new Keybinding(bindingName));
+			Bindings.Add(new Keybinding(bindingName));
 		}
 	}
 
 	public bool IsBindingChanged() {
 		string[] bindingNames = PlayerPrefs.GetString("Bindings", "").Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
 		foreach(string bindingName in bindingNames) {
-			for(int i = 0; i < keybindings.Count; i++) {
-				if(bindingName != keybindings[i].Name)
+			for(int i = 0; i < Bindings.Count; i++) {
+				if(bindingName != Bindings[i].Name)
 					continue;
-				if(new Keybinding(bindingName).Equals(keybindings[i]))
+				if(new Keybinding(bindingName).Equals(Bindings[i]))
 					break;
 				return true;
 			}
@@ -182,7 +186,7 @@ public class KeybindingsController : MonoBehaviour {
 	}
 
 	public Keybinding GetBindingByName(string bindingName) {
-		foreach(Keybinding binding in keybindings) {
+		foreach(Keybinding binding in Bindings) {
 			if(binding.Name.Equals(bindingName, StringComparison.InvariantCultureIgnoreCase)) {
 				return binding;
 			}
