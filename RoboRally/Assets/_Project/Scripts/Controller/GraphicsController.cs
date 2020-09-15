@@ -9,7 +9,7 @@ using UnityEngine.UI.Extensions;
 
 public class GraphicsController : MonoBehaviour {
 
-	private LightweightRenderPipelineAsset lwrp;
+	private UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset lwrp;
 
 	#region FullscreenMode
 
@@ -104,7 +104,7 @@ public class GraphicsController : MonoBehaviour {
 
 
 	void Start() {
-		lwrp = GraphicsSettings.renderPipelineAsset as LightweightRenderPipelineAsset;
+		lwrp = GraphicsSettings.renderPipelineAsset as UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset;
 		DefaultResolution = Screen.currentResolution;
 		PossibleResolutions = Screen.resolutions;
 		int i = 0;
