@@ -1,8 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Networking;
+using Newtonsoft.Json;
 
 public class MainMenuController : MonoBehaviour {
 
@@ -21,6 +28,9 @@ public class MainMenuController : MonoBehaviour {
 	public Animator SettingsMenu;
 	public float SettingsMenuWaitTime = 0.5f;
 
+	public MainMenuFields fields;
+	private Process server;
+
 	void Start() {
 		MainMenu.gameObject.SetActive(true);
 		StartMenu.gameObject.SetActive(true);
@@ -28,10 +38,21 @@ public class MainMenuController : MonoBehaviour {
 		JoinMenu.gameObject.SetActive(true);
 		RulebookMenu.gameObject.SetActive(true);
 		SettingsMenu.gameObject.SetActive(true);
+		fields = GetComponent<MainMenuFields>();
+	}
+
+	void OnApplicationQuit() {
+		if(server != null) {
+			try {
+				server.Kill();
+			} catch(Exception exc) {
+
+			}
+		}
 	}
 
 	void Update() {
-		
+
 	}
 
 	public void PressedBackToMain() {
@@ -72,8 +93,90 @@ public class MainMenuController : MonoBehaviour {
 	}
 
 	public void PressedCreateLobby() {
-		// TODO
+		if(!Http.running) {
+			ProcessStartInfo startInfo = new ProcessStartInfo();
+			startInfo.CreateNoWindow = false;
+			startInfo.UseShellExecute = false;
+			startInfo.FileName = "D:\\Coding\\Projekte\\FactoryRally\\game-controller\\server\\src\\Tgm.Roborally.Server\\bin\\Debug\\netcoreapp3.1\\Tgm.Roborally.Server.exe";
+			startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+			try {
+				server = Process.Start(startInfo);
+				Http.running = true;
+			} catch(Exception e) {
+				UnityEngine.Debug.Log("Was not able to start the server!");
+			}
+		}
+		StartCoroutine(CreateLobby());
 	}
+
+	private IEnumerator CreateLobby() {
+		if(Http.running) {
+			UnityWebRequest response = null;
+			string[] body = {
+				"player-names-visible=" + fields.ShowPlayerNamesToggle.isOn.ToString().ToLower(),
+				"max-players=" + fields.MaxPlayersSlider.value,
+				"name=" + fields.GameNameInput.text,
+				"robots-per-player=1",
+				"password=" + fields.PasswordInput.text,
+				"fill-with-bots=" + fields.FillAiToggle.isOn.ToString().ToLower()
+			};
+			yield return StartCoroutine(Http.Post("games", body, response));
+			UnityEngine.Debug.Log("HI2");
+			UnityEngine.Debug.Log(response.responseCode);
+		} else {
+			UnityEngine.Debug.Log("Cannot reach Server");
+		}
+	}
+	
+	/*
+	public void PressedCreateLobby() {
+		if(!Http.running) {
+			new DelayAction(
+				this,
+				0,
+				() => {
+					ProcessStartInfo startInfo = new ProcessStartInfo();
+					startInfo.CreateNoWindow = false;
+					startInfo.UseShellExecute = false;
+					startInfo.FileName = "D:\\Coding\\Projekte\\FactoryRally\\game-controller\\server\\src\\Tgm.Roborally.Server\\bin\\Debug\\netcoreapp3.1\\Tgm.Roborally.Server.exe";
+					startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+					try {
+						server = Process.Start(startInfo);
+						Http.running = true;
+					} catch { }
+				}
+			);
+		}
+		DelayAction da = new DelayAction();
+		new DelayAction(
+			this,
+			0.5f,
+			10,
+			() => {
+				if(Http.running) {
+					da.StopRepeat();
+					DownloadHandler response = null;
+					string[] body = {
+						"player-names-visible=" + fields.ShowPlayerNamesToggle.isOn,
+						"max-players=" + fields.MaxPlayersSlider.value,
+						"name=" + fields.GameNameInput.text,
+						"robots-per-player=1",
+						"password=" + fields.PasswordInput.text,
+						"fill-with-bots=" + fields.FillAiToggle.isOn
+					};
+					yield return StartCoroutine(Http.Post("games", body, response));
+
+					UnityEngine.Debug.Log(response.isDone);
+				} else if(da.currentRepeat == 10) {
+					UnityEngine.Debug.Log("Cannot reach Server");
+				}
+
+			}
+		);
+	}
+	*/
 
 	public void PressedJoin() {
 		Hide();

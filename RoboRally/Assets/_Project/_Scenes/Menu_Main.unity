@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.28502586, g: 0.37139237, b: 0.4960093, a: 1}
+  m_IndirectSpecularColor: {r: 0.28502697, g: 0.37139347, b: 0.49601266, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1206,6 +1206,7 @@ GameObject:
   - component: {fileID: 93360397}
   - component: {fileID: 93360401}
   - component: {fileID: 93360402}
+  - component: {fileID: 93360403}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1424,6 +1425,23 @@ MonoBehaviour:
   RulebookMenuWaitTime: 0.2
   SettingsMenu: {fileID: 1634928078}
   SettingsMenuWaitTime: 0.2
+--- !u!114 &93360403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93360396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b058f269235afd1419589a5d98625db1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameNameInput: {fileID: 1479882115}
+  PasswordInput: {fileID: 1809237230}
+  MaxPlayersSlider: {fileID: 6248411104722408303}
+  ShowPlayerNamesToggle: {fileID: 1002364531}
+  FillAiToggle: {fileID: 1551137225}
 --- !u!1 &99720260
 GameObject:
   m_ObjectHideFlags: 0
@@ -10627,6 +10645,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 815379775}
+  - component: {fileID: 815379776}
   m_Layer: 0
   m_Name: LobbyController
   m_TagString: Untagged
@@ -10648,6 +10667,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &815379776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 815379774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: def55a8550e1ed245b8719cb4be54573, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &823850829
 GameObject:
   m_ObjectHideFlags: 0
@@ -23532,39 +23563,7 @@ MonoBehaviour:
   DefaultColor: {r: 0.61823195, g: 0.41411534, b: 0.6226415, a: 0.8862745}
   BindingColor: {r: 0.24502365, g: 0.21693665, b: 0.7075472, a: 0.83137256}
   MouseClickPreventer: {fileID: 0}
-  Keybindings:
-  - Name: 
-    PositiveButton: 0
-    NegativeButton: 0
-    AltPositiveButton: 0
-    AltNegativeButton: 0
-    Gravity: 0
-    Sensitivity: 0
-    Snap: 0
-  - Name: 
-    PositiveButton: 0
-    NegativeButton: 0
-    AltPositiveButton: 0
-    AltNegativeButton: 0
-    Gravity: 0
-    Sensitivity: 0
-    Snap: 0
-  - Name: 
-    PositiveButton: 0
-    NegativeButton: 0
-    AltPositiveButton: 0
-    AltNegativeButton: 0
-    Gravity: 0
-    Sensitivity: 0
-    Snap: 0
-  - Name: 
-    PositiveButton: 0
-    NegativeButton: 0
-    AltPositiveButton: 0
-    AltNegativeButton: 0
-    Gravity: 0
-    Sensitivity: 0
-    Snap: 0
+  Keybindings: []
 --- !u!1 &1754796114
 GameObject:
   m_ObjectHideFlags: 0

@@ -25,13 +25,14 @@ public class KeybindingsController : MonoBehaviour {
 		SetDefault();
 		LoadBindings();
 		Keybindings = Bindings;
-		DontDestroyOnLoad(this.gameObject);
 	}
 
 	void Start() {
 		SetDefault();
 		LoadBindings();
 		Keybindings = Bindings;
+		if(Application.isPlaying)
+			DontDestroyOnLoad(this.gameObject);
 	}
 
 	void Update() {
