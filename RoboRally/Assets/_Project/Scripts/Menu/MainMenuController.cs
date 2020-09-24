@@ -121,8 +121,7 @@ public class MainMenuController : MonoBehaviour {
 				"password=" + fields.PasswordInput.text,
 				"fill-with-bots=" + fields.FillAiToggle.isOn.ToString().ToLower()
 			};
-			yield return StartCoroutine(Http.Post("games", body, response));
-			UnityEngine.Debug.Log("HI2");
+			yield return StartCoroutine(Http.Post("games", body, (x) => response = x));
 			UnityEngine.Debug.Log(response.responseCode);
 		} else {
 			UnityEngine.Debug.Log("Cannot reach Server");

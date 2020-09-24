@@ -11,48 +11,46 @@ public class Http {
 	public const string address = "http://localhost:5050/v1/";
 
 
-	public static IEnumerator Request(string path, string[] parameter, UnityWebRequest response) {
+	public static IEnumerator Request(string path, string[] parameter, Action<UnityWebRequest> response) {
 		UnityWebRequest uwr = UnityWebRequest.Get(Http.address + path + GetParameters(parameter));
 		uwr.SetRequestHeader("Content-Type", "application/json");
 		uwr.SetRequestHeader("Accept", "application/json");
 		yield return uwr.SendWebRequest();
-		response = uwr;
+		response(uwr);
 		while(!uwr.isDone) {
 			yield return null;
 		}
 	}
 
-	public static IEnumerator Post(string path, string[] bodys, UnityWebRequest response) {
+	public static IEnumerator Post(string path, string[] bodys, Action<UnityWebRequest> response) {
 		UnityWebRequest uwr = UnityWebRequest.Put(Http.address + path, GetBodyJson(bodys));
 		uwr.method = UnityWebRequest.kHttpVerbPOST;
 		uwr.SetRequestHeader("Content-Type", "application/json");
 		uwr.SetRequestHeader("Accept", "application/json");
 		yield return uwr.SendWebRequest();
-		response = uwr;
-		Debug.Log("HI1");
-		Debug.Log(response.responseCode);
+		response(uwr);
 		while(!uwr.isDone) {
 			yield return null;
 		}
 	}
 
-	public static IEnumerator Put(string path, string[] parameter, UnityWebRequest response) {
+	public static IEnumerator Put(string path, string[] parameter, Action<UnityWebRequest> response) {
 		UnityWebRequest uwr = UnityWebRequest.Put(Http.address + path + GetParameters(parameter), "");
 		uwr.SetRequestHeader("Content-Type", "application/json");
 		uwr.SetRequestHeader("Accept", "application/json");
 		yield return uwr.SendWebRequest();
-		response = uwr;
+		response(uwr);
 		while(!uwr.isDone) {
 			yield return null;
 		}
 	}
 
-	public static IEnumerator Delete(string path, UnityWebRequest response) {
+	public static IEnumerator Delete(string path, Action<UnityWebRequest> response) {
 		UnityWebRequest uwr = UnityWebRequest.Delete(Http.address + path);
 		uwr.SetRequestHeader("Content-Type", "application/json");
 		uwr.SetRequestHeader("Accept", "application/json");
 		yield return uwr.SendWebRequest();
-		response = uwr;
+		response(uwr);
 		while(!uwr.isDone) {
 			yield return null;
 		}
