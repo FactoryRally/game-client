@@ -2,34 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LobbyController : MonoBehaviour {
-	
+public class JoinLobbyMenu : MonoBehaviour {
+
 	public GameObject LobbyItem;
 	public GameObject LobbyContent;
 
-	public Object[] Games;
+	public JoinLobbyController jlc;
 
-	// Game item
-	
-
-	public void Start() {
-
+	void Awake() {
+		jlc = GetComponent<JoinLobbyController>();
 	}
-	
-	public void Update() {
+
+	void Start() {
 
 	}
 
+	void Update() {
 
-	public void RefreshLobbys() {
+	}
+
+
+	public void ReloadButton() {
+		jlc.RequestGames();
 		int i = 0;
-		foreach(Object game in Games) {
+		foreach(Object game in jlc.Games) {
 			GameObject lobbyItem = Instantiate(LobbyItem, LobbyContent.transform);
-			JoinLobbyElement jle = lobbyItem.GetComponent<JoinLobbyElement>();
+			JoinLobbyItem jle = lobbyItem.GetComponent<JoinLobbyItem>();
 			jle.GameID = i; // Set ID 
 			jle.IsLocked = false; // Set if Locked
 			i++;
 		}
-		
+
 	}
 }

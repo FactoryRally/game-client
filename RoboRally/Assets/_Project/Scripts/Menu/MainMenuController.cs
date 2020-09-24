@@ -93,20 +93,7 @@ public class MainMenuController : MonoBehaviour {
 	}
 
 	public void PressedCreateLobby() {
-		if(!Http.running) {
-			ProcessStartInfo startInfo = new ProcessStartInfo();
-			startInfo.CreateNoWindow = false;
-			startInfo.UseShellExecute = false;
-			startInfo.FileName = "D:\\Coding\\Projekte\\FactoryRally\\game-controller\\server\\src\\Tgm.Roborally.Server\\bin\\Debug\\netcoreapp3.1\\Tgm.Roborally.Server.exe";
-			startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
-			try {
-				server = Process.Start(startInfo);
-				Http.running = true;
-			} catch(Exception e) {
-				UnityEngine.Debug.Log("Was not able to start the server!");
-			}
-		}
+		Http.StartServer();
 		StartCoroutine(CreateLobby());
 	}
 
@@ -127,55 +114,6 @@ public class MainMenuController : MonoBehaviour {
 			UnityEngine.Debug.Log("Cannot reach Server");
 		}
 	}
-	
-	/*
-	public void PressedCreateLobby() {
-		if(!Http.running) {
-			new DelayAction(
-				this,
-				0,
-				() => {
-					ProcessStartInfo startInfo = new ProcessStartInfo();
-					startInfo.CreateNoWindow = false;
-					startInfo.UseShellExecute = false;
-					startInfo.FileName = "D:\\Coding\\Projekte\\FactoryRally\\game-controller\\server\\src\\Tgm.Roborally.Server\\bin\\Debug\\netcoreapp3.1\\Tgm.Roborally.Server.exe";
-					startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
-					try {
-						server = Process.Start(startInfo);
-						Http.running = true;
-					} catch { }
-				}
-			);
-		}
-		DelayAction da = new DelayAction();
-		new DelayAction(
-			this,
-			0.5f,
-			10,
-			() => {
-				if(Http.running) {
-					da.StopRepeat();
-					DownloadHandler response = null;
-					string[] body = {
-						"player-names-visible=" + fields.ShowPlayerNamesToggle.isOn,
-						"max-players=" + fields.MaxPlayersSlider.value,
-						"name=" + fields.GameNameInput.text,
-						"robots-per-player=1",
-						"password=" + fields.PasswordInput.text,
-						"fill-with-bots=" + fields.FillAiToggle.isOn
-					};
-					yield return StartCoroutine(Http.Post("games", body, response));
-
-					UnityEngine.Debug.Log(response.isDone);
-				} else if(da.currentRepeat == 10) {
-					UnityEngine.Debug.Log("Cannot reach Server");
-				}
-
-			}
-		);
-	}
-	*/
 
 	public void PressedJoin() {
 		Hide();

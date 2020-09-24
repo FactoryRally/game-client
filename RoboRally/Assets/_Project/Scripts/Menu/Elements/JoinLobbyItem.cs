@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class JoinLobbyElement : MonoBehaviour {
+public class JoinLobbyItem : MonoBehaviour {
 
 	public int GameID = 0;
 	public bool IsLocked = false;

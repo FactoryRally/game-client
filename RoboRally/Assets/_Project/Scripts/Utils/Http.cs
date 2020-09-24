@@ -1,25 +1,56 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
 public class Http {
 
+	public static Process server;
+
     public static bool running = false;
 	public const string address = "http://localhost:5050/v1/";
 
+	
+	public static void StartServer() {
+		if(Http.running)
+			return;
+		ProcessStartInfo startInfo = new ProcessStartInfo();
+		startInfo.CreateNoWindow = false;
+		startInfo.UseShellExecute = false;
+		startInfo.FileName = "D:\\Coding\\Projekte\\FactoryRally\\game-controller\\server\\src\\Tgm.Roborally.Server\\bin\\Debug\\netcoreapp3.1\\Tgm.Roborally.Server.exe";
+		startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+		try {
+			server = Process.Start(startInfo);
+			Http.running = true;
+		} catch(Exception e) {
+			UnityEngine.Debug.Log("Was not able to start the server!");
+		}
+	}
+
+	public static void StopServer() {
+		if(!Http.running)
+			return;
+		if(server != null)
+			server.Kill();
+		Http.running = false;
+	}
 
 	public static IEnumerator Request(string path, string[] parameter, Action<UnityWebRequest> response) {
 		UnityWebRequest uwr = UnityWebRequest.Get(Http.address + path + GetParameters(parameter));
+		uwr.method = UnityWebRequest.kHttpVerbGET;
+		UnityEngine.Debug.Log(uwr.downloadHandler);
 		uwr.SetRequestHeader("Content-Type", "application/json");
 		uwr.SetRequestHeader("Accept", "application/json");
 		yield return uwr.SendWebRequest();
-		response(uwr);
+		UnityEngine.Debug.Log(uwr.downloadHandler);
 		while(!uwr.isDone) {
 			yield return null;
 		}
+		response(uwr);
 	}
 
 	public static IEnumerator Post(string path, string[] bodys, Action<UnityWebRequest> response) {
@@ -28,10 +59,10 @@ public class Http {
 		uwr.SetRequestHeader("Content-Type", "application/json");
 		uwr.SetRequestHeader("Accept", "application/json");
 		yield return uwr.SendWebRequest();
-		response(uwr);
 		while(!uwr.isDone) {
 			yield return null;
 		}
+		response(uwr);
 	}
 
 	public static IEnumerator Put(string path, string[] parameter, Action<UnityWebRequest> response) {
@@ -39,10 +70,10 @@ public class Http {
 		uwr.SetRequestHeader("Content-Type", "application/json");
 		uwr.SetRequestHeader("Accept", "application/json");
 		yield return uwr.SendWebRequest();
-		response(uwr);
 		while(!uwr.isDone) {
 			yield return null;
 		}
+		response(uwr);
 	}
 
 	public static IEnumerator Delete(string path, Action<UnityWebRequest> response) {
@@ -50,13 +81,15 @@ public class Http {
 		uwr.SetRequestHeader("Content-Type", "application/json");
 		uwr.SetRequestHeader("Accept", "application/json");
 		yield return uwr.SendWebRequest();
-		response(uwr);
 		while(!uwr.isDone) {
 			yield return null;
 		}
+		response(uwr);
 	}
 
 	private static string GetParameters(string[] parameter) {
+		if(parameter == null)
+			return "";
 		string body = "?";
 		if(parameter.Length == 0) {
 			body = "";
@@ -70,6 +103,8 @@ public class Http {
 	}
 
 	private static WWWForm GetBody(string[] bodys) {
+		if(bodys == null)
+			return new WWWForm();
 		WWWForm form = new WWWForm();
 		for(int i = 0; i < bodys.Length; i++) {
 			if(bodys[i].Split('=')[1].Length == 0)
@@ -80,6 +115,8 @@ public class Http {
 	}
 
 	private static string GetBodyJson(string[] bodys) {
+		if(bodys == null)
+			return "";
 		string json = "{\n";
 		for(int i = 0; i < bodys.Length; i++) {
 			if(bodys[i].Split('=')[1].Length == 0)

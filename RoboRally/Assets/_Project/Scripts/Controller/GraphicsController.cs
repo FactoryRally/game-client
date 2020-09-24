@@ -211,7 +211,7 @@ public class GraphicsController : MonoBehaviour {
 	public void ApplyChanges() {
 		Application.targetFrameRate = CurrentFrames;
 		Screen.SetResolution(CurrentResolution.width, CurrentResolution.height, CurrentWindowMode);
-		QualitySettings.masterTextureLimit = CurrentTextureQuality;
+		QualitySettings.masterTextureLimit = 3 - CurrentTextureQuality;
 		QualitySettings.anisotropicFiltering = CurrentAnisotropicFilteringMode;
 		lwrp.msaaSampleCount = (int) (Mathf.Pow(2, CurrentAntiAliasing) % 2 == 0 ? Mathf.Pow(2, CurrentAntiAliasing) : 0);
 		QualitySettings.vSyncCount = CurrentVSync;
