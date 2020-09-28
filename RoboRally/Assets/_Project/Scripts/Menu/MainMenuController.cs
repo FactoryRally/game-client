@@ -109,7 +109,6 @@ public class MainMenuController : MonoBehaviour {
 				"fill-with-bots=" + fields.FillAiToggle.isOn.ToString().ToLower()
 			};
 			yield return StartCoroutine(Http.Post("games", body, (x) => response = x));
-			UnityEngine.Debug.Log(response.responseCode);
 		} else {
 			UnityEngine.Debug.Log("Cannot reach Server");
 		}

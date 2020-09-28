@@ -42,15 +42,20 @@ public class Http {
 	public static IEnumerator Request(string path, string[] parameter, Action<UnityWebRequest> response) {
 		UnityWebRequest uwr = UnityWebRequest.Get(Http.address + path + GetParameters(parameter));
 		uwr.method = UnityWebRequest.kHttpVerbGET;
-		UnityEngine.Debug.Log(uwr.downloadHandler);
 		uwr.SetRequestHeader("Content-Type", "application/json");
 		uwr.SetRequestHeader("Accept", "application/json");
 		yield return uwr.SendWebRequest();
-		UnityEngine.Debug.Log(uwr.downloadHandler);
 		while(!uwr.isDone) {
 			yield return null;
 		}
 		response(uwr);
+	}
+	public static UnityWebRequest CreateRequest(string path, string[] parameter) {
+		UnityWebRequest uwr = UnityWebRequest.Get(Http.address + path + GetParameters(parameter));
+		uwr.method = UnityWebRequest.kHttpVerbGET;
+		uwr.SetRequestHeader("Content-Type", "application/json");
+		uwr.SetRequestHeader("Accept", "application/json");
+		return uwr;
 	}
 
 	public static IEnumerator Post(string path, string[] bodys, Action<UnityWebRequest> response) {
@@ -64,6 +69,7 @@ public class Http {
 		}
 		response(uwr);
 	}
+
 
 	public static IEnumerator Put(string path, string[] parameter, Action<UnityWebRequest> response) {
 		UnityWebRequest uwr = UnityWebRequest.Put(Http.address + path + GetParameters(parameter), "");
