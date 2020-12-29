@@ -6,6 +6,6 @@ using UnityEngine.SceneManagement;
 public class OpenGameMenu : MonoBehaviour {
 
 	void Update() {
-	}
 
+	}
 }

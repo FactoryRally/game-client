@@ -9,6 +9,8 @@ using UnityEngine.UI;
 [ExecuteInEditMode]
 public class KeybindingsController : MonoBehaviour {
 
+	public static KeybindingsController instance = null;
+
 	public GameObject BindingsContainer;
 	public Color DefaultColor;
 	public Color BindingColor;
@@ -22,6 +24,13 @@ public class KeybindingsController : MonoBehaviour {
 	private List<String> LastNames = new List<String>();
 
 	private void Awake() {
+		if(instance == null) {
+			instance = this;
+			DontDestroyOnLoad(this);
+		} else {
+			Destroy(gameObject);
+		}
+
 		SetDefault();
 		LoadBindings();
 		Keybindings = Bindings;
@@ -31,8 +40,6 @@ public class KeybindingsController : MonoBehaviour {
 		SetDefault();
 		LoadBindings();
 		Keybindings = Bindings;
-		if(Application.isPlaying)
-			DontDestroyOnLoad(this.gameObject);
 	}
 
 	void Update() {

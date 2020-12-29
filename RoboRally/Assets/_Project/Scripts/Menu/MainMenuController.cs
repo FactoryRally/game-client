@@ -93,6 +93,7 @@ public class MainMenuController : MonoBehaviour {
 	}
 
 	public void PressedCreateLobby() {
+		UnityEngine.Debug.Log(Application.dataPath);
 		Http.StartServer();
 		StartCoroutine(CreateLobby());
 	}

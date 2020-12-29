@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0.28502697, g: 0.37139347, b: 0.49601266, a: 1}
+  m_IndirectSpecularColor: {r: 0.28502586, g: 0.37139237, b: 0.4960093, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10938,6 +10938,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14413eac185bdf8459990cdcd07c9743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Games: []
 --- !u!1 &823850829
 GameObject:
   m_ObjectHideFlags: 0
@@ -23484,7 +23485,7 @@ GameObject:
   - component: {fileID: 1746797729}
   - component: {fileID: 1746797730}
   m_Layer: 0
-  m_Name: KeybindingsController
+  m_Name: InputManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
