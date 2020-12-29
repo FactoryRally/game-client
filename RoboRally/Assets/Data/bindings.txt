@@ -1,0 +1,52 @@
+[
+  {
+    "Name": "EditorRotate",
+    "PositiveButton": 114,
+    "NegativeButton": 0,
+    "AltPositiveButton": 0,
+    "AltNegativeButton": 0,
+    "Gravity": 0.0,
+    "Sensitivity": 0.0,
+    "Snap": false
+  },
+  {
+    "Name": "EditorFocus",
+    "PositiveButton": 102,
+    "NegativeButton": 0,
+    "AltPositiveButton": 0,
+    "AltNegativeButton": 0,
+    "Gravity": 0.0,
+    "Sensitivity": 0.0,
+    "Snap": false
+  },
+  {
+    "Name": "EditorDeselectTile",
+    "PositiveButton": 118,
+    "NegativeButton": 0,
+    "AltPositiveButton": 0,
+    "AltNegativeButton": 0,
+    "Gravity": 0.0,
+    "Sensitivity": 0.0,
+    "Snap": false
+  },
+  {
+    "Name": "EditorLevel",
+    "PositiveButton": 273,
+    "NegativeButton": 274,
+    "AltPositiveButton": 0,
+    "AltNegativeButton": 0,
+    "Gravity": 0.0,
+    "Sensitivity": 0.0,
+    "Snap": false
+  },
+  {
+    "Name": "Jump",
+    "PositiveButton": 32,
+    "NegativeButton": 0,
+    "AltPositiveButton": 0,
+    "AltNegativeButton": 0,
+    "Gravity": 0.0,
+    "Sensitivity": 0.0,
+    "Snap": false
+  }
+]

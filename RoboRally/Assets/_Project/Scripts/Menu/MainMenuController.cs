@@ -93,7 +93,7 @@ public class MainMenuController : MonoBehaviour {
 	}
 
 	public void PressedCreateLobby() {
-		UnityEngine.Debug.Log(Application.dataPath);
+		Http.serverPath = Application.dataPath + "/Server/Tgm.Roborally.Server.exe";
 		Http.StartServer();
 		StartCoroutine(CreateLobby());
 	}

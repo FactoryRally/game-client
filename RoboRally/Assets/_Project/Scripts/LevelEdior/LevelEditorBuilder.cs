@@ -170,18 +170,22 @@ public class LevelEditorBuilder : MonoBehaviour {
 
 	private void UpdateHoverEffect() {
 		if(MouseOverGUI) { // Is GUI focused
+			lec.MainCamera.DefaultCursor = true;
 			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+			
 			if(CurrentTile != null) {
 				Destroy(CurrentTile);
 				CurrentTile = null;
 			}
 		} else if(CurrentTileIndex == -1) {  // If no Tile is selected
+			lec.MainCamera.DefaultCursor = false;
 			MoveSelected = true;
 			if(CurrentTile != null) {
 				Destroy(CurrentTile);
 				CurrentTile = null;
 			}
 		} else { // If a tile is selected
+			lec.MainCamera.DefaultCursor = true;
 			Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
 			if(CurrentTile != null)
 				Destroy(CurrentTile);

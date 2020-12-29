@@ -1,15 +1,18 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteInEditMode]
-public class KeybindingsController : MonoBehaviour {
+public class InputManager : MonoBehaviour {
 
-	public static KeybindingsController instance = null;
+	public static InputManager instance = null;
+
+	public static string SAVE_FOLDER;
 
 	public GameObject BindingsContainer;
 	public Color DefaultColor;
@@ -18,12 +21,12 @@ public class KeybindingsController : MonoBehaviour {
 
 	private GameObject CurrentButton;
 
-	public static List<Keybinding> Bindings = new List<Keybinding>();
 	public List<Keybinding> Keybindings = new List<Keybinding>();
 
 	private List<String> LastNames = new List<String>();
 
 	private void Awake() {
+		SAVE_FOLDER = Application.dataPath + "/Data/";
 		if(instance == null) {
 			instance = this;
 			DontDestroyOnLoad(this);
@@ -31,24 +34,21 @@ public class KeybindingsController : MonoBehaviour {
 			Destroy(gameObject);
 		}
 
+		if(!Directory.Exists(SAVE_FOLDER)) {
+			Directory.CreateDirectory(SAVE_FOLDER);
+		}
+
 		SetDefault();
 		LoadBindings();
-		Keybindings = Bindings;
 	}
 
 	void Start() {
 		SetDefault();
 		LoadBindings();
-		Keybindings = Bindings;
 	}
 
 	void Update() {
-		if(!Application.isPlaying) {
-			if(IsBindingChanged()) {
-				DeleteBindings();
-				SaveBindings();
-			}
-		}
+		
 	}
 
 	void OnGUI() {
@@ -103,7 +103,7 @@ public class KeybindingsController : MonoBehaviour {
 	#region Key Methods
 
 	public static float GetAxis(string keybindingName) {
-		foreach(Keybinding binding in Bindings) {
+		foreach(Keybinding binding in InputManager.instance.Keybindings) {
 			if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 				return binding.GetAxis();
 		}
@@ -111,7 +111,7 @@ public class KeybindingsController : MonoBehaviour {
 	}
 
 	public static bool GetButton(string keybindingName) {
-		foreach(Keybinding binding in Bindings) {
+		foreach(Keybinding binding in InputManager.instance.Keybindings) {
 			if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 				return binding.GetButton();
 		}
@@ -119,7 +119,7 @@ public class KeybindingsController : MonoBehaviour {
 	}
 
 	public static bool GetButtonDown(string keybindingName) {
-		foreach(Keybinding binding in Bindings) {
+		foreach(Keybinding binding in InputManager.instance.Keybindings) {
 			if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 				return binding.GetButtonDown();
 		}
@@ -127,7 +127,7 @@ public class KeybindingsController : MonoBehaviour {
 	}
 
 	public static bool GetButtonUp(string keybindingName) {
-		foreach(Keybinding binding in Bindings) {
+		foreach(Keybinding binding in InputManager.instance.Keybindings) {
 			if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 				return binding.GetButtonUp();
 		}
@@ -151,42 +151,18 @@ public class KeybindingsController : MonoBehaviour {
 	#region Binding Methods
 
 	public void SaveBindings() {
-		string bindingNames = "";
-		foreach(Keybinding binding in Bindings) {
-			binding.Save();
-			bindingNames += binding.Name + ", ";
+		if(!Directory.Exists(SAVE_FOLDER)) {
+			Directory.CreateDirectory(SAVE_FOLDER);
 		}
-		PlayerPrefs.SetString("Bindings", bindingNames);
-		PlayerPrefs.Save();
-	}
-
-	public void DeleteBindings() {
-		string[] bindingNames = PlayerPrefs.GetString("Bindings", "").Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-		foreach(string bindingName in bindingNames) {
-			Keybinding.Delete(bindingName);
-		}
+		string json = JsonConvert.SerializeObject(Keybindings, Formatting.Indented);
+		File.WriteAllText(SAVE_FOLDER + "/bindings.txt", json);
 	}
 
 	public void LoadBindings() {
-		string[] bindingNames = PlayerPrefs.GetString("Bindings", "").Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-		Bindings = new List<Keybinding>();
-		foreach(string bindingName in bindingNames) {
-			Bindings.Add(new Keybinding(bindingName));
+		if(File.Exists(SAVE_FOLDER + "/bindings.txt")) {
+			string saveString = File.ReadAllText(SAVE_FOLDER + "/bindings.txt");
+			Keybindings = JsonConvert.DeserializeObject<List<Keybinding>>(saveString);
 		}
-	}
-
-	public bool IsBindingChanged() {
-		string[] bindingNames = PlayerPrefs.GetString("Bindings", "").Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-		foreach(string bindingName in bindingNames) {
-			for(int i = 0; i < Bindings.Count; i++) {
-				if(bindingName != Bindings[i].Name)
-					continue;
-				if(new Keybinding(bindingName).Equals(Bindings[i]))
-					break;
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public void SetDefault() {
@@ -194,7 +170,7 @@ public class KeybindingsController : MonoBehaviour {
 	}
 
 	public Keybinding GetBindingByName(string bindingName) {
-		foreach(Keybinding binding in Bindings) {
+		foreach(Keybinding binding in InputManager.instance.Keybindings) {
 			if(binding.Name.Equals(bindingName, StringComparison.InvariantCultureIgnoreCase)) {
 				return binding;
 			}

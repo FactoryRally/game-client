@@ -25,19 +25,19 @@ public class LevelEditorController : MonoBehaviour {
 
 	public void HandleInputs() {
 		bool isShift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-		if(KeybindingsController.GetButtonDown("EditorFocus")) {
+		if(InputManager.GetButtonDown("EditorFocus")) {
 			MainCamera.Focus();
 		}
-		if(KeybindingsController.GetButtonDown("EditorDeselectTile")) {
+		if(InputManager.GetButtonDown("EditorDeselectTile")) {
 			leb.CurrentTileIndex = -1;
 		}
-		if(KeybindingsController.GetButtonDown("EditorRotate")) {
+		if(InputManager.GetButtonDown("EditorRotate")) {
 			leb.RotateTile(isShift);
 		}
-		if(KeybindingsController.GetButtonDown("EditorLevel")) {
-			if(KeybindingsController.GetAxis("EditorLevel") > 0) {
+		if(InputManager.GetButtonDown("EditorLevel")) {
+			if(InputManager.GetAxis("EditorLevel") > 0) {
 				leb.TileLevel++;
-			} else if(KeybindingsController.GetAxis("EditorLevel") < 0) {
+			} else if(InputManager.GetAxis("EditorLevel") < 0) {
 				leb.TileLevel--;
 			}
 		} 

@@ -20,6 +20,9 @@ public class LevelEditorCameraController : MonoBehaviour {
 	private Vector3 LastValidPosition;
 	private Vector3 Origin;
 
+	[MyBox.ReadOnly]
+	public bool DefaultCursor = false;
+
 	[MyBox.Separator("Zoom")]
 	public float minZoom = 10f;
 	public float maxZoom = 90f;
@@ -44,11 +47,12 @@ public class LevelEditorCameraController : MonoBehaviour {
 			return;
 		bounds = new Bounds(Grid.position, new Vector3(11, 0, 11));
 
-
-		if(Dragging) {
-			Cursor.SetCursor(HandClosedCursor, Vector2.zero, CursorMode.Auto);
-		} else {
-			Cursor.SetCursor(HandOpenCursor, Vector2.zero, CursorMode.Auto);
+		if(!DefaultCursor) {
+			if(Dragging) {
+				Cursor.SetCursor(HandClosedCursor, Vector2.zero, CursorMode.Auto);
+			} else {
+				Cursor.SetCursor(HandOpenCursor, Vector2.zero, CursorMode.Auto);
+			}
 		}
 
 		if(Input.GetMouseButtonDown(0) && MoveSelected || Input.GetMouseButtonDown(2)) {

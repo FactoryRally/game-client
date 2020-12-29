@@ -13,6 +13,8 @@ public class Http {
     public static bool running = false;
 	public const string address = "http://localhost:5050/v1/";
 
+	public static string serverPath = "";
+
 	
 	public static void StartServer() {
 		if(Http.running)
@@ -20,7 +22,7 @@ public class Http {
 		ProcessStartInfo startInfo = new ProcessStartInfo();
 		startInfo.CreateNoWindow = false;
 		startInfo.UseShellExecute = false;
-		startInfo.FileName = "D:\\Coding\\Projekte\\FactoryRally\\game-controller\\server\\src\\Tgm.Roborally.Server\\bin\\Debug\\netcoreapp3.1\\Tgm.Roborally.Server.exe";
+		startInfo.FileName = serverPath;
 		startInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
 		try {
