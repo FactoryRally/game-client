@@ -94,25 +94,26 @@ public class MainMenuController : MonoBehaviour {
 
 	public void PressedCreateLobby() {
 		Http.serverPath = Application.dataPath + "/Server/Tgm.Roborally.Server.exe";
+		UnityEngine.Debug.Log(Http.serverPath);
 		Http.StartServer();
 		StartCoroutine(CreateLobby());
 	}
 
 	private IEnumerator CreateLobby() {
-		if(Http.running) {
-			UnityWebRequest response = null;
-			string[] body = {
-				"player-names-visible=" + fields.ShowPlayerNamesToggle.isOn.ToString().ToLower(),
-				"max-players=" + fields.MaxPlayersSlider.value,
-				"name=" + fields.GameNameInput.text,
-				"robots-per-player=1",
-				"password=" + fields.PasswordInput.text,
-				"fill-with-bots=" + fields.FillAiToggle.isOn.ToString().ToLower()
-			};
-			yield return StartCoroutine(Http.Post("games", body, (x) => response = x));
-		} else {
+		// if(Http.running) {
+		UnityWebRequest response = null;
+		string[] body = {
+			"player-names-visible=" + fields.ShowPlayerNamesToggle.isOn.ToString().ToLower(),
+			"max-players=" + fields.MaxPlayersSlider.value,
+			"name=" + fields.GameNameInput.text,
+			"robots-per-player=1",
+			"password=" + fields.PasswordInput.text,
+			"fill-with-bots=" + fields.FillAiToggle.isOn.ToString().ToLower()
+		};
+		yield return StartCoroutine(Http.Post("games", body, (x) => response = x));
+		/* } else {
 			UnityEngine.Debug.Log("Cannot reach Server");
-		}
+		} */
 	}
 
 	public void PressedJoin() {

@@ -21,13 +21,12 @@ public class Http {
 			return;
 		ProcessStartInfo startInfo = new ProcessStartInfo();
 		startInfo.CreateNoWindow = false;
-		startInfo.UseShellExecute = false;
+		startInfo.UseShellExecute = true;
 		startInfo.FileName = serverPath;
-		startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+		startInfo.WindowStyle = ProcessWindowStyle.Normal;
 
 		try {
 			server = Process.Start(startInfo);
-			Http.running = true;
 		} catch(Exception e) {
 			UnityEngine.Debug.Log("Was not able to start the server!");
 		}
