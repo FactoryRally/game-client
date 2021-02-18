@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenuButton : MonoBehaviour {
+public class ButtonSound : MonoBehaviour {
 	public AudioSource source;
 	private AudioClip clip;
 

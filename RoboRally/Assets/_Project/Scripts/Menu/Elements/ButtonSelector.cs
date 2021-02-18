@@ -8,7 +8,7 @@ public class ButtonSelector : MonoBehaviour {
 	private GameObject[] Buttons;
 	public int index = 0;
 	public Color SelectedColor;
-	private Color UnselectedColor;
+	public Color UnselectedColor;
 
 	void Start() {
 		int s = 0;

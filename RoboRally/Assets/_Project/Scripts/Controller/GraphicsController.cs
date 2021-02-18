@@ -11,7 +11,7 @@ public class GraphicsController : MonoBehaviour {
 
 	private UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset lwrp;
 
-	#region FullscreenMode
+	#region Frames
 
 	public GameObject FramesList;
 	private ScrollSnap FramesScrollSnap;
@@ -108,6 +108,9 @@ public class GraphicsController : MonoBehaviour {
 		DefaultResolution = Screen.currentResolution;
 		PossibleResolutions = Screen.resolutions;
 		int i = 0;
+		foreach(Transform t in ResolutionList.transform) {
+			Destroy(t);
+		}
 		foreach(Resolution res in PossibleResolutions) {
 			GameObject resolutionText = ResolutionTextPrefab;
 			resolutionText.GetComponent<TMP_Text>().text = res.width + " x " + res.height;
