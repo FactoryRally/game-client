@@ -9,27 +9,27 @@ public class JoinLobbyMenu : MonoBehaviour {
 	public GameObject LobbyItem;
 	public GameObject LobbyContent;
 
-	public JoinLobbyController jlc;
+	public LobbyManager lm;
 
 	void Awake() {
-		jlc = GetComponent<JoinLobbyController>();
+		lm = GetComponent<LobbyManager>();
 	}
 
 	void Start() {
-
+		// Reload();
 	}
 
 	void Update() {
 
 	}
 
-
-	public void ReloadButton() {
-		jlc.RequestGames(
+	public void Reload() {
+		lm.RequestGames(
 			(response) => {
 				DeleteLobbyItems();
+				// Show Load
 				int i = 0;
-				foreach(UnityEngine.Object game in jlc.Games) {
+				foreach(Object game in lm.Games) {
 					GameObject lobbyItem = Instantiate(LobbyItem, LobbyContent.transform);
 					JoinLobbyItem jle = lobbyItem.GetComponent<JoinLobbyItem>();
 					jle.GameID = i; // Set ID 

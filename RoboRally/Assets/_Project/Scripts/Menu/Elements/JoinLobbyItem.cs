@@ -24,11 +24,7 @@ public class JoinLobbyItem : MonoBehaviour {
 	}
 
 	public void Update() {
-		// Update GUI all 5 sec
-		if(lastTime <= Time.time && GameID != 0) { 
-			lastTime = Time.time + waitTime;
-			UpdateGUI();
-		}
+
 	}
 
 	

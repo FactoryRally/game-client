@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _autoSaveEnabled: 1
   _cleanEmptyDirectoriesFeature: 1
-  _prepareOnPlaymode: 1
+  _prepareOnPlaymode: 0
   _checkForUpdates: 0
