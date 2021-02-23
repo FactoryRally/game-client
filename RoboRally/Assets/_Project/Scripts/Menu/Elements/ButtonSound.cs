@@ -1,35 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
+[RequireComponent(typeof(Button))]
 public class ButtonSound : MonoBehaviour {
+
 	public AudioSource source;
-	private AudioClip clip;
+	public AudioClip clip;
+	public float delay = 0;
+	private Button button;
 
 	bool isPress = false;
-	int wait = 0;
+	float wait = 0;
+
+
+	public void Awake() { 
+		button = GetComponent<Button>();
+		button.onClick.AddListener(() => PlaySound(delay));
+		if(source == null) {
+			GameObject gj = GameObject.FindGameObjectWithTag("AudioController");
+			if(gj) {
+				source = gj.GetComponent<AudioSource>();
+			}
+		}
+	}
 
 	void Update() {
 		if(clip == null) {
 			return;
 		}
-		if(wait <= 0) {
+		if(wait <= Time.time && wait != 0) {
+			wait = 0;
 			source.PlayOneShot(clip);
-			clip = null;
 			isPress = false;
 		}
-		wait--;
 	}
 
-	public void PlaySound(AudioClip clip) {
-		wait = 0;
+	public void PlaySound(float delay = 0) {
+		wait = Time.time + delay;
 		isPress = true;
-		this.clip = clip;
 	}
 
-	public void PlaySoundSelect(AudioClip clip) {
-		wait = 4;
-		if(!isPress)
-			this.clip = clip;
-	}
 }

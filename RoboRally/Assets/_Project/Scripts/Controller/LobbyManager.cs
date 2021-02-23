@@ -36,7 +36,7 @@ public class LobbyManager : MonoBehaviour {
 		if(af.finished && load) {
 			load = false;
 			foreach(string address in localAddresses) {
-				Debug.Log(address.ToString());
+
 			}
 		}
 	}
