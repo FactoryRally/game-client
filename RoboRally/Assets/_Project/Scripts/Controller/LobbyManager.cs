@@ -2,43 +2,61 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.Monetization;
 using UnityEngine.Networking;
-using Ping = System.Net.NetworkInformation.Ping;
 
 public class LobbyManager : MonoBehaviour {
 
-	public UnityEngine.Object[] Games;
-	private List<string> localAddresses = new List<string>();
-	private List<string> hostAddresses = new List<string>();
-	private bool load = true;
+	public List<string> localAddresses = new List<string>();
+	public List<string> hostAddresses = new List<string>();
+	public List<string> games = new List<string>();
+	public LobbyCallState state = LobbyCallState.NONE;
 	private int maxSubnet = 24;
-	AddressFinder af;
+	public AddressFinder af;
+
+	public void Awake() {
+		af = new AddressFinder(this);
+		GetGames(true);
+	}
 
 	public void Start() {
-		List<IPSegment> iPSegments = GetInterfaces(false);
-		af = new AddressFinder(this);
-		af.Scan(
-			iPSegments,
-			(addresses) => {
-				localAddresses = addresses;
-			}
-		);
+
 	}
 
 	public void Update() {
-		if(af.finished && load) {
-			load = false;
-			foreach(string address in localAddresses) {
-
-			}
+		if(state == LobbyCallState.SCANNED) {
+			List<string> addresses = new List<string>(localAddresses);
+			addresses.AddRange(hostAddresses);
+			RequestGames(addresses);
 		}
+	}
+
+	public void GetGames(bool reloadHosts = false) {
+		if(state == LobbyCallState.LOADING)
+			return;
+		this.games = new List<string>();
+		if(reloadHosts) {
+			GetLocalAddresses();
+		} else {
+			state = LobbyCallState.SCANNED;
+		}
+	}
+
+
+	public void GetLocalAddresses() {
+		state = LobbyCallState.SCANNING;
+		List<IPSegment> IPSegments = GetInterfaces(false);
+		af = new AddressFinder(this);
+		af.Scan(
+			IPSegments,
+			(addresses) => {
+				localAddresses = addresses;
+				state = LobbyCallState.SCANNED;
+			}
+		);
 	}
 
 	public List<IPSegment> GetInterfaces(bool showVPN) {
@@ -62,21 +80,39 @@ public class LobbyManager : MonoBehaviour {
 		return ipsList;
 	}
 
-	public void RequestGames(Action<string[]> callback) {
-		StartCoroutine(RequestGamesAsync(callback));
+	int instances = 0;
+	public void RequestGames(List<string> addresses) {
+		state = LobbyCallState.LOADING;
+		instances = addresses.Count;
+		foreach(string address in addresses) {
+			StartCoroutine(RequestGamesAsync(address));
+		}
 	}
-	public IEnumerator RequestGamesAsync(Action<string[]> callback) {
-		UnityWebRequest request = Http.CreateRequest("games", null);
+
+	public IEnumerator RequestGamesAsync(string address) {
+		List<string> games = new List<string>();
+		UnityWebRequest request = Http.CreateRequest(address, "games", null);
 		yield return request.SendWebRequest();
 		int[] gameIds = JsonConvert.DeserializeObject<int[]>(request.downloadHandler.text);
-		string[] games = new string[gameIds.Length];
-		for(int i = 0; i < gameIds.Length; i++) {
-			request = Http.CreateRequest("games/" + gameIds[i] + "/status", null);
-			yield return request.SendWebRequest();
-			if(request.responseCode == 200)
-				games[i] = request.downloadHandler.text;
-			Debug.Log(request.downloadHandler.text);
+		if(gameIds == null) {
+
+		} else {
+			for(int i = 0; i < gameIds.Length; i++) {
+				request = Http.CreateRequest(address, "games/" + gameIds[i] + "/status", null);
+				yield return request.SendWebRequest();
+				if(request.responseCode == 200)
+					games.Add(request.downloadHandler.text);
+				Debug.Log(i + " - " + address + ": " + request.downloadHandler.text);
+			}
 		}
-		callback(games);
+		this.games.AddRange(games);
+		instances--;
+		if(state == LobbyCallState.LOADING && instances == 0) {
+			if(this.games.Count == 0) {
+				state = LobbyCallState.NO_GAMES_FOUND;
+			} else {
+				state = LobbyCallState.LOADED;
+			}
+		}
 	}
 }

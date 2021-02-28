@@ -21,7 +21,15 @@ public class MenuSwitcher : MonoBehaviour {
 
 
 	public void Awake() {
+		MainMenu.SetActive(true);
+		JoinMenu.SetActive(false);
+		HostMenu.SetActive(false);
+		CreateMenu.SetActive(false);
+		RuleBookMenu.SetActive(false);
+		SettingsMenu.SetActive(false);
 
+		MenuStack = new List<GameObject>();
+		MenuStack.Add(MainMenu);
 	}
 
 	public void Start() {
@@ -32,6 +40,10 @@ public class MenuSwitcher : MonoBehaviour {
 		if(Input.GetKey(KeyCode.Escape)) {
 			Back();
 		}
+	}
+
+	void OnApplicationQuit() {
+		Http.StopServer();
 	}
 
 

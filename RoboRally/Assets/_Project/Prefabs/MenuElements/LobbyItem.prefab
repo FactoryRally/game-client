@@ -397,6 +397,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 0}
+  clip: {fileID: 0}
+  delay: 0
 --- !u!114 &6541541189040787056
 MonoBehaviour:
   m_ObjectHideFlags: 0

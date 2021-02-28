@@ -51,8 +51,14 @@ public class Http {
 		}
 		response(uwr);
 	}
-	public static UnityWebRequest CreateRequest(string path, string[] parameter) {
-		UnityWebRequest uwr = UnityWebRequest.Get(Http.address + path + GetParameters(parameter));
+
+	public static UnityWebRequest CreateRequest(string address, string path, string[] parameter) {
+		UnityWebRequest uwr;
+		if(address == null) {
+			uwr = UnityWebRequest.Get(Http.address + path + GetParameters(parameter));
+		} else {
+			uwr = UnityWebRequest.Get("http://" + address + ":5050" + "/v1/" + path + GetParameters(parameter));
+		}
 		uwr.method = UnityWebRequest.kHttpVerbGET;
 		uwr.SetRequestHeader("Content-Type", "application/json");
 		uwr.SetRequestHeader("Accept", "application/json");

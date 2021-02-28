@@ -1,14 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MenuParent : MonoBehaviour {
 
-	void Start() {
+	public void Awake() {
 
 	}
 
-	void Update() {
+	public void Start() {
 
 	}
+
+	public void Update() {
+
+	}
+
+
 }

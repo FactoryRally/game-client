@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - AudioController
+  - LobbyController
   layers:
   - Default
   - TransparentFX
