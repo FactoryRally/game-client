@@ -25,51 +25,42 @@ using System.ComponentModel.DataAnnotations;
 namespace Tgm.Roborally.Api.Model
 {
     /// <summary>
-    /// A queued action. Actions are executed in their adding sequence which is represented by their index
+    /// The oportunity to perfom an action / event
     /// </summary>
     [DataContract]
-    public partial class Action :  IEquatable<Action>, IValidatableObject
+    public partial class EntityEventOportunity :  IEquatable<EntityEventOportunity>, IValidatableObject
     {
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
-        public ActionType? Type { get; set; }
+        public EntityActionType? Type { get; set; }
         /// <summary>
-        /// Initializes a new instance of the <see cref="Action" /> class.
+        /// Initializes a new instance of the <see cref="EntityEventOportunity" /> class.
         /// </summary>
-        /// <param name="index">The queue index of the action.</param>
         /// <param name="type">type.</param>
-        /// <param name="executed">true if the action was allready executed.</param>
-        /// <param name="requestor">The index of the player this instruction came from.</param>
-        public Action(int index = default(int), ActionType? type = default(ActionType?), bool executed = default(bool), int requestor = default(int))
+        /// <param name="timeLeft">The time in ms left to do this action.</param>
+        /// <param name="endTime">The in most languages avinable system time in MS as of which the action cant be committed any more.</param>
+        public EntityEventOportunity(EntityActionType? type = default(EntityActionType?), long timeLeft = default(long), long endTime = default(long))
         {
-            this.Index = index;
             this.Type = type;
-            this.Executed = executed;
-            this.Requestor = requestor;
+            this.TimeLeft = timeLeft;
+            this.EndTime = endTime;
         }
         
         /// <summary>
-        /// The queue index of the action
+        /// The time in ms left to do this action
         /// </summary>
-        /// <value>The queue index of the action</value>
-        [DataMember(Name="index", EmitDefaultValue=false)]
-        public int Index { get; set; }
+        /// <value>The time in ms left to do this action</value>
+        [DataMember(Name="time-left", EmitDefaultValue=false)]
+        public long TimeLeft { get; set; }
 
         /// <summary>
-        /// true if the action was allready executed
+        /// The in most languages avinable system time in MS as of which the action cant be committed any more
         /// </summary>
-        /// <value>true if the action was allready executed</value>
-        [DataMember(Name="executed", EmitDefaultValue=false)]
-        public bool Executed { get; set; }
-
-        /// <summary>
-        /// The index of the player this instruction came from
-        /// </summary>
-        /// <value>The index of the player this instruction came from</value>
-        [DataMember(Name="requestor", EmitDefaultValue=false)]
-        public int Requestor { get; set; }
+        /// <value>The in most languages avinable system time in MS as of which the action cant be committed any more</value>
+        [DataMember(Name="end-time", EmitDefaultValue=false)]
+        public long EndTime { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -78,11 +69,10 @@ namespace Tgm.Roborally.Api.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Action {\n");
-            sb.Append("  Index: ").Append(Index).Append("\n");
+            sb.Append("class EntityEventOportunity {\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Executed: ").Append(Executed).Append("\n");
-            sb.Append("  Requestor: ").Append(Requestor).Append("\n");
+            sb.Append("  TimeLeft: ").Append(TimeLeft).Append("\n");
+            sb.Append("  EndTime: ").Append(EndTime).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -103,35 +93,31 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as Action);
+            return this.Equals(input as EntityEventOportunity);
         }
 
         /// <summary>
-        /// Returns true if Action instances are equal
+        /// Returns true if EntityEventOportunity instances are equal
         /// </summary>
-        /// <param name="input">Instance of Action to be compared</param>
+        /// <param name="input">Instance of EntityEventOportunity to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(Action input)
+        public bool Equals(EntityEventOportunity input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.Index == input.Index ||
-                    this.Index.Equals(input.Index)
-                ) && 
-                (
                     this.Type == input.Type ||
                     this.Type.Equals(input.Type)
                 ) && 
                 (
-                    this.Executed == input.Executed ||
-                    this.Executed.Equals(input.Executed)
+                    this.TimeLeft == input.TimeLeft ||
+                    this.TimeLeft.Equals(input.TimeLeft)
                 ) && 
                 (
-                    this.Requestor == input.Requestor ||
-                    this.Requestor.Equals(input.Requestor)
+                    this.EndTime == input.EndTime ||
+                    this.EndTime.Equals(input.EndTime)
                 );
         }
 
@@ -144,10 +130,9 @@ namespace Tgm.Roborally.Api.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                hashCode = hashCode * 59 + this.Index.GetHashCode();
                 hashCode = hashCode * 59 + this.Type.GetHashCode();
-                hashCode = hashCode * 59 + this.Executed.GetHashCode();
-                hashCode = hashCode * 59 + this.Requestor.GetHashCode();
+                hashCode = hashCode * 59 + this.TimeLeft.GetHashCode();
+                hashCode = hashCode * 59 + this.EndTime.GetHashCode();
                 return hashCode;
             }
         }
@@ -159,6 +144,18 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
+            // TimeLeft (long) minimum
+            if(this.TimeLeft < (long)1)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for TimeLeft, must be a value greater than or equal to 1.", new [] { "TimeLeft" });
+            }
+
+            // EndTime (long) minimum
+            if(this.EndTime < (long)0)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for EndTime, must be a value greater than or equal to 0.", new [] { "EndTime" });
+            }
+
             yield break;
         }
     }

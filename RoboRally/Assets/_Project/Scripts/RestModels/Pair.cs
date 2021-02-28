@@ -25,51 +25,41 @@ using System.ComponentModel.DataAnnotations;
 namespace Tgm.Roborally.Api.Model
 {
     /// <summary>
-    /// A queued action. Actions are executed in their adding sequence which is represented by their index
+    /// A named value. A pair of an index and value. (Part of a map)
     /// </summary>
     [DataContract]
-    public partial class Action :  IEquatable<Action>, IValidatableObject
+    public partial class Pair :  IEquatable<Pair>, IValidatableObject
     {
         /// <summary>
-        /// Gets or Sets Type
+        /// Initializes a new instance of the <see cref="Pair" /> class.
         /// </summary>
-        [DataMember(Name="type", EmitDefaultValue=false)]
-        public ActionType? Type { get; set; }
+        [JsonConstructorAttribute]
+        protected Pair() { }
         /// <summary>
-        /// Initializes a new instance of the <see cref="Action" /> class.
+        /// Initializes a new instance of the <see cref="Pair" /> class.
         /// </summary>
-        /// <param name="index">The queue index of the action.</param>
-        /// <param name="type">type.</param>
-        /// <param name="executed">true if the action was allready executed.</param>
-        /// <param name="requestor">The index of the player this instruction came from.</param>
-        public Action(int index = default(int), ActionType? type = default(ActionType?), bool executed = default(bool), int requestor = default(int))
+        /// <param name="name">The name the value is bound to (required).</param>
+        /// <param name="value">The value behind the name. Can be null.</param>
+        public Pair(string name = default(string), int value = default(int))
         {
-            this.Index = index;
-            this.Type = type;
-            this.Executed = executed;
-            this.Requestor = requestor;
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for Pair and cannot be null");
+            this.Value = value;
         }
         
         /// <summary>
-        /// The queue index of the action
+        /// The name the value is bound to
         /// </summary>
-        /// <value>The queue index of the action</value>
-        [DataMember(Name="index", EmitDefaultValue=false)]
-        public int Index { get; set; }
+        /// <value>The name the value is bound to</value>
+        [DataMember(Name="name", EmitDefaultValue=false)]
+        public string Name { get; set; }
 
         /// <summary>
-        /// true if the action was allready executed
+        /// The value behind the name. Can be null
         /// </summary>
-        /// <value>true if the action was allready executed</value>
-        [DataMember(Name="executed", EmitDefaultValue=false)]
-        public bool Executed { get; set; }
-
-        /// <summary>
-        /// The index of the player this instruction came from
-        /// </summary>
-        /// <value>The index of the player this instruction came from</value>
-        [DataMember(Name="requestor", EmitDefaultValue=false)]
-        public int Requestor { get; set; }
+        /// <value>The value behind the name. Can be null</value>
+        [DataMember(Name="value", EmitDefaultValue=false)]
+        public int Value { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -78,11 +68,9 @@ namespace Tgm.Roborally.Api.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Action {\n");
-            sb.Append("  Index: ").Append(Index).Append("\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Executed: ").Append(Executed).Append("\n");
-            sb.Append("  Requestor: ").Append(Requestor).Append("\n");
+            sb.Append("class Pair {\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Value: ").Append(Value).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -103,35 +91,28 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as Action);
+            return this.Equals(input as Pair);
         }
 
         /// <summary>
-        /// Returns true if Action instances are equal
+        /// Returns true if Pair instances are equal
         /// </summary>
-        /// <param name="input">Instance of Action to be compared</param>
+        /// <param name="input">Instance of Pair to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(Action input)
+        public bool Equals(Pair input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.Index == input.Index ||
-                    this.Index.Equals(input.Index)
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
                 ) && 
                 (
-                    this.Type == input.Type ||
-                    this.Type.Equals(input.Type)
-                ) && 
-                (
-                    this.Executed == input.Executed ||
-                    this.Executed.Equals(input.Executed)
-                ) && 
-                (
-                    this.Requestor == input.Requestor ||
-                    this.Requestor.Equals(input.Requestor)
+                    this.Value == input.Value ||
+                    this.Value.Equals(input.Value)
                 );
         }
 
@@ -144,10 +125,9 @@ namespace Tgm.Roborally.Api.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                hashCode = hashCode * 59 + this.Index.GetHashCode();
-                hashCode = hashCode * 59 + this.Type.GetHashCode();
-                hashCode = hashCode * 59 + this.Executed.GetHashCode();
-                hashCode = hashCode * 59 + this.Requestor.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                hashCode = hashCode * 59 + this.Value.GetHashCode();
                 return hashCode;
             }
         }
@@ -159,6 +139,12 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
+            // Name (string) minLength
+            if(this.Name != null && this.Name.Length < 1)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Name, length must be greater than 1.", new [] { "Name" });
+            }
+
             yield break;
         }
     }

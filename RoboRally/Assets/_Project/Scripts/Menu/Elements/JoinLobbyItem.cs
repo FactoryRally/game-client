@@ -9,6 +9,7 @@ public class JoinLobbyItem : MonoBehaviour {
 	public int GameID = 0;
 	public bool IsLocked = false;
 
+	public Button JoinButton;
 	public Image LockIcon;
 	public TMP_Text GameNameText;
 	public TMP_Text PlayersAmountText;
@@ -16,11 +17,8 @@ public class JoinLobbyItem : MonoBehaviour {
 	public Sprite LockedImage;
 	public Sprite UnlockedImage;
 
-	private float lastTime = 0;
-	private float waitTime = 5;
-
 	public void Start() {
-		
+
 	}
 
 	public void Update() {
@@ -29,13 +27,17 @@ public class JoinLobbyItem : MonoBehaviour {
 
 	
 	public void UpdateGUI() {
-		GameNameText.text = ""; // TODO: Get GameName from the game
-		PlayersAmountText.text = ""; // TODO: Get maximum and current playerammount from the game
 		if(IsLocked) {
 			LockIcon.sprite = LockedImage;
 		} else {
 			LockIcon.sprite = UnlockedImage;
 		}
+	}
+
+	public void SetOnClick(LobbyManager manager) {
+		JoinButton.onClick.AddListener(() => {
+			manager.JoinLobby(GameID);
+		});
 	}
 
 }

@@ -25,51 +25,41 @@ using System.ComponentModel.DataAnnotations;
 namespace Tgm.Roborally.Api.Model
 {
     /// <summary>
-    /// A queued action. Actions are executed in their adding sequence which is represented by their index
+    /// All the data you need as you joined a game.
     /// </summary>
     [DataContract]
-    public partial class Action :  IEquatable<Action>, IValidatableObject
+    public partial class JoinResponse :  IEquatable<JoinResponse>, IValidatableObject
     {
         /// <summary>
-        /// Gets or Sets Type
+        /// Initializes a new instance of the <see cref="JoinResponse" /> class.
         /// </summary>
-        [DataMember(Name="type", EmitDefaultValue=false)]
-        public ActionType? Type { get; set; }
+        [JsonConstructorAttribute]
+        protected JoinResponse() { }
         /// <summary>
-        /// Initializes a new instance of the <see cref="Action" /> class.
+        /// Initializes a new instance of the <see cref="JoinResponse" /> class.
         /// </summary>
-        /// <param name="index">The queue index of the action.</param>
-        /// <param name="type">type.</param>
-        /// <param name="executed">true if the action was allready executed.</param>
-        /// <param name="requestor">The index of the player this instruction came from.</param>
-        public Action(int index = default(int), ActionType? type = default(ActionType?), bool executed = default(bool), int requestor = default(int))
+        /// <param name="id">This id uniquely identifys the player (in a game).   **Not** to be confused with the &#x60;uid&#x60; which is used for authentication (required).</param>
+        /// <param name="pat">The uid is the key for the joined player. You need this key for authentication (required).</param>
+        public JoinResponse(int id = default(int), string pat = default(string))
         {
-            this.Index = index;
-            this.Type = type;
-            this.Executed = executed;
-            this.Requestor = requestor;
+            this.Id = id;
+            // to ensure "pat" is required (not null)
+            this.Pat = pat ?? throw new ArgumentNullException("pat is a required property for JoinResponse and cannot be null");
         }
         
         /// <summary>
-        /// The queue index of the action
+        /// This id uniquely identifys the player (in a game).   **Not** to be confused with the &#x60;uid&#x60; which is used for authentication
         /// </summary>
-        /// <value>The queue index of the action</value>
-        [DataMember(Name="index", EmitDefaultValue=false)]
-        public int Index { get; set; }
+        /// <value>This id uniquely identifys the player (in a game).   **Not** to be confused with the &#x60;uid&#x60; which is used for authentication</value>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public int Id { get; set; }
 
         /// <summary>
-        /// true if the action was allready executed
+        /// The uid is the key for the joined player. You need this key for authentication
         /// </summary>
-        /// <value>true if the action was allready executed</value>
-        [DataMember(Name="executed", EmitDefaultValue=false)]
-        public bool Executed { get; set; }
-
-        /// <summary>
-        /// The index of the player this instruction came from
-        /// </summary>
-        /// <value>The index of the player this instruction came from</value>
-        [DataMember(Name="requestor", EmitDefaultValue=false)]
-        public int Requestor { get; set; }
+        /// <value>The uid is the key for the joined player. You need this key for authentication</value>
+        [DataMember(Name="pat", EmitDefaultValue=false)]
+        public string Pat { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -78,11 +68,9 @@ namespace Tgm.Roborally.Api.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Action {\n");
-            sb.Append("  Index: ").Append(Index).Append("\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Executed: ").Append(Executed).Append("\n");
-            sb.Append("  Requestor: ").Append(Requestor).Append("\n");
+            sb.Append("class JoinResponse {\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  Pat: ").Append(Pat).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -103,35 +91,28 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as Action);
+            return this.Equals(input as JoinResponse);
         }
 
         /// <summary>
-        /// Returns true if Action instances are equal
+        /// Returns true if JoinResponse instances are equal
         /// </summary>
-        /// <param name="input">Instance of Action to be compared</param>
+        /// <param name="input">Instance of JoinResponse to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(Action input)
+        public bool Equals(JoinResponse input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.Index == input.Index ||
-                    this.Index.Equals(input.Index)
+                    this.Id == input.Id ||
+                    this.Id.Equals(input.Id)
                 ) && 
                 (
-                    this.Type == input.Type ||
-                    this.Type.Equals(input.Type)
-                ) && 
-                (
-                    this.Executed == input.Executed ||
-                    this.Executed.Equals(input.Executed)
-                ) && 
-                (
-                    this.Requestor == input.Requestor ||
-                    this.Requestor.Equals(input.Requestor)
+                    this.Pat == input.Pat ||
+                    (this.Pat != null &&
+                    this.Pat.Equals(input.Pat))
                 );
         }
 
@@ -144,10 +125,9 @@ namespace Tgm.Roborally.Api.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                hashCode = hashCode * 59 + this.Index.GetHashCode();
-                hashCode = hashCode * 59 + this.Type.GetHashCode();
-                hashCode = hashCode * 59 + this.Executed.GetHashCode();
-                hashCode = hashCode * 59 + this.Requestor.GetHashCode();
+                hashCode = hashCode * 59 + this.Id.GetHashCode();
+                if (this.Pat != null)
+                    hashCode = hashCode * 59 + this.Pat.GetHashCode();
                 return hashCode;
             }
         }
@@ -159,6 +139,18 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
+            // Id (int) maximum
+            if(this.Id > (int)8)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Id, must be a value less than or equal to 8.", new [] { "Id" });
+            }
+
+            // Id (int) minimum
+            if(this.Id < (int)0)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Id, must be a value greater than or equal to 0.", new [] { "Id" });
+            }
+
             yield break;
         }
     }

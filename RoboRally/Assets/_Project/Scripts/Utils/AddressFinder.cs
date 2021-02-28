@@ -36,7 +36,6 @@ public class AddressFinder {
 					myPing = new Ping();
 					instances++;
 					reply = myPing.Send(ip, 250);
-
 					if(reply.Status == IPStatus.Success) {
 						addresses.Add(ip);
 					}

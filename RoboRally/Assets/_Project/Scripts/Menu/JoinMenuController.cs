@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Tgm.Roborally.Api.Model;
+using UnityEngine;
 
 public class JoinMenuController : MonoBehaviour {
 
@@ -8,6 +10,8 @@ public class JoinMenuController : MonoBehaviour {
 	public GameObject MessageBox;
 
 	public LobbyManager lm;
+
+	private List<JoinLobbyItem> items = new List<JoinLobbyItem>();
 
 
 	public void Awake() {
@@ -19,33 +23,39 @@ public class JoinMenuController : MonoBehaviour {
 	}
 
 	public void Update() {
-		if(lm.state == LobbyCallState.SCANNED) {
+		if(lm.state != LobbyCallState.LOADED && lm.state != LobbyCallState.NONE) {
 			DeleteLobbyItems();
 		}
-		LoadBox.SetActive(lm.state == LobbyCallState.LOADING);
+		LoadBox.SetActive(lm.state == LobbyCallState.LOADING || lm.state == LobbyCallState.SCANNING);
 		MessageBox.SetActive(lm.state == LobbyCallState.NO_GAMES_FOUND);
 		if(lm.state == LobbyCallState.LOADED) {
-			// Reload();
+			Reload();
 			lm.state = LobbyCallState.NONE;
 		}
 	}
 
 
 	public void Reload() {
-		int i = 0;
-		foreach(string game in lm.games) {
+		foreach((GameInfo game, int id) game in lm.games) {
 			GameObject lobbyItem = Instantiate(LobbyItem, LobbyContent.transform);
 			JoinLobbyItem jle = lobbyItem.GetComponent<JoinLobbyItem>();
-			jle.GameID = i; // Set ID 
-			jle.IsLocked = false; // Set if Locked
-			i++;
+			items.Add(jle);
+			if(jle == null)
+				continue;
+			jle.GameID = game.id;
+			jle.IsLocked = false;
+			jle.GameNameText.text = game.game.Name;
+			jle.PlayersAmountText.text = game.game.CurrentPlayers + "/" + game.game.MaxPlayers;
+			jle.SetOnClick(lm);
+			jle.UpdateGUI();
 		}
 	}
 
 	private void DeleteLobbyItems() {
-		for(int childIndex = 0; childIndex < LobbyContent.transform.childCount; childIndex++) {
-			Destroy(LobbyContent.transform.GetChild(childIndex).gameObject);
+		foreach(JoinLobbyItem item in items) {
+			Destroy(item.gameObject);
 		}
+		items.Clear();
 	}
 
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
+using Tgm.Roborally.Api.Model;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -12,7 +13,8 @@ public class LobbyManager : MonoBehaviour {
 
 	public List<string> localAddresses = new List<string>();
 	public List<string> hostAddresses = new List<string>();
-	public List<string> games = new List<string>();
+	public List<(GameInfo game, int id)> games = new List<(GameInfo game, int id)>();
+
 	public LobbyCallState state = LobbyCallState.NONE;
 	private int maxSubnet = 24;
 	public AddressFinder af;
@@ -37,14 +39,13 @@ public class LobbyManager : MonoBehaviour {
 	public void GetGames(bool reloadHosts = false) {
 		if(state == LobbyCallState.LOADING)
 			return;
-		this.games = new List<string>();
+		this.games = new List<(GameInfo game, int id)>();
 		if(reloadHosts) {
 			GetLocalAddresses();
 		} else {
 			state = LobbyCallState.SCANNED;
 		}
 	}
-
 
 	public void GetLocalAddresses() {
 		state = LobbyCallState.SCANNING;
@@ -100,12 +101,13 @@ public class LobbyManager : MonoBehaviour {
 			for(int i = 0; i < gameIds.Length; i++) {
 				request = Http.CreateRequest(address, "games/" + gameIds[i] + "/status", null);
 				yield return request.SendWebRequest();
-				if(request.responseCode == 200)
-					games.Add(request.downloadHandler.text);
-				Debug.Log(i + " - " + address + ": " + request.downloadHandler.text);
+				if(request.responseCode == 200) {
+					(GameInfo, int) t = (JsonConvert.DeserializeObject<GameInfo>(request.downloadHandler.text), gameIds[i]);
+					this.games.Add(t);
+				}
+
 			}
 		}
-		this.games.AddRange(games);
 		instances--;
 		if(state == LobbyCallState.LOADING && instances == 0) {
 			if(this.games.Count == 0) {
@@ -114,5 +116,9 @@ public class LobbyManager : MonoBehaviour {
 				state = LobbyCallState.LOADED;
 			}
 		}
+	}
+
+	public void JoinLobby(int gameID) {
+
 	}
 }

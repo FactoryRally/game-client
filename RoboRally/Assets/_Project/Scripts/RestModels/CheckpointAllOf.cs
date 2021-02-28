@@ -25,51 +25,35 @@ using System.ComponentModel.DataAnnotations;
 namespace Tgm.Roborally.Api.Model
 {
     /// <summary>
-    /// A queued action. Actions are executed in their adding sequence which is represented by their index
+    /// CheckpointAllOf
     /// </summary>
     [DataContract]
-    public partial class Action :  IEquatable<Action>, IValidatableObject
+    public partial class CheckpointAllOf :  IEquatable<CheckpointAllOf>, IValidatableObject
     {
         /// <summary>
-        /// Gets or Sets Type
+        /// Initializes a new instance of the <see cref="CheckpointAllOf" /> class.
         /// </summary>
-        [DataMember(Name="type", EmitDefaultValue=false)]
-        public ActionType? Type { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Action" /> class.
-        /// </summary>
-        /// <param name="index">The queue index of the action.</param>
-        /// <param name="type">type.</param>
-        /// <param name="executed">true if the action was allready executed.</param>
-        /// <param name="requestor">The index of the player this instruction came from.</param>
-        public Action(int index = default(int), ActionType? type = default(ActionType?), bool executed = default(bool), int requestor = default(int))
+        /// <param name="number">The number of the checkpoint defining the order they need to be called in.</param>
+        /// <param name="checkedBy">The entities (robots) which allready were at this point.</param>
+        public CheckpointAllOf(int number = default(int), List<int> checkedBy = default(List<int>))
         {
-            this.Index = index;
-            this.Type = type;
-            this.Executed = executed;
-            this.Requestor = requestor;
+            this.Number = number;
+            this.CheckedBy = checkedBy;
         }
         
         /// <summary>
-        /// The queue index of the action
+        /// The number of the checkpoint defining the order they need to be called in
         /// </summary>
-        /// <value>The queue index of the action</value>
-        [DataMember(Name="index", EmitDefaultValue=false)]
-        public int Index { get; set; }
+        /// <value>The number of the checkpoint defining the order they need to be called in</value>
+        [DataMember(Name="number", EmitDefaultValue=false)]
+        public int Number { get; set; }
 
         /// <summary>
-        /// true if the action was allready executed
+        /// The entities (robots) which allready were at this point
         /// </summary>
-        /// <value>true if the action was allready executed</value>
-        [DataMember(Name="executed", EmitDefaultValue=false)]
-        public bool Executed { get; set; }
-
-        /// <summary>
-        /// The index of the player this instruction came from
-        /// </summary>
-        /// <value>The index of the player this instruction came from</value>
-        [DataMember(Name="requestor", EmitDefaultValue=false)]
-        public int Requestor { get; set; }
+        /// <value>The entities (robots) which allready were at this point</value>
+        [DataMember(Name="checked-by", EmitDefaultValue=false)]
+        public List<int> CheckedBy { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -78,11 +62,9 @@ namespace Tgm.Roborally.Api.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Action {\n");
-            sb.Append("  Index: ").Append(Index).Append("\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Executed: ").Append(Executed).Append("\n");
-            sb.Append("  Requestor: ").Append(Requestor).Append("\n");
+            sb.Append("class CheckpointAllOf {\n");
+            sb.Append("  Number: ").Append(Number).Append("\n");
+            sb.Append("  CheckedBy: ").Append(CheckedBy).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -103,35 +85,29 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as Action);
+            return this.Equals(input as CheckpointAllOf);
         }
 
         /// <summary>
-        /// Returns true if Action instances are equal
+        /// Returns true if CheckpointAllOf instances are equal
         /// </summary>
-        /// <param name="input">Instance of Action to be compared</param>
+        /// <param name="input">Instance of CheckpointAllOf to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(Action input)
+        public bool Equals(CheckpointAllOf input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.Index == input.Index ||
-                    this.Index.Equals(input.Index)
+                    this.Number == input.Number ||
+                    this.Number.Equals(input.Number)
                 ) && 
                 (
-                    this.Type == input.Type ||
-                    this.Type.Equals(input.Type)
-                ) && 
-                (
-                    this.Executed == input.Executed ||
-                    this.Executed.Equals(input.Executed)
-                ) && 
-                (
-                    this.Requestor == input.Requestor ||
-                    this.Requestor.Equals(input.Requestor)
+                    this.CheckedBy == input.CheckedBy ||
+                    this.CheckedBy != null &&
+                    input.CheckedBy != null &&
+                    this.CheckedBy.SequenceEqual(input.CheckedBy)
                 );
         }
 
@@ -144,10 +120,9 @@ namespace Tgm.Roborally.Api.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                hashCode = hashCode * 59 + this.Index.GetHashCode();
-                hashCode = hashCode * 59 + this.Type.GetHashCode();
-                hashCode = hashCode * 59 + this.Executed.GetHashCode();
-                hashCode = hashCode * 59 + this.Requestor.GetHashCode();
+                hashCode = hashCode * 59 + this.Number.GetHashCode();
+                if (this.CheckedBy != null)
+                    hashCode = hashCode * 59 + this.CheckedBy.GetHashCode();
                 return hashCode;
             }
         }
@@ -159,6 +134,12 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
+            // Number (int) minimum
+            if(this.Number < (int)0)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Number, must be a value greater than or equal to 0.", new [] { "Number" });
+            }
+
             yield break;
         }
     }

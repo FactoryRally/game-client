@@ -25,51 +25,33 @@ using System.ComponentModel.DataAnnotations;
 namespace Tgm.Roborally.Api.Model
 {
     /// <summary>
-    /// A queued action. Actions are executed in their adding sequence which is represented by their index
+    /// The map including the tiles
     /// </summary>
     [DataContract]
-    public partial class Action :  IEquatable<Action>, IValidatableObject
+    public partial class Map :  IEquatable<Map>, IValidatableObject
     {
         /// <summary>
-        /// Gets or Sets Type
+        /// Initializes a new instance of the <see cref="Map" /> class.
         /// </summary>
-        [DataMember(Name="type", EmitDefaultValue=false)]
-        public ActionType? Type { get; set; }
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Action" /> class.
-        /// </summary>
-        /// <param name="index">The queue index of the action.</param>
-        /// <param name="type">type.</param>
-        /// <param name="executed">true if the action was allready executed.</param>
-        /// <param name="requestor">The index of the player this instruction came from.</param>
-        public Action(int index = default(int), ActionType? type = default(ActionType?), bool executed = default(bool), int requestor = default(int))
+        /// <param name="info">info.</param>
+        /// <param name="rows">rows.</param>
+        public Map(MapInfo info = default(MapInfo), List<List<Tile>> rows = default(List<List<Tile>>))
         {
-            this.Index = index;
-            this.Type = type;
-            this.Executed = executed;
-            this.Requestor = requestor;
+            this.Info = info;
+            this.Rows = rows;
         }
         
         /// <summary>
-        /// The queue index of the action
+        /// Gets or Sets Info
         /// </summary>
-        /// <value>The queue index of the action</value>
-        [DataMember(Name="index", EmitDefaultValue=false)]
-        public int Index { get; set; }
+        [DataMember(Name="info", EmitDefaultValue=false)]
+        public MapInfo Info { get; set; }
 
         /// <summary>
-        /// true if the action was allready executed
+        /// Gets or Sets Rows
         /// </summary>
-        /// <value>true if the action was allready executed</value>
-        [DataMember(Name="executed", EmitDefaultValue=false)]
-        public bool Executed { get; set; }
-
-        /// <summary>
-        /// The index of the player this instruction came from
-        /// </summary>
-        /// <value>The index of the player this instruction came from</value>
-        [DataMember(Name="requestor", EmitDefaultValue=false)]
-        public int Requestor { get; set; }
+        [DataMember(Name="rows", EmitDefaultValue=false)]
+        public List<List<Tile>> Rows { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -78,11 +60,9 @@ namespace Tgm.Roborally.Api.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Action {\n");
-            sb.Append("  Index: ").Append(Index).Append("\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Executed: ").Append(Executed).Append("\n");
-            sb.Append("  Requestor: ").Append(Requestor).Append("\n");
+            sb.Append("class Map {\n");
+            sb.Append("  Info: ").Append(Info).Append("\n");
+            sb.Append("  Rows: ").Append(Rows).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -103,35 +83,30 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as Action);
+            return this.Equals(input as Map);
         }
 
         /// <summary>
-        /// Returns true if Action instances are equal
+        /// Returns true if Map instances are equal
         /// </summary>
-        /// <param name="input">Instance of Action to be compared</param>
+        /// <param name="input">Instance of Map to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(Action input)
+        public bool Equals(Map input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.Index == input.Index ||
-                    this.Index.Equals(input.Index)
+                    this.Info == input.Info ||
+                    (this.Info != null &&
+                    this.Info.Equals(input.Info))
                 ) && 
                 (
-                    this.Type == input.Type ||
-                    this.Type.Equals(input.Type)
-                ) && 
-                (
-                    this.Executed == input.Executed ||
-                    this.Executed.Equals(input.Executed)
-                ) && 
-                (
-                    this.Requestor == input.Requestor ||
-                    this.Requestor.Equals(input.Requestor)
+                    this.Rows == input.Rows ||
+                    this.Rows != null &&
+                    input.Rows != null &&
+                    this.Rows.SequenceEqual(input.Rows)
                 );
         }
 
@@ -144,10 +119,10 @@ namespace Tgm.Roborally.Api.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                hashCode = hashCode * 59 + this.Index.GetHashCode();
-                hashCode = hashCode * 59 + this.Type.GetHashCode();
-                hashCode = hashCode * 59 + this.Executed.GetHashCode();
-                hashCode = hashCode * 59 + this.Requestor.GetHashCode();
+                if (this.Info != null)
+                    hashCode = hashCode * 59 + this.Info.GetHashCode();
+                if (this.Rows != null)
+                    hashCode = hashCode * 59 + this.Rows.GetHashCode();
                 return hashCode;
             }
         }

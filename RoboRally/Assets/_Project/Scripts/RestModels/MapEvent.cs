@@ -25,51 +25,32 @@ using System.ComponentModel.DataAnnotations;
 namespace Tgm.Roborally.Api.Model
 {
     /// <summary>
-    /// A queued action. Actions are executed in their adding sequence which is represented by their index
+    /// Events that takes place with the active components of the map
     /// </summary>
     [DataContract]
-    public partial class Action :  IEquatable<Action>, IValidatableObject
+    public partial class MapEvent :  IEquatable<MapEvent>, IValidatableObject
     {
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
-        public ActionType? Type { get; set; }
+        public MapEventType? Type { get; set; }
         /// <summary>
-        /// Initializes a new instance of the <see cref="Action" /> class.
+        /// Initializes a new instance of the <see cref="MapEvent" /> class.
         /// </summary>
-        /// <param name="index">The queue index of the action.</param>
         /// <param name="type">type.</param>
-        /// <param name="executed">true if the action was allready executed.</param>
-        /// <param name="requestor">The index of the player this instruction came from.</param>
-        public Action(int index = default(int), ActionType? type = default(ActionType?), bool executed = default(bool), int requestor = default(int))
+        /// <param name="position">position.</param>
+        public MapEvent(MapEventType? type = default(MapEventType?), Position position = default(Position))
         {
-            this.Index = index;
             this.Type = type;
-            this.Executed = executed;
-            this.Requestor = requestor;
+            this.Position = position;
         }
         
         /// <summary>
-        /// The queue index of the action
+        /// Gets or Sets Position
         /// </summary>
-        /// <value>The queue index of the action</value>
-        [DataMember(Name="index", EmitDefaultValue=false)]
-        public int Index { get; set; }
-
-        /// <summary>
-        /// true if the action was allready executed
-        /// </summary>
-        /// <value>true if the action was allready executed</value>
-        [DataMember(Name="executed", EmitDefaultValue=false)]
-        public bool Executed { get; set; }
-
-        /// <summary>
-        /// The index of the player this instruction came from
-        /// </summary>
-        /// <value>The index of the player this instruction came from</value>
-        [DataMember(Name="requestor", EmitDefaultValue=false)]
-        public int Requestor { get; set; }
+        [DataMember(Name="position", EmitDefaultValue=false)]
+        public Position Position { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -78,11 +59,9 @@ namespace Tgm.Roborally.Api.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Action {\n");
-            sb.Append("  Index: ").Append(Index).Append("\n");
+            sb.Append("class MapEvent {\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Executed: ").Append(Executed).Append("\n");
-            sb.Append("  Requestor: ").Append(Requestor).Append("\n");
+            sb.Append("  Position: ").Append(Position).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -103,35 +82,28 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as Action);
+            return this.Equals(input as MapEvent);
         }
 
         /// <summary>
-        /// Returns true if Action instances are equal
+        /// Returns true if MapEvent instances are equal
         /// </summary>
-        /// <param name="input">Instance of Action to be compared</param>
+        /// <param name="input">Instance of MapEvent to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(Action input)
+        public bool Equals(MapEvent input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.Index == input.Index ||
-                    this.Index.Equals(input.Index)
-                ) && 
-                (
                     this.Type == input.Type ||
                     this.Type.Equals(input.Type)
                 ) && 
                 (
-                    this.Executed == input.Executed ||
-                    this.Executed.Equals(input.Executed)
-                ) && 
-                (
-                    this.Requestor == input.Requestor ||
-                    this.Requestor.Equals(input.Requestor)
+                    this.Position == input.Position ||
+                    (this.Position != null &&
+                    this.Position.Equals(input.Position))
                 );
         }
 
@@ -144,10 +116,9 @@ namespace Tgm.Roborally.Api.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                hashCode = hashCode * 59 + this.Index.GetHashCode();
                 hashCode = hashCode * 59 + this.Type.GetHashCode();
-                hashCode = hashCode * 59 + this.Executed.GetHashCode();
-                hashCode = hashCode * 59 + this.Requestor.GetHashCode();
+                if (this.Position != null)
+                    hashCode = hashCode * 59 + this.Position.GetHashCode();
                 return hashCode;
             }
         }

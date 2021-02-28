@@ -25,51 +25,40 @@ using System.ComponentModel.DataAnnotations;
 namespace Tgm.Roborally.Api.Model
 {
     /// <summary>
-    /// A queued action. Actions are executed in their adding sequence which is represented by their index
+    /// type is allways &#x60;use-upgrade&#x60;
     /// </summary>
     [DataContract]
-    public partial class Action :  IEquatable<Action>, IValidatableObject
+    public partial class SimpleUpgradeActivation :  IEquatable<SimpleUpgradeActivation>, IValidatableObject
     {
+        /// <summary>
+        /// Gets or Sets Phase
+        /// </summary>
+        [DataMember(Name="phase", EmitDefaultValue=false)]
+        public EntityActionPhase? Phase { get; set; }
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
-        public ActionType? Type { get; set; }
+        public EntityActionType? Type { get; set; }
         /// <summary>
-        /// Initializes a new instance of the <see cref="Action" /> class.
+        /// Initializes a new instance of the <see cref="SimpleUpgradeActivation" /> class.
         /// </summary>
-        /// <param name="index">The queue index of the action.</param>
+        /// <param name="phase">phase.</param>
         /// <param name="type">type.</param>
-        /// <param name="executed">true if the action was allready executed.</param>
-        /// <param name="requestor">The index of the player this instruction came from.</param>
-        public Action(int index = default(int), ActionType? type = default(ActionType?), bool executed = default(bool), int requestor = default(int))
+        /// <param name="upgrade">The id of an upgrade. **Unique**.</param>
+        public SimpleUpgradeActivation(EntityActionPhase? phase = default(EntityActionPhase?), EntityActionType? type = default(EntityActionType?), int upgrade = default(int))
         {
-            this.Index = index;
+            this.Phase = phase;
             this.Type = type;
-            this.Executed = executed;
-            this.Requestor = requestor;
+            this.Upgrade = upgrade;
         }
         
         /// <summary>
-        /// The queue index of the action
+        /// The id of an upgrade. **Unique**
         /// </summary>
-        /// <value>The queue index of the action</value>
-        [DataMember(Name="index", EmitDefaultValue=false)]
-        public int Index { get; set; }
-
-        /// <summary>
-        /// true if the action was allready executed
-        /// </summary>
-        /// <value>true if the action was allready executed</value>
-        [DataMember(Name="executed", EmitDefaultValue=false)]
-        public bool Executed { get; set; }
-
-        /// <summary>
-        /// The index of the player this instruction came from
-        /// </summary>
-        /// <value>The index of the player this instruction came from</value>
-        [DataMember(Name="requestor", EmitDefaultValue=false)]
-        public int Requestor { get; set; }
+        /// <value>The id of an upgrade. **Unique**</value>
+        [DataMember(Name="upgrade", EmitDefaultValue=false)]
+        public int Upgrade { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -78,11 +67,10 @@ namespace Tgm.Roborally.Api.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Action {\n");
-            sb.Append("  Index: ").Append(Index).Append("\n");
+            sb.Append("class SimpleUpgradeActivation {\n");
+            sb.Append("  Phase: ").Append(Phase).Append("\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Executed: ").Append(Executed).Append("\n");
-            sb.Append("  Requestor: ").Append(Requestor).Append("\n");
+            sb.Append("  Upgrade: ").Append(Upgrade).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -103,35 +91,31 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as Action);
+            return this.Equals(input as SimpleUpgradeActivation);
         }
 
         /// <summary>
-        /// Returns true if Action instances are equal
+        /// Returns true if SimpleUpgradeActivation instances are equal
         /// </summary>
-        /// <param name="input">Instance of Action to be compared</param>
+        /// <param name="input">Instance of SimpleUpgradeActivation to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(Action input)
+        public bool Equals(SimpleUpgradeActivation input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.Index == input.Index ||
-                    this.Index.Equals(input.Index)
+                    this.Phase == input.Phase ||
+                    this.Phase.Equals(input.Phase)
                 ) && 
                 (
                     this.Type == input.Type ||
                     this.Type.Equals(input.Type)
                 ) && 
                 (
-                    this.Executed == input.Executed ||
-                    this.Executed.Equals(input.Executed)
-                ) && 
-                (
-                    this.Requestor == input.Requestor ||
-                    this.Requestor.Equals(input.Requestor)
+                    this.Upgrade == input.Upgrade ||
+                    this.Upgrade.Equals(input.Upgrade)
                 );
         }
 
@@ -144,10 +128,9 @@ namespace Tgm.Roborally.Api.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                hashCode = hashCode * 59 + this.Index.GetHashCode();
+                hashCode = hashCode * 59 + this.Phase.GetHashCode();
                 hashCode = hashCode * 59 + this.Type.GetHashCode();
-                hashCode = hashCode * 59 + this.Executed.GetHashCode();
-                hashCode = hashCode * 59 + this.Requestor.GetHashCode();
+                hashCode = hashCode * 59 + this.Upgrade.GetHashCode();
                 return hashCode;
             }
         }
@@ -159,6 +142,18 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
+            // Upgrade (int) maximum
+            if(this.Upgrade > (int)10000)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Upgrade, must be a value less than or equal to 10000.", new [] { "Upgrade" });
+            }
+
+            // Upgrade (int) minimum
+            if(this.Upgrade < (int)0)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Upgrade, must be a value greater than or equal to 0.", new [] { "Upgrade" });
+            }
+
             yield break;
         }
     }

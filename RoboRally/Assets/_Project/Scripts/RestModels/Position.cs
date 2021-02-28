@@ -25,51 +25,40 @@ using System.ComponentModel.DataAnnotations;
 namespace Tgm.Roborally.Api.Model
 {
     /// <summary>
-    /// A queued action. Actions are executed in their adding sequence which is represented by their index
+    /// Describes a point in a 2D system, without decimals
     /// </summary>
     [DataContract]
-    public partial class Action :  IEquatable<Action>, IValidatableObject
+    public partial class Position :  IEquatable<Position>, IValidatableObject
     {
         /// <summary>
-        /// Gets or Sets Type
+        /// Initializes a new instance of the <see cref="Position" /> class.
         /// </summary>
-        [DataMember(Name="type", EmitDefaultValue=false)]
-        public ActionType? Type { get; set; }
+        [JsonConstructorAttribute]
+        protected Position() { }
         /// <summary>
-        /// Initializes a new instance of the <see cref="Action" /> class.
+        /// Initializes a new instance of the <see cref="Position" /> class.
         /// </summary>
-        /// <param name="index">The queue index of the action.</param>
-        /// <param name="type">type.</param>
-        /// <param name="executed">true if the action was allready executed.</param>
-        /// <param name="requestor">The index of the player this instruction came from.</param>
-        public Action(int index = default(int), ActionType? type = default(ActionType?), bool executed = default(bool), int requestor = default(int))
+        /// <param name="x">The X cordinate (required).</param>
+        /// <param name="y">Position on the Y axis (top-down on screen) (required).</param>
+        public Position(int x = default(int), int y = default(int))
         {
-            this.Index = index;
-            this.Type = type;
-            this.Executed = executed;
-            this.Requestor = requestor;
+            this.X = x;
+            this.Y = y;
         }
         
         /// <summary>
-        /// The queue index of the action
+        /// The X cordinate
         /// </summary>
-        /// <value>The queue index of the action</value>
-        [DataMember(Name="index", EmitDefaultValue=false)]
-        public int Index { get; set; }
+        /// <value>The X cordinate</value>
+        [DataMember(Name="x", EmitDefaultValue=false)]
+        public int X { get; set; }
 
         /// <summary>
-        /// true if the action was allready executed
+        /// Position on the Y axis (top-down on screen)
         /// </summary>
-        /// <value>true if the action was allready executed</value>
-        [DataMember(Name="executed", EmitDefaultValue=false)]
-        public bool Executed { get; set; }
-
-        /// <summary>
-        /// The index of the player this instruction came from
-        /// </summary>
-        /// <value>The index of the player this instruction came from</value>
-        [DataMember(Name="requestor", EmitDefaultValue=false)]
-        public int Requestor { get; set; }
+        /// <value>Position on the Y axis (top-down on screen)</value>
+        [DataMember(Name="y", EmitDefaultValue=false)]
+        public int Y { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -78,11 +67,9 @@ namespace Tgm.Roborally.Api.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class Action {\n");
-            sb.Append("  Index: ").Append(Index).Append("\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Executed: ").Append(Executed).Append("\n");
-            sb.Append("  Requestor: ").Append(Requestor).Append("\n");
+            sb.Append("class Position {\n");
+            sb.Append("  X: ").Append(X).Append("\n");
+            sb.Append("  Y: ").Append(Y).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -103,35 +90,27 @@ namespace Tgm.Roborally.Api.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as Action);
+            return this.Equals(input as Position);
         }
 
         /// <summary>
-        /// Returns true if Action instances are equal
+        /// Returns true if Position instances are equal
         /// </summary>
-        /// <param name="input">Instance of Action to be compared</param>
+        /// <param name="input">Instance of Position to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(Action input)
+        public bool Equals(Position input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.Index == input.Index ||
-                    this.Index.Equals(input.Index)
+                    this.X == input.X ||
+                    this.X.Equals(input.X)
                 ) && 
                 (
-                    this.Type == input.Type ||
-                    this.Type.Equals(input.Type)
-                ) && 
-                (
-                    this.Executed == input.Executed ||
-                    this.Executed.Equals(input.Executed)
-                ) && 
-                (
-                    this.Requestor == input.Requestor ||
-                    this.Requestor.Equals(input.Requestor)
+                    this.Y == input.Y ||
+                    this.Y.Equals(input.Y)
                 );
         }
 
@@ -144,10 +123,8 @@ namespace Tgm.Roborally.Api.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                hashCode = hashCode * 59 + this.Index.GetHashCode();
-                hashCode = hashCode * 59 + this.Type.GetHashCode();
-                hashCode = hashCode * 59 + this.Executed.GetHashCode();
-                hashCode = hashCode * 59 + this.Requestor.GetHashCode();
+                hashCode = hashCode * 59 + this.X.GetHashCode();
+                hashCode = hashCode * 59 + this.Y.GetHashCode();
                 return hashCode;
             }
         }
