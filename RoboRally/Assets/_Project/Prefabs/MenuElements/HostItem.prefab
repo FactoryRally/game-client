@@ -85,7 +85,7 @@ GameObject:
   - component: {fileID: 6514367646619285113}
   - component: {fileID: 6514367646619285095}
   - component: {fileID: 6514367646619285112}
-  - component: {fileID: 7377767522574940642}
+  - component: {fileID: 4668179835114564470}
   m_Layer: 5
   m_Name: HostItem
   m_TagString: Untagged
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7377767522574940642
+--- !u!114 &4668179835114564470
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,16 +161,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6514367646619285114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a20f5192cb24f154fbf983787fdd4d73, type: 3}
+  m_Script: {fileID: 11500000, guid: 8bd64ea03a28ec741bb2dc9fedec43d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameID: 0
-  IsLocked: 1
-  LockIcon: {fileID: 0}
-  GameNameText: {fileID: 6514367647494862292}
-  PlayersAmountText: {fileID: 0}
-  LockedImage: {fileID: 21300000, guid: 4ccc7ef44beed59449ec8f7956d89aaa, type: 3}
-  UnlockedImage: {fileID: 21300000, guid: bdc9a7a6643b4e04683ab6ed6a5eb0db, type: 3}
+  ip: 
+  RemoveButton: {fileID: 6514367647117478954}
+  Text: {fileID: 6514367647494862292}
 --- !u!1 &6514367647117478956
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,6 +277,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   source: {fileID: 0}
+  clip: {fileID: 0}
+  delay: 0
 --- !u!114 &6514367647117478954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -625,7 +623,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 31.65
+  m_fontSize: 20
   m_fontSizeBase: 43.2
   m_fontWeight: 400
   m_enableAutoSizing: 1

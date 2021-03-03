@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
@@ -12,6 +13,7 @@ using UnityEngine.Networking;
 public class LobbyManager : MonoBehaviour {
 
 	public List<string> localAddresses = new List<string>();
+
 	public List<string> hostAddresses = new List<string>();
 	public List<(GameInfo game, int id)> games = new List<(GameInfo game, int id)>();
 
@@ -34,6 +36,24 @@ public class LobbyManager : MonoBehaviour {
 			addresses.AddRange(hostAddresses);
 			RequestGames(addresses);
 		}
+	}
+
+	public bool AddHost(string text) {
+		if(hostAddresses.Contains(text))
+			return false;
+		IPAddress address;
+		if(IPAddress.TryParse(text, out address)) {
+			if(address.AddressFamily == AddressFamily.InterNetwork) {
+				hostAddresses.Add(text);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void RemoveHost(string text) {
+		hostAddresses.Remove(text);
+		Debug.Log("Removed: " + text);
 	}
 
 	public void GetGames(bool reloadHosts = false) {
@@ -119,6 +139,6 @@ public class LobbyManager : MonoBehaviour {
 	}
 
 	public void JoinLobby(int gameID) {
-
+		// TODO
 	}
 }
