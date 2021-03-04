@@ -934,6 +934,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameID: 0
   IsLocked: 1
+  JoinButton: {fileID: 6541541189040787056}
   LockIcon: {fileID: 6541541189367829702}
   GameNameText: {fileID: 6541541189233588110}
   PlayersAmountText: {fileID: 6541541190383378519}

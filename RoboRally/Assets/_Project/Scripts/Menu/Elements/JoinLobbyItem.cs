@@ -17,6 +17,7 @@ public class JoinLobbyItem : MonoBehaviour {
 	public Sprite LockedImage;
 	public Sprite UnlockedImage;
 
+
 	public void Start() {
 
 	}
@@ -35,6 +36,8 @@ public class JoinLobbyItem : MonoBehaviour {
 	}
 
 	public void SetOnClick(LobbyManager manager) {
+		if(JoinButton == null)
+			return;
 		JoinButton.onClick.AddListener(() => {
 			manager.JoinLobby(GameID);
 		});
