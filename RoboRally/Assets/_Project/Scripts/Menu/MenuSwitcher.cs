@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class MenuSwitcher : MonoBehaviour {
 
+	public static MenuSwitcher instance = null;
+
 	public Transform Container;
 	public List<GameObject> MenuStack = new List<GameObject>();
 
@@ -21,6 +23,12 @@ public class MenuSwitcher : MonoBehaviour {
 
 
 	public void Awake() {
+		if(instance == null) {
+			instance = this;
+		} else {
+			Destroy(gameObject);
+		}
+
 		MainMenu.SetActive(true);
 		JoinMenu.SetActive(false);
 		HostMenu.SetActive(false);
@@ -37,7 +45,7 @@ public class MenuSwitcher : MonoBehaviour {
 	}
 
 	public void Update() {
-		if(Input.GetKey(KeyCode.Escape)) {
+		if(Input.GetKeyDown(KeyCode.Escape)) {
 			Back();
 		}
 	}

@@ -9,12 +9,14 @@ public class ButtonSelector : MonoBehaviour {
 	public int index = 0;
 	public Color SelectedColor;
 	public Color UnselectedColor;
+	public int selections = 0;
 
 	void Start() {
 		int s = 0;
 		foreach(Transform child in transform) {
 			s++;
 		}
+		selections = s;
 		if(s > 0) {
 			Buttons = new GameObject[s];
 			s = 0;

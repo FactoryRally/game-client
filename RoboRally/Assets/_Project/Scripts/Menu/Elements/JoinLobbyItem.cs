@@ -7,6 +7,9 @@ using UnityEngine.UI;
 public class JoinLobbyItem : MonoBehaviour {
 
 	public int GameID = 0;
+	public string address = "localhost";
+	public string password = "";
+	public string playerName = "";
 	public bool IsLocked = false;
 
 	public Button JoinButton;
@@ -35,11 +38,11 @@ public class JoinLobbyItem : MonoBehaviour {
 		}
 	}
 
-	public void SetOnClick(LobbyManager manager) {
+	public void SetOnClick(JoinInputsMenuController joinInput) {
 		if(JoinButton == null)
 			return;
 		JoinButton.onClick.AddListener(() => {
-			manager.JoinLobby(GameID);
+			joinInput.Show(IsLocked, address, GameID);
 		});
 	}
 

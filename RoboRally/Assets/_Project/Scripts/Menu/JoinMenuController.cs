@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class JoinMenuController : MonoBehaviour {
 
-	public GameObject LobbyItem;
 	public GameObject LobbyContent;
 	public GameObject LoadBox;
 	public GameObject MessageBox;
+	public GameObject LobbyItemPrefab;
+	public JoinInputsMenuController JoinInput;
 
 	public LobbyManager lm;
 
@@ -36,17 +37,18 @@ public class JoinMenuController : MonoBehaviour {
 
 
 	public void Reload() {
-		foreach((GameInfo game, int id) game in lm.games) {
-			GameObject lobbyItem = Instantiate(LobbyItem, LobbyContent.transform);
+		foreach((GameInfo game, string address, int id) game in lm.games) {
+			GameObject lobbyItem = Instantiate(LobbyItemPrefab, LobbyContent.transform);
 			JoinLobbyItem jle = lobbyItem.GetComponent<JoinLobbyItem>();
 			items.Add(jle);
 			if(jle == null)
 				continue;
 			jle.GameID = game.id;
-			jle.IsLocked = false;
+			jle.IsLocked = game.game.PasswordProtected;
 			jle.GameNameText.text = game.game.Name;
 			jle.PlayersAmountText.text = game.game.CurrentPlayers + "/" + game.game.MaxPlayers;
-			jle.SetOnClick(lm);
+			jle.address = game.address;
+			jle.SetOnClick(JoinInput);
 			jle.UpdateGUI();
 		}
 	}

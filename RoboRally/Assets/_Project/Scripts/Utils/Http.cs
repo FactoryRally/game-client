@@ -11,7 +11,8 @@ public class Http {
 	public static Process server;
 
     public static bool running = false;
-	public const string address = "http://localhost:5050/v1/";
+	public const string address = "http://localhost";
+	public const string port = ":5050";
 
 	public static string serverPath = "";
 
@@ -19,6 +20,7 @@ public class Http {
 	public static void StartServer() {
 		if(Http.running)
 			return;
+		Http.running = true;
 		ProcessStartInfo startInfo = new ProcessStartInfo();
 		startInfo.CreateNoWindow = false;
 		startInfo.UseShellExecute = true;
@@ -27,15 +29,20 @@ public class Http {
 
 		try {
 			server = Process.Start(startInfo);
+			server.Exited += new EventHandler(OnServerStop);
 		} catch(Exception e) {
 			UnityEngine.Debug.Log("Was not able to start the server!");
 		}
 	}
 
+	public static void OnServerStop(object sender, EventArgs e) {
+		Http.running = false;
+	}
+
 	public static void StopServer() {
 		if(!Http.running)
 			return;
-		if(server != null)
+		if(server != null && !server.HasExited)
 			server.Kill();
 		Http.running = false;
 	}
@@ -52,12 +59,12 @@ public class Http {
 		response(uwr);
 	}
 
-	public static UnityWebRequest CreateRequest(string address, string path, string[] parameter) {
+	public static UnityWebRequest CreateRequest(string address, string path, params string[] parameter) {
 		UnityWebRequest uwr;
 		if(address == null) {
 			uwr = UnityWebRequest.Get(Http.address + path + GetParameters(parameter));
 		} else {
-			uwr = UnityWebRequest.Get("http://" + address + ":5050" + "/v1/" + path + GetParameters(parameter));
+			uwr = UnityWebRequest.Get("http://" + address + port + "/v1/" + path + GetParameters(parameter));
 		}
 		uwr.method = UnityWebRequest.kHttpVerbGET;
 		uwr.SetRequestHeader("Content-Type", "application/json");
@@ -75,6 +82,19 @@ public class Http {
 			yield return null;
 		}
 		response(uwr);
+	}
+
+	public static UnityWebRequest CreatePost(string address, string path, params string[] parameter) {
+		UnityWebRequest uwr;
+		if(address == null) {
+			uwr = UnityWebRequest.Put(Http.address + port + "/v1/" + path, GetBodyJson(parameter));
+		} else {
+			uwr = UnityWebRequest.Put("http://" + address + port + "/v1/" + path, GetBodyJson(parameter));
+		}
+		uwr.method = UnityWebRequest.kHttpVerbPOST;
+		uwr.SetRequestHeader("Content-Type", "application/json");
+		uwr.SetRequestHeader("Accept", "application/json");
+		return uwr;
 	}
 
 
@@ -103,12 +123,13 @@ public class Http {
 	private static string GetParameters(string[] parameter) {
 		if(parameter == null)
 			return "";
-		string body = "?";
+		string body = "";
 		if(parameter.Length == 0) {
 			body = "";
 		} else {
 			for(int i = 0; i < parameter.Length; i++) {
-				body = parameter[i] + "&";
+				if(parameter[i] != null)
+					body += parameter[i] + "&";
 			}
 			body = body.Substring(0, body.Length - 1);
 		}

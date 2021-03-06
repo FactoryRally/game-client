@@ -15,11 +15,12 @@ public class LobbyManager : MonoBehaviour {
 	public List<string> localAddresses = new List<string>();
 
 	public List<string> hostAddresses = new List<string>();
-	public List<(GameInfo game, int id)> games = new List<(GameInfo game, int id)>();
+	public List<(GameInfo game, string address, int id)> games = new List<(GameInfo game, string address, int id)>();
 
 	public LobbyCallState state = LobbyCallState.NONE;
 	private int maxSubnet = 24;
 	public AddressFinder af;
+
 
 	public void Awake() {
 		af = new AddressFinder(this);
@@ -38,6 +39,7 @@ public class LobbyManager : MonoBehaviour {
 		}
 	}
 
+
 	public bool AddHost(string text) {
 		if(hostAddresses.Contains(text))
 			return false;
@@ -53,13 +55,12 @@ public class LobbyManager : MonoBehaviour {
 
 	public void RemoveHost(string text) {
 		hostAddresses.Remove(text);
-		Debug.Log("Removed: " + text);
 	}
 
 	public void GetGames(bool reloadHosts = false) {
-		if(state == LobbyCallState.LOADING)
+		if(state == LobbyCallState.LOADING || state == LobbyCallState.SCANNING)
 			return;
-		this.games = new List<(GameInfo game, int id)>();
+		this.games = new List<(GameInfo game, string address, int id)>();
 		if(reloadHosts) {
 			GetLocalAddresses();
 		} else {
@@ -68,6 +69,8 @@ public class LobbyManager : MonoBehaviour {
 	}
 
 	public void GetLocalAddresses() {
+		if(state != LobbyCallState.NONE)
+			return;
 		state = LobbyCallState.SCANNING;
 		List<IPSegment> IPSegments = GetInterfaces(false);
 		af = new AddressFinder(this);
@@ -78,6 +81,16 @@ public class LobbyManager : MonoBehaviour {
 				state = LobbyCallState.SCANNED;
 			}
 		);
+	}
+
+	public static string GetLocalIPAddress() {
+		var host = Dns.GetHostEntry(Dns.GetHostName());
+		foreach(var ip in host.AddressList) {
+			if(ip.AddressFamily == AddressFamily.InterNetwork) {
+				return ip.ToString();
+			}
+		}
+		throw new Exception("No network adapters with an IPv4 address in the system!");
 	}
 
 	public List<IPSegment> GetInterfaces(bool showVPN) {
@@ -102,9 +115,12 @@ public class LobbyManager : MonoBehaviour {
 	}
 
 	int instances = 0;
+	int instancesInfo = 0;
 	public void RequestGames(List<string> addresses) {
+		StopAllCoroutines();
 		state = LobbyCallState.LOADING;
 		instances = addresses.Count;
+		instancesInfo = 0;
 		foreach(string address in addresses) {
 			StartCoroutine(RequestGamesAsync(address));
 		}
@@ -114,22 +130,27 @@ public class LobbyManager : MonoBehaviour {
 		List<string> games = new List<string>();
 		UnityWebRequest request = Http.CreateRequest(address, "games", null);
 		yield return request.SendWebRequest();
+		instances--;
 		int[] gameIds = JsonConvert.DeserializeObject<int[]>(request.downloadHandler.text);
 		if(gameIds == null) {
 
 		} else {
+			instancesInfo += gameIds.Length;
 			for(int i = 0; i < gameIds.Length; i++) {
-				request = Http.CreateRequest(address, "games/" + gameIds[i] + "/status", null);
-				yield return request.SendWebRequest();
-				if(request.responseCode == 200) {
-					(GameInfo, int) t = (JsonConvert.DeserializeObject<GameInfo>(request.downloadHandler.text), gameIds[i]);
-					this.games.Add(t);
-				}
-
+				StartCoroutine(RequestGameInfo(address, gameIds[i]));
 			}
 		}
-		instances--;
-		if(state == LobbyCallState.LOADING && instances == 0) {
+		float ttl = 5f;
+		float time = 0;
+		while(instancesInfo > 0) {
+			yield return new WaitForSeconds(0.05f);
+			time += 0.05f;
+			if(time >= ttl) {
+				instances = 0;
+				break;
+			}
+		}
+		if(state == LobbyCallState.LOADING) {
 			if(this.games.Count == 0) {
 				state = LobbyCallState.NO_GAMES_FOUND;
 			} else {
@@ -138,7 +159,36 @@ public class LobbyManager : MonoBehaviour {
 		}
 	}
 
-	public void JoinLobby(int gameID) {
-		// TODO
+	public IEnumerator RequestGameInfo(string address, int gameId) {
+		UnityWebRequest request = Http.CreateRequest(address, "games/" + gameId + "/status", null);
+		yield return request.SendWebRequest();
+		if(request.responseCode == 200) {
+			(GameInfo, string, int) t = (
+				JsonConvert.DeserializeObject<GameInfo>(request.downloadHandler.text), 
+				address,
+				gameId
+			);
+			this.games.Add(t);
+		}
+		instancesInfo--;
+	}
+
+	public void JoinLobby(string address, int gameId, string password, string playerName) {
+		StartCoroutine(JoinLobbyAsync(address, gameId, password, playerName));
+	}
+
+	public IEnumerator JoinLobbyAsync(string address, int gameId, string password, string playerName) {
+		if(password != null) {
+			password = "password=" + password;
+		}
+		playerName = "name=" + playerName;
+		UnityWebRequest request = Http.CreatePost(
+			address, 
+			"games/" + gameId + "/players", 
+			password, playerName
+		);
+		yield return request.SendWebRequest();
+		if(request.downloadHandler != null)
+			Debug.Log(request.downloadHandler.text);
 	}
 }

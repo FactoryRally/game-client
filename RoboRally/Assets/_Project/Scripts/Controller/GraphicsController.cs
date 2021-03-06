@@ -36,7 +36,7 @@ public class GraphicsController : MonoBehaviour {
 
 	public static Resolution DefaultResolution;
 	public static Resolution CurrentResolution;
-	public static Resolution[] PossibleResolutions;
+	public static Resolution[] PossibleResolutions = new Resolution[0];
 
 	#endregion
 
@@ -103,7 +103,7 @@ public class GraphicsController : MonoBehaviour {
 	private bool Changes = true;
 
 
-	void Start() {
+	void Awake() {
 		lwrp = GraphicsSettings.renderPipelineAsset as UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset;
 		DefaultResolution = Screen.currentResolution;
 		PossibleResolutions = Screen.resolutions;

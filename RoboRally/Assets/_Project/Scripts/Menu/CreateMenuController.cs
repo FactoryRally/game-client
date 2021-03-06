@@ -4,17 +4,20 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-class CreateMenuController : MenuParent {
+class CreateMenuController : MonoBehaviour {
 
 	public TMP_InputField GameNameInput;
+	public TMP_InputField ServerInput;
 	public TMP_InputField PasswordInput;
-	public Slider MaxPlayersSlider;
-	public Toggle ShowPlayerNamesToggle;
-	public Toggle FillAiToggle;
+	public ButtonSelector NamesSelector;
+	public ButtonSelector ComsSelector;
+	public ButtonSelector MaxPlayersSelector;
+
+	public CreateManager cm;
 
 
 	public void Awake() {
-
+		cm = GameObject.FindGameObjectWithTag("LobbyController").GetComponent<CreateManager>();
 	}
 
 	public void Start() {
@@ -24,29 +27,15 @@ class CreateMenuController : MenuParent {
 	public void Update() {
 
 	}
-	
-	
-	public void PressedCreateLobby() {
-		Http.serverPath = Application.dataPath + "/Server/Tgm.Roborally.Server.exe";
-		Http.StartServer();
-		StartCoroutine(CreateLobby());
-	}
 
-	private IEnumerator CreateLobby() {
-		// if(Http.running) {
-		UnityWebRequest response = null;
-		string[] body = {
-			"player-names-visible=" + ShowPlayerNamesToggle.isOn.ToString().ToLower(),
-			"max-players=" + MaxPlayersSlider.value,
-			"name=" + GameNameInput.text,
-			"robots-per-player=1",
-			"password=" + PasswordInput.text,
-			"fill-with-bots=" + FillAiToggle.isOn.ToString().ToLower()
-		};
-		yield return StartCoroutine(Http.Post("games", body, (x) => response = x));
-		/* } else {
-			UnityEngine.Debug.Log("Cannot reach Server");
-		} */
+	public void Create() {
+		string address = LobbyManager.GetLocalIPAddress();
+		cm.CreateLobby(
+			GameNameInput.text,
+			PasswordInput.text,
+			NamesSelector.index == 0,
+			ComsSelector.index == 0,
+			MaxPlayersSelector.index + 1
+		); ;
 	}
-
 }
