@@ -27,7 +27,7 @@ public class JoinInputsMenuController : MonoBehaviour {
 
 	public void Show(bool prot, string address, int gameId) {
 		gameObject.SetActive(true);
-		passwordInput.interactable = !prot;
+		passwordInput.interactable = prot;
 		nameInput.Select();
 		JoinButton.onClick.RemoveAllListeners();
 		JoinButton.onClick.AddListener(() => {

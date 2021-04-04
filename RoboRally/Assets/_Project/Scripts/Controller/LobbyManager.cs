@@ -128,7 +128,7 @@ public class LobbyManager : MonoBehaviour {
 
 	public IEnumerator RequestGamesAsync(string address) {
 		List<string> games = new List<string>();
-		UnityWebRequest request = Http.CreateRequest(address, "games", null);
+		UnityWebRequest request = Http.CreateGet(address, "games", null);
 		yield return request.SendWebRequest();
 		instances--;
 		int[] gameIds = JsonConvert.DeserializeObject<int[]>(request.downloadHandler.text);
@@ -160,7 +160,7 @@ public class LobbyManager : MonoBehaviour {
 	}
 
 	public IEnumerator RequestGameInfo(string address, int gameId) {
-		UnityWebRequest request = Http.CreateRequest(address, "games/" + gameId + "/status", null);
+		UnityWebRequest request = Http.CreateGet(address, "games/" + gameId + "/status", null);
 		yield return request.SendWebRequest();
 		if(request.responseCode == 200) {
 			(GameInfo, string, int) t = (
@@ -184,8 +184,9 @@ public class LobbyManager : MonoBehaviour {
 		playerName = "name=" + playerName;
 		UnityWebRequest request = Http.CreatePost(
 			address, 
-			"games/" + gameId + "/players", 
-			password, playerName
+			"games/" + gameId + "/players",
+			new string[] { password, playerName },
+			null
 		);
 		yield return request.SendWebRequest();
 		if(request.downloadHandler != null)
