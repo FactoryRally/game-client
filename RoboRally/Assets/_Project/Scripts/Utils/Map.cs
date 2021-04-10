@@ -6,9 +6,6 @@ using System.Runtime.Serialization;
 
 [DataContract]
 public class Map {
-	private              GameLogic _game;
-
-
 	//This is mapped to a 1d array because KALIAN FUCKED UP AGAIN
 	[DataMember] private Tile[]    _tiles;
 
@@ -77,22 +74,6 @@ public class Map {
 		return tiles;
 	}
 
-
-	/// <summary>
-	/// Caculates wich fields are empty (no entities on top) and sets the regarding property
-	/// </summary>
-	public void CalculateEmpty() {
-		if(_game == null)
-			return;
-		ImmutableList<(int X, int Y)> occupied = _game.Entitys.List
-													  .Select(selector: e => e.Location)
-													  .Select(selector: p => (p.X, p.Y))
-													  .ToImmutableList();
-		for (int c = 0; c < Height; c++) {
-			for (int r = 0; r < Width; r++) this[c, r].Empty = !occupied.Contains((c, r));
-		}
-	}
-
 	public bool AddColumn(int index) {
 		if (index < 0 || index > Height)
 			return false;
@@ -109,7 +90,6 @@ public class Map {
 					tiles[c, r] = new Tile();
 			}
 		}
-
 		SetDeepTiles(tiles);
 
 		return true;
