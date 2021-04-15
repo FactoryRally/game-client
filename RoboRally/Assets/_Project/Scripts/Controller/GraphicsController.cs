@@ -45,7 +45,7 @@ public class GraphicsController : MonoBehaviour {
 	public GameObject WindowModeList;
 	private ScrollSnap WindowModeScrollSnap;
 
-	public static FullScreenMode DefaultWindowMode = FullScreenMode.Windowed;
+	public static FullScreenMode DefaultWindowMode = FullScreenMode.FullScreenWindow;
 	public static FullScreenMode CurrentWindowMode;
 	public static FullScreenMode[] PossibleWindowModes = {
 		FullScreenMode.Windowed,
@@ -132,7 +132,7 @@ public class GraphicsController : MonoBehaviour {
 		}
 
 		SetDefault(); // Set default values 
-		LoadGarphicSettings(); // If valid values are saved load them
+		LoadGraphicSettings(); // If valid values are saved load them
 		ApplyChanges(); // Apply everything
 	}
 
@@ -143,6 +143,15 @@ public class GraphicsController : MonoBehaviour {
 			UpdateValues();
 		}
 		Changes = !IsUpdated();
+
+		if(Input.GetKeyDown(KeyCode.F11)) {
+			if(CurrentWindowMode == FullScreenMode.Windowed) {
+				CurrentWindowMode = FullScreenMode.FullScreenWindow;
+			} else {
+				CurrentWindowMode = FullScreenMode.Windowed;
+			}
+			ApplyChanges();
+		}
 	}
 
 	public bool IsUpdated() {
@@ -234,7 +243,7 @@ public class GraphicsController : MonoBehaviour {
 		PlayerPrefs.Save();
 	}
 
-	public void LoadGarphicSettings() {
+	public void LoadGraphicSettings() {
 		int frames = PlayerPrefs.GetInt("frames", -1);
 		if(frames != -1) {
 			CurrentFrames = frames;

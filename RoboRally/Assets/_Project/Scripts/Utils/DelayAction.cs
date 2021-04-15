@@ -7,15 +7,18 @@ public class DelayAction {
 
 	private bool stopRepeat = false;
 	public int currentRepeat = 0;
+	private MonoBehaviour gameObject;
 
 	public DelayAction() { }
 
 	public DelayAction(MonoBehaviour gameObject, float time, Action task) {
 		gameObject.StartCoroutine(ExecuteAfterTime(time, task));
+		this.gameObject = gameObject;
 	}
 
 	public DelayAction(MonoBehaviour gameObject, float time, int repeat, Action task) {
 		gameObject.StartCoroutine(RepeatAfterTime(time, repeat, task));
+		this.gameObject = gameObject;
 	}
 
 	private IEnumerator ExecuteAfterTime(float time, Action task) {
@@ -35,5 +38,9 @@ public class DelayAction {
 
 	public void StopRepeat() {
 		stopRepeat = true;
+	}
+
+	public void Stop() {
+		gameObject.StopCoroutine("ExecuteAfterTime");
 	}
 }

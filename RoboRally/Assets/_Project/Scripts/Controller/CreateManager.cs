@@ -21,6 +21,7 @@ public class CreateManager : MonoBehaviour {
 
 	public void CreateLobby(string name, string password, bool namesVis, bool coms, int maxPlayers) {
 		Http.serverPath = Application.dataPath + "/Server/Tgm.Roborally.Server.exe";
+		DebugText.Set(Http.serverPath);
 		Http.StartServer();
 		StartCoroutine(CreateLobbyAsync(name, password, namesVis, coms, maxPlayers));
 	}
