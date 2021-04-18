@@ -20,10 +20,10 @@ public class LevelEditorMenu : MonoBehaviour {
 	private Direction LastRotaterDirectionValue = Direction.Left;
 
 	[MyBox.Separator("Map Config")]
-	public TMP_InputField ColumnCountInput;
-	public TMP_InputField RowCountInput;
-	private int LastColumnCount;
-	private int LastRowCount;
+	public TMP_InputField WidthInput;
+	public TMP_InputField HeightInput;
+	private int LastWidth;
+	private int LastHeight;
 
 	public TMP_InputField AddColumnAtInput;
 	public Slider AddColumnAtSlider;
@@ -67,32 +67,32 @@ public class LevelEditorMenu : MonoBehaviour {
 		RotationDropdown.transform.parent.gameObject.SetActive(leb.CurrentTileIndex == ShowRotationOnTileIndex);
 
 		// Set Slider Min and Max values
-		AddColumnAtSlider.maxValue = leb.CurrentMap.columnCount;
-		AddRowAtSlider.maxValue = leb.CurrentMap.rowCount;
+		AddColumnAtSlider.maxValue = leb.CurrentMap.Width;
+		AddRowAtSlider.maxValue = leb.CurrentMap.Height;
 
-		RemoveColumnAtSlider.maxValue = leb.CurrentMap.columnCount - 1;
-		RemoveRowAtSlider.maxValue = leb.CurrentMap.rowCount - 1;
+		RemoveColumnAtSlider.maxValue = leb.CurrentMap.Width - 1;
+		RemoveRowAtSlider.maxValue = leb.CurrentMap.Height - 1;
 
 		// Map size validation
 		try {
-			int columnCount = int.Parse(ColumnCountInput.text);
-			if(columnCount > leb.maxSize) {
-				ColumnCountInput.text = leb.maxSize + "";
+			int Width = int.Parse(WidthInput.text);
+			if(Width > leb.maxSize) {
+				WidthInput.text = leb.maxSize + "";
 			}
-			if(columnCount < leb.minSize) {
-				ColumnCountInput.text = leb.minSize + "";
+			if(Width < leb.minSize) {
+				WidthInput.text = leb.minSize + "";
 			}
 		} catch(FormatException e) {
 
 		}
 
 		try {
-			int rowCount = int.Parse(RowCountInput.text);
-			if(rowCount > leb.maxSize) {
-				RowCountInput.text = leb.maxSize + "";
+			int Height = int.Parse(HeightInput.text);
+			if(Height > leb.maxSize) {
+				HeightInput.text = leb.maxSize + "";
 			}
-			if(rowCount < leb.minSize) {
-				RowCountInput.text = leb.minSize + "";
+			if(Height < leb.minSize) {
+				HeightInput.text = leb.minSize + "";
 			}
 		} catch(FormatException e) {
 
@@ -162,40 +162,40 @@ public class LevelEditorMenu : MonoBehaviour {
 	}
 
 	public void UpdateMapSize() {
-		if(LastColumnCount.ToString() == ColumnCountInput.text) {
-			ColumnCountInput.text = leb.CurrentMap.columnCount.ToString();
+		if(LastWidth.ToString() == WidthInput.text) {
+			WidthInput.text = leb.CurrentMap.Width.ToString();
 		} else {
 			try {
-				int columnCount = int.Parse(ColumnCountInput.text);
-				while(columnCount > leb.CurrentMap.columnCount) {
-					leb.CurrentMap.AddColumn(leb.CurrentMap.columnCount);
+				int Width = int.Parse(WidthInput.text);
+				while(Width > leb.CurrentMap.Width) {
+					leb.CurrentMap.AddColumn(leb.CurrentMap.Width);
 				}
-				while(columnCount < leb.CurrentMap.columnCount) {
-					leb.CurrentMap.RemoveColumn(leb.CurrentMap.columnCount - 1);
+				while(Width < leb.CurrentMap.Width) {
+					leb.CurrentMap.RemoveColumn(leb.CurrentMap.Width - 1);
 				}
 				leb.UpdateMap();
 			} catch(FormatException e) {
 
 			}
 		}
-		LastColumnCount = leb.CurrentMap.columnCount;
+		LastWidth = leb.CurrentMap.Width;
 
-		if(LastRowCount.ToString() == RowCountInput.text) {
-			RowCountInput.text = leb.CurrentMap.rowCount.ToString();
+		if(LastHeight.ToString() == HeightInput.text) {
+			HeightInput.text = leb.CurrentMap.Height.ToString();
 		} else {
 			try {
-				int rowCount = int.Parse(RowCountInput.text);
-				while(rowCount > leb.CurrentMap.rowCount) {
-					leb.CurrentMap.AddRow(leb.CurrentMap.rowCount);
+				int Height = int.Parse(HeightInput.text);
+				while(Height > leb.CurrentMap.Height) {
+					leb.CurrentMap.AddRow(leb.CurrentMap.Height);
 				}
-				while(rowCount < leb.CurrentMap.rowCount) {
-					leb.CurrentMap.RemoveRow(leb.CurrentMap.rowCount - 1);
+				while(Height < leb.CurrentMap.Height) {
+					leb.CurrentMap.RemoveRow(leb.CurrentMap.Height - 1);
 				}
 				leb.UpdateMap();
 			} catch(FormatException e) {
 
 			}
 		}
-		LastRowCount = leb.CurrentMap.rowCount;
+		LastHeight = leb.CurrentMap.Height;
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Gameclient.Utils;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -50,7 +51,7 @@ public class LevelEditorBuilder : MonoBehaviour {
 
 	void Start() {
 		CurrentMap = new Map();
-		GridObjects = new GameObject[CurrentMap.columnCount, CurrentMap.rowCount];
+		GridObjects = new GameObject[CurrentMap.Width, CurrentMap.Height];
 		UpdateMap();
 	}
 
@@ -60,7 +61,7 @@ public class LevelEditorBuilder : MonoBehaviour {
 		UpdateMouseState();
 		UpdateHoverEffect();
 
-		LevelGrid.transform.localScale = new Vector3(CurrentMap.columnCount, 1, CurrentMap.rowCount);
+		LevelGrid.transform.localScale = new Vector3(CurrentMap.Width, 1, CurrentMap.Height);
 
 		if(Input.GetMouseButton(0) && CurrentTile != null) {
 			TileType type = CurrentTile.GetComponent<TileObject>().TileType;
@@ -81,9 +82,9 @@ public class LevelEditorBuilder : MonoBehaviour {
 	}
 
 	public void UpdateMap() {
-		if(GridObjects.GetLength(0) == CurrentMap.columnCount && GridObjects.GetLength(1) == CurrentMap.rowCount) {
-			for(int c = 0; c < CurrentMap.columnCount; c++) {
-				for(int r = 0; r < CurrentMap.rowCount; r++) {
+		if(GridObjects.GetLength(0) == CurrentMap.Width && GridObjects.GetLength(1) == CurrentMap.Height) {
+			for(int c = 0; c < CurrentMap.Width; c++) {
+				for(int r = 0; r < CurrentMap.Height; r++) {
 					if(CurrentMap[c, r] == null) {
 						if(GridObjects[c, r] != null)
 							Destroy(GridObjects[c, r]);
@@ -96,7 +97,7 @@ public class LevelEditorBuilder : MonoBehaviour {
 						Destroy(GridObjects[c, r]);
 						GridObjects[c, r] = Instantiate(
 							tile,
-							new Vector3(c, CurrentMap[c, r].Level + 1, CurrentMap.rowCount - r - 1),
+							new Vector3(c, CurrentMap[c, r].Level + 1, CurrentMap.Height - r - 1),
 							DirectionToQuaternion(CurrentMap[c, r].TileDirection)
 						);
 						GridObjects[c, r].transform.parent = GridChilds.transform;
@@ -110,9 +111,9 @@ public class LevelEditorBuilder : MonoBehaviour {
 						Destroy(GridObjects[c, r]);
 				}
 			}
-			GridObjects = new GameObject[CurrentMap.columnCount, CurrentMap.rowCount];
-			for(int c = 0; c < CurrentMap.columnCount; c++) {
-				for(int r = 0; r < CurrentMap.rowCount; r++) {
+			GridObjects = new GameObject[CurrentMap.Width, CurrentMap.Height];
+			for(int c = 0; c < CurrentMap.Width; c++) {
+				for(int r = 0; r < CurrentMap.Height; r++) {
 					if(CurrentMap[c, r] == null)
 						continue;
 					GameObject tile = GetTileFromType(CurrentMap[c, r].Type);
@@ -120,7 +121,7 @@ public class LevelEditorBuilder : MonoBehaviour {
 						continue;
 					GridObjects[c, r] = Instantiate(
 						tile,
-						new Vector3(c, CurrentMap[c, r].Level + 1, CurrentMap.rowCount - r - 1),
+						new Vector3(c, CurrentMap[c, r].Level + 1, CurrentMap.Height - r - 1),
 						DirectionToQuaternion(CurrentMap[c, r].TileDirection)
 					);
 					GridObjects[c, r].transform.parent = GridChilds.transform;
@@ -153,7 +154,7 @@ public class LevelEditorBuilder : MonoBehaviour {
 				);
 			MapPos = new Vector2(
 					GridPos.x,
-					(CurrentMap.rowCount - 1) - GridPos.z
+					(CurrentMap.Height - 1) - GridPos.z
 				);
 		}
 	}

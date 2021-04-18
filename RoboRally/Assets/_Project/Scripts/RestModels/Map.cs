@@ -20,122 +20,114 @@ using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Tgm.Roborally.Api.Model
-{
-    /// <summary>
-    /// The map including the tiles
-    /// </summary>
-    [DataContract]
-    public partial class Map :  IEquatable<Map>, IValidatableObject
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Map" /> class.
-        /// </summary>
-        /// <param name="info">info.</param>
-        /// <param name="rows">rows.</param>
-        public Map(MapInfo info = default(MapInfo), List<List<Tile>> rows = default(List<List<Tile>>))
-        {
-            this.Info = info;
-            this.Rows = rows;
-        }
-        
-        /// <summary>
-        /// Gets or Sets Info
-        /// </summary>
-        [DataMember(Name="info", EmitDefaultValue=false)]
-        public MapInfo Info { get; set; }
 
-        /// <summary>
-        /// Gets or Sets Rows
-        /// </summary>
-        [DataMember(Name="rows", EmitDefaultValue=false)]
-        public List<List<Tile>> Rows { get; set; }
+namespace Tgm.Roborally.Api.Model {
+	/// <summary>
+	/// The map including the tiles
+	/// </summary>
+	[DataContract]
+	public partial class Map : IEquatable<Map>, IValidatableObject {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Map" /> class.
+		/// </summary>
+		/// <param name="info">info.</param>
+		/// <param name="rows">rows.</param>
+		public Map(MapInfo info = default(MapInfo), List<List<Tile>> rows = default(List<List<Tile>>)) {
+			this.Info = info;
+			this.Rows = rows;
+		}
 
-        /// <summary>
-        /// Returns the string presentation of the object
-        /// </summary>
-        /// <returns>String presentation of the object</returns>
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            sb.Append("class Map {\n");
-            sb.Append("  Info: ").Append(Info).Append("\n");
-            sb.Append("  Rows: ").Append(Rows).Append("\n");
-            sb.Append("}\n");
-            return sb.ToString();
-        }
-  
-        /// <summary>
-        /// Returns the JSON string presentation of the object
-        /// </summary>
-        /// <returns>JSON string presentation of the object</returns>
-        public virtual string ToJson()
-        {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
-        }
+		/// <summary>
+		/// Gets or Sets Info
+		/// </summary>
+		[DataMember(Name = "info", EmitDefaultValue = false)]
+		public MapInfo Info { get; set; }
 
-        /// <summary>
-        /// Returns true if objects are equal
-        /// </summary>
-        /// <param name="input">Object to be compared</param>
-        /// <returns>Boolean</returns>
-        public override bool Equals(object input)
-        {
-            return this.Equals(input as Map);
-        }
+		/// <summary>
+		/// Gets or Sets Rows
+		/// </summary>
+		[DataMember(Name = "rows", EmitDefaultValue = false)]
+		public List<List<Tile>> Rows { get; set; }
 
-        /// <summary>
-        /// Returns true if Map instances are equal
-        /// </summary>
-        /// <param name="input">Instance of Map to be compared</param>
-        /// <returns>Boolean</returns>
-        public bool Equals(Map input)
-        {
-            if (input == null)
-                return false;
+		/// <summary>
+		/// Returns the string presentation of the object
+		/// </summary>
+		/// <returns>String presentation of the object</returns>
+		public override string ToString() {
+			var sb = new StringBuilder();
+			sb.Append("class Map {\n");
+			sb.Append("  Info: ").Append(Info).Append("\n");
+			sb.Append("  Rows: ").Append(Rows).Append("\n");
+			sb.Append("}\n");
+			return sb.ToString();
+		}
 
-            return 
-                (
-                    this.Info == input.Info ||
-                    (this.Info != null &&
-                    this.Info.Equals(input.Info))
-                ) && 
-                (
-                    this.Rows == input.Rows ||
-                    this.Rows != null &&
-                    input.Rows != null &&
-                    this.Rows.SequenceEqual(input.Rows)
-                );
-        }
+		/// <summary>
+		/// Returns the JSON string presentation of the object
+		/// </summary>
+		/// <returns>JSON string presentation of the object</returns>
+		public virtual string ToJson() {
+			return JsonConvert.SerializeObject(this, Formatting.Indented);
+		}
 
-        /// <summary>
-        /// Gets the hash code
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            unchecked // Overflow is fine, just wrap
-            {
-                int hashCode = 41;
-                if (this.Info != null)
-                    hashCode = hashCode * 59 + this.Info.GetHashCode();
-                if (this.Rows != null)
-                    hashCode = hashCode * 59 + this.Rows.GetHashCode();
-                return hashCode;
-            }
-        }
+		/// <summary>
+		/// Returns true if objects are equal
+		/// </summary>
+		/// <param name="input">Object to be compared</param>
+		/// <returns>Boolean</returns>
+		public override bool Equals(object input) {
+			return this.Equals(input as Map);
+		}
 
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
-        {
-            yield break;
-        }
-    }
+		/// <summary>
+		/// Returns true if Map instances are equal
+		/// </summary>
+		/// <param name="input">Instance of Map to be compared</param>
+		/// <returns>Boolean</returns>
+		public bool Equals(Map input) {
+			if(input == null)
+				return false;
+
+			return
+				(
+					this.Info == input.Info ||
+					(this.Info != null &&
+					this.Info.Equals(input.Info))
+				) &&
+				(
+					this.Rows == input.Rows ||
+					this.Rows != null &&
+					input.Rows != null &&
+					this.Rows.SequenceEqual(input.Rows)
+				);
+		}
+
+		/// <summary>
+		/// Gets the hash code
+		/// </summary>
+		/// <returns>Hash code</returns>
+		public override int GetHashCode() {
+			unchecked // Overflow is fine, just wrap
+			{
+				int hashCode = 41;
+				if(this.Info != null)
+					hashCode = hashCode * 59 + this.Info.GetHashCode();
+				if(this.Rows != null)
+					hashCode = hashCode * 59 + this.Rows.GetHashCode();
+				return hashCode;
+			}
+		}
+
+		/// <summary>
+		/// To validate all properties of the instance
+		/// </summary>
+		/// <param name="validationContext">Validation context</param>
+		/// <returns>Validation Result</returns>
+		IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext) {
+			yield break;
+		}
+	}
 
 }
