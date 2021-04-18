@@ -23,13 +23,22 @@ namespace RoboRally.Controller {
 		private int maxSubnet = 24;
 		public AddressFinder af;
 
+		private static LobbyManager _instance;
+		public static LobbyManager Instance { get { return _instance; } }
+
 
 		public void Awake() {
+			if(_instance != null && _instance != this) {
+				Destroy(this.gameObject);
+				return;
+			} else {
+				_instance = this;
+			}
 			af = new AddressFinder(this);
 			GetGames(true);
 		}
 
-		public void Start() {
+		public void Start() { 
 
 		}
 

@@ -5512,6 +5512,7 @@ GameObject:
   m_Component:
   - component: {fileID: 311354317}
   - component: {fileID: 311354316}
+  - component: {fileID: 311354318}
   m_Layer: 0
   m_Name: AudioController
   m_TagString: AudioController

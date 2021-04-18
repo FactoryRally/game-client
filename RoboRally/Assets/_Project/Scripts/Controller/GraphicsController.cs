@@ -10,6 +10,8 @@ using UnityEngine.UI.Extensions;
 namespace RoboRally.Controller {
 	public class GraphicsController : MonoBehaviour {
 
+		public static GraphicsController Instance = null;
+
 		private UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset lwrp;
 
 		#region Frames
@@ -105,6 +107,13 @@ namespace RoboRally.Controller {
 
 
 		void Awake() {
+			if(Instance == null) {
+				Instance = this;
+				DontDestroyOnLoad(this);
+			} else {
+				Destroy(gameObject);
+			}
+
 			lwrp = GraphicsSettings.renderPipelineAsset as UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset;
 			DefaultResolution = Screen.currentResolution;
 			PossibleResolutions = Screen.resolutions;
