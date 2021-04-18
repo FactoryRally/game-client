@@ -1,24 +1,27 @@
-﻿using RoboRally.Utils;
+﻿using RoboRally.Controller;
+using RoboRally.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InlobbyMenuController : MonoBehaviour {
+namespace RoboRally.Menu {
+	public class InlobbyMenuController : MonoBehaviour {
 
-	public Button StartButton;
-	
-	
-	void Start() {
-		StartButton.interactable = IngameData.IsHost;
-	}
+		public Button StartButton;
 
 
-	void Update() {
+		void Start() {
+			StartButton.interactable = IngameData.IsHost;
+		}
 
-	}
 
-	public void Leave() {
+		void Update() {
 
+		}
+
+		public void Leave() {
+
+		}
 	}
 }

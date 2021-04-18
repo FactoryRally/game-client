@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InlobbyManager : MonoBehaviour { 
 
-	void Start() {
+namespace RoboRally.Controller {
+	public class InlobbyManager : MonoBehaviour {
 
-	}
+		void Start() {
 
-	void Update() {
+		}
 
+		void Update() {
+
+		}
 	}
 }
