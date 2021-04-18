@@ -19,6 +19,6 @@ public class InlobbyMenuController : MonoBehaviour {
 	}
 
 	public void Leave() {
-		LobbyManager
+
 	}
 }
