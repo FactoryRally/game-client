@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using RoboRally.Utils;
 
+namespace RoboRally.LevelEdior
+{
 public class LevelEditorMenu : MonoBehaviour {
 
 	public LevelEditorBuilder leb;
@@ -198,4 +201,5 @@ public class LevelEditorMenu : MonoBehaviour {
 		}
 		LastHeight = leb.CurrentMap.Height;
 	}
+}
 }

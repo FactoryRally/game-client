@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using RoboRally.Keybindings;
+using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(InputManager))]

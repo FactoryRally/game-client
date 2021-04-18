@@ -20,9 +20,9 @@ namespace Tgm.Roborally.Api.Model {
 	/// </summary>
 	[DataContract]
 	public class MapInfo : IEquatable<MapInfo> {
-		private readonly Gameclient.Utils.Map _map;
+		private readonly RoboRally.Utils.Map _map;
 
-		public MapInfo(Gameclient.Utils.Map map) {
+		public MapInfo(RoboRally.Utils.Map map) {
 			_map = map;
 		}
 

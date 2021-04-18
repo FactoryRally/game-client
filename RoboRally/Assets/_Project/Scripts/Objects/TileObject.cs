@@ -1,16 +1,19 @@
-﻿using System.Collections;
+﻿using RoboRally.Utils;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TileObject : MonoBehaviour {
+namespace RoboRally.Objects {
+	public class TileObject : MonoBehaviour {
 
-	public TileType TileType;
+		public TileType TileType;
 
-	void Start() {
+		void Start() {
 
-	}
+		}
 
-	void Update() {
+		void Update() {
 
+		}
 	}
 }

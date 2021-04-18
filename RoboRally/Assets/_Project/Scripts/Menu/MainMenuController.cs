@@ -1,28 +1,30 @@
 ﻿using System.Diagnostics;
 using UnityEngine;
 
-public class MainMenuController : MonoBehaviour {
+namespace RoboRally.Menu {
+	public class MainMenuController : MonoBehaviour {
 
-	public string[] links;
+		public string[] links;
 
 
-	public void Awake() {
+		public void Awake() {
+
+		}
+
+		public void Start() {
+
+		}
+
+		public void Update() {
+
+		}
+
+
+		public void OpenLink(int index) {
+			if(index < 0 || index >= links.Length)
+				return;
+			Application.OpenURL(links[index]);
+		}
 
 	}
-
-	public void Start() {
-
-	}
-
-	public void Update() {
-
-	}
-
-
-	public void OpenLink(int index) {
-		if(index < 0 || index >= links.Length)
-			return;
-		Application.OpenURL(links[index]);
-	}
-
 }

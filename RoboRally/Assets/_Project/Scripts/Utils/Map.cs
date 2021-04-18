@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Tgm.Roborally.Api.Model;
 
-namespace Gameclient.Utils {
+namespace RoboRally.Utils {
 	[DataContract]
 	public class Map {
 

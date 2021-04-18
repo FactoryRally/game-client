@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameController : MonoBehaviour {
+namespace RoboRally.Controller {
+	public class GameController : MonoBehaviour {
 
-	void Start() {
+		void Start() {
+
+		}
+
+		void Update() {
+
+
+		}
 
 	}
-
-	void Update() {
-
-
-	}
-
 }

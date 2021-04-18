@@ -2,24 +2,26 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HostItem : MonoBehaviour {
+namespace RoboRally.Menu.Elements {
+	public class HostItem : MonoBehaviour {
 
-	public string ip;
+		public string ip;
 
-	public Button RemoveButton;
-	public TMP_Text Text;
+		public Button RemoveButton;
+		public TMP_Text Text;
 
-	void Start() {
-		Text.text = ip;
-	}
+		void Start() {
+			Text.text = ip;
+		}
 
-	void Update() {
+		void Update() {
 
-	}
+		}
 
-	public void SetOnClick(HostMenuController hmc) {
-		RemoveButton.onClick.AddListener(() => {
-			hmc.RemoveHost(ip);
-		});
+		public void SetOnClick(HostMenuController hmc) {
+			RemoveButton.onClick.AddListener(() => {
+				hmc.RemoveHost(ip);
+			});
+		}
 	}
 }
