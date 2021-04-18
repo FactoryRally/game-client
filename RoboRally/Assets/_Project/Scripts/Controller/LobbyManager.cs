@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using Tgm.Roborally.Api.Model;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 namespace RoboRally.Controller {
 	public class LobbyManager : MonoBehaviour {
@@ -200,8 +201,12 @@ namespace RoboRally.Controller {
 				null
 			);
 			yield return request.SendWebRequest();
-			if(request.downloadHandler != null)
-				Debug.Log(request.downloadHandler.text);
+			if(request.downloadHandler != null) {
+				IngameData.JoinData = JsonConvert.DeserializeObject<JoinResponse>(request.downloadHandler.text);
+				IngameData.PlayerName = playerName;
+				if(IngameData.JoinData != null)
+					SceneManager.LoadScene("Lobby");
+			}
 		}
 	}
 }

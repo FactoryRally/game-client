@@ -11,7 +11,7 @@ using UnityEngine.UI;
 namespace RoboRally.Keybindings {
 	public class InputManager : MonoBehaviour {
 
-		public static InputManager instance = null;
+		public static InputManager Instance = null;
 
 		public static string SAVE_FOLDER;
 
@@ -28,8 +28,8 @@ namespace RoboRally.Keybindings {
 
 		private void Awake() {
 			SAVE_FOLDER = Application.dataPath + "/Data/";
-			if(instance == null) {
-				instance = this;
+			if(Instance == null) {
+				Instance = this;
 				DontDestroyOnLoad(this);
 			} else {
 				Destroy(gameObject);
@@ -104,7 +104,7 @@ namespace RoboRally.Keybindings {
 		#region Key Methods
 
 		public static float GetAxis(string keybindingName) {
-			foreach(Keybinding binding in InputManager.instance.Keybindings) {
+			foreach(Keybinding binding in InputManager.Instance.Keybindings) {
 				if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 					return binding.GetAxis();
 			}
@@ -112,7 +112,7 @@ namespace RoboRally.Keybindings {
 		}
 
 		public static bool GetButton(string keybindingName) {
-			foreach(Keybinding binding in InputManager.instance.Keybindings) {
+			foreach(Keybinding binding in InputManager.Instance.Keybindings) {
 				if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 					return binding.GetButton();
 			}
@@ -120,7 +120,7 @@ namespace RoboRally.Keybindings {
 		}
 
 		public static bool GetButtonDown(string keybindingName) {
-			foreach(Keybinding binding in InputManager.instance.Keybindings) {
+			foreach(Keybinding binding in InputManager.Instance.Keybindings) {
 				if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 					return binding.GetButtonDown();
 			}
@@ -128,7 +128,7 @@ namespace RoboRally.Keybindings {
 		}
 
 		public static bool GetButtonUp(string keybindingName) {
-			foreach(Keybinding binding in InputManager.instance.Keybindings) {
+			foreach(Keybinding binding in InputManager.Instance.Keybindings) {
 				if(binding.Name.ToLower().Equals(keybindingName.ToLower()))
 					return binding.GetButtonUp();
 			}
@@ -171,7 +171,7 @@ namespace RoboRally.Keybindings {
 		}
 
 		public Keybinding GetBindingByName(string bindingName) {
-			foreach(Keybinding binding in InputManager.instance.Keybindings) {
+			foreach(Keybinding binding in InputManager.Instance.Keybindings) {
 				if(binding.Name.Equals(bindingName, StringComparison.InvariantCultureIgnoreCase)) {
 					return binding;
 				}

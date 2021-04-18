@@ -27,6 +27,7 @@ namespace RoboRally.Utils {
 			startInfo.UseShellExecute = true;
 			startInfo.FileName = serverPath;
 			startInfo.WindowStyle = ProcessWindowStyle.Normal;
+			// startInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
 			try {
 				server = Process.Start(startInfo);

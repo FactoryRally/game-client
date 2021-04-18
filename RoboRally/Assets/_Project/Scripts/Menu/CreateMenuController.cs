@@ -10,8 +10,8 @@ namespace RoboRally.Menu {
 	class CreateMenuController : MonoBehaviour {
 
 		public TMP_InputField GameNameInput;
-		public TMP_InputField ServerInput;
 		public TMP_InputField PasswordInput;
+		public TMP_InputField PlayerNameInput;
 		public ButtonSelector NamesSelector;
 		public ButtonSelector ComsSelector;
 		public ButtonSelector MaxPlayersSelector;
@@ -32,15 +32,23 @@ namespace RoboRally.Menu {
 		}
 
 		public void Create() {
-			string address = LobbyManager.GetLocalIPAddress();
+			if(!ValidateInputs())
+				return;
 			cm.CreateLobby(
 				GameNameInput.text,
 				PasswordInput.text,
 				NamesSelector.index == 0,
 				ComsSelector.index == 0,
-				MaxPlayersSelector.index + 1
+				MaxPlayersSelector.index + 1,
+				PlayerNameInput.text
 			);
-			;
+		}
+
+		public bool ValidateInputs() {
+			return 
+				GameNameInput.text.Length >= 4 && 
+				PasswordInput.text.Length >= 4 && 
+				PlayerNameInput.text.Length >= 4;
 		}
 	}
 }
