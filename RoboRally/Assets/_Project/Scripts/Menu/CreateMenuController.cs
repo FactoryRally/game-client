@@ -47,7 +47,7 @@ namespace RoboRally.Menu {
 		public bool ValidateInputs() {
 			return 
 				GameNameInput.text.Length >= 4 && 
-				PasswordInput.text.Length >= 4 && 
+				(PasswordInput.text.Length >= 4 || PasswordInput.text.Length == 0) && 
 				PlayerNameInput.text.Length >= 4;
 		}
 	}

@@ -21,7 +21,11 @@ namespace RoboRally.Menu {
 		}
 
 		public void Leave() {
+			InlobbyManager.Instance.LeaveLobby(IngameData.Address, IngameData.ID, IngameData.JoinData.Id);
+		}
 
+		public void StartGame() {
+			InlobbyManager.Instance.StartGame(IngameData.Address, IngameData.ID);
 		}
 	}
 }

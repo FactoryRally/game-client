@@ -201,11 +201,14 @@ namespace RoboRally.Controller {
 				null
 			);
 			yield return request.SendWebRequest();
-			if(request.downloadHandler != null) {
+			if(request.downloadHandler != null && !request.downloadHandler.text.Contains("error")) {
 				IngameData.JoinData = JsonConvert.DeserializeObject<JoinResponse>(request.downloadHandler.text);
 				IngameData.PlayerName = playerName;
-				if(IngameData.JoinData != null)
+				IngameData.ID = gameId;
+				IngameData.Address = address;
+				if(IngameData.JoinData != null) {
 					SceneManager.LoadScene("Lobby");
+				}
 			}
 		}
 	}

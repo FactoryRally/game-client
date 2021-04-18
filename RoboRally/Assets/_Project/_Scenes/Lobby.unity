@@ -434,8 +434,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1899667450}
-        m_MethodName: 
+      - m_Target: {fileID: 1899667451}
+        m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3379,9 +3379,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1899667450}
-        m_MethodName: 
-        m_Mode: 6
+      - m_Target: {fileID: 1899667451}
+        m_MethodName: Leave
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4304,6 +4304,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1899667452}
   - component: {fileID: 1899667451}
+  - component: {fileID: 1899667453}
   m_Layer: 0
   m_Name: LobbyUIController
   m_TagString: Untagged
@@ -4323,6 +4324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11b14a904098ffc4f9fd08d0f3ab2fda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StartButton: {fileID: 230199415}
 --- !u!4 &1899667452
 Transform:
   m_ObjectHideFlags: 0
@@ -4337,6 +4339,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1899667453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899667450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e804de727807c38429d7a7cff86e61e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1973392155
 GameObject:
   m_ObjectHideFlags: 0

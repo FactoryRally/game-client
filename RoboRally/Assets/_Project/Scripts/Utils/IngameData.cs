@@ -10,17 +10,22 @@ namespace RoboRally.Utils {
 		public static JoinResponse JoinData = null;
 		
 		public static List<string> PlayerNames = new List<string>();
+
+		public static string _playerName = "";
 		public static string PlayerName {
+			get { return _playerName; }
 			set {
-				PlayerNames.Remove(PlayerName);
+				if(PlayerNames.Contains(_playerName))
+					PlayerNames.Remove(_playerName);
 				PlayerNames.Add(value);
-				PlayerName = value;
+				_playerName = value;
 			}
-			get { return PlayerName; }
 		}
 
 		public static bool IsHost = false;
 
 		public static int ID = -1;
+
+		public static string Address = "";
 	}
 }
