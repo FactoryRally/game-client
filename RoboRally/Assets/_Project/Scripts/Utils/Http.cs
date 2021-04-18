@@ -12,7 +12,7 @@ namespace RoboRally.Utils {
 		public static Process server;
 
 		public static bool running = false;
-		public const string address = "http://localhost";
+		public const string address = "localhost";
 		public const string port = ":5050";
 
 		public static string serverPath = "";
@@ -49,101 +49,65 @@ namespace RoboRally.Utils {
 			Http.running = false;
 		}
 
-		public static IEnumerator Get(string path, string[] parameter, Action<UnityWebRequest> response) {
-			UnityWebRequest uwr = UnityWebRequest.Get(Http.address + path + GetParameters(parameter));
-			uwr.method = UnityWebRequest.kHttpVerbGET;
-			uwr.SetRequestHeader("Content-Type", "application/json");
-			uwr.SetRequestHeader("Accept", "application/json");
-			yield return uwr.SendWebRequest();
-			while(!uwr.isDone) {
-				yield return null;
-			}
-			response(uwr);
-		}
-
 		public static UnityWebRequest CreateGet(string address, string path, params string[] query) {
 			UnityWebRequest uwr;
 			if(address == null) {
-				uwr = UnityWebRequest.Get(Http.address + path + GetParameters(query));
-			} else {
-				uwr = UnityWebRequest.Get("http://" + address + port + "/v1/" + path + GetParameters(query));
+				address = Http.address;
 			}
+			uwr = UnityWebRequest.Get("http://" + address + port + "/v1/" + path + GetParameters(query));
 			uwr.method = UnityWebRequest.kHttpVerbGET;
 			uwr.SetRequestHeader("Content-Type", "application/json");
 			uwr.SetRequestHeader("Accept", "application/json");
 			return uwr;
-		}
-
-		public static IEnumerator Post(string path, string[] bodys, Action<UnityWebRequest> response) {
-			UnityWebRequest uwr = UnityWebRequest.Put(Http.address + path, GetBodyJson(bodys));
-			uwr.method = UnityWebRequest.kHttpVerbPOST;
-			uwr.SetRequestHeader("Content-Type", "application/json");
-			uwr.SetRequestHeader("Accept", "application/json");
-			yield return uwr.SendWebRequest();
-			while(!uwr.isDone) {
-				yield return null;
-			}
-			response(uwr);
 		}
 
 		public static UnityWebRequest CreatePost(string address, string path, string[] query, string[] body) {
 			UnityWebRequest uwr;
 			byte[] data = Encoding.ASCII.GetBytes(GetBodyJson(body));
 			if(address == null) {
-				uwr = new UnityWebRequest(
-					Http.address + port + "/v1/" + path + GetParameters(query),
-					"POST",
-					new DownloadHandlerBuffer(),
-					body == null || body.Length == 0 ? null : (UploadHandler) new UploadHandlerRaw(data)
-				);
-			} else {
-				uwr = new UnityWebRequest(
-					"http://" + address + port + "/v1/" + path + GetParameters(query),
-					"POST",
-					new DownloadHandlerBuffer(),
-					body == null || body.Length == 0 ? null : (UploadHandler) new UploadHandlerRaw(data)
-				);
+				address = Http.address;
 			}
+			uwr = new UnityWebRequest(
+				"http://" + address + port + "/v1/" + path + GetParameters(query),
+				UnityWebRequest.kHttpVerbPOST,
+				new DownloadHandlerBuffer(),
+				body == null || body.Length == 0 ? null : (UploadHandler) new UploadHandlerRaw(data)
+			);
 			uwr.method = UnityWebRequest.kHttpVerbPOST;
 			uwr.SetRequestHeader("Content-Type", "application/json");
 			uwr.SetRequestHeader("Accept", "application/json");
 			return uwr;
 		}
 
-
-		public static IEnumerator Put(string path, string[] parameter, Action<UnityWebRequest> response) {
-			UnityWebRequest uwr = UnityWebRequest.Put(Http.address + path + GetParameters(parameter), "");
-			uwr.SetRequestHeader("Content-Type", "application/json");
-			uwr.SetRequestHeader("Accept", "application/json");
-			yield return uwr.SendWebRequest();
-			while(!uwr.isDone) {
-				yield return null;
-			}
-			response(uwr);
-		}
-
 		public static UnityWebRequest CreatePut(string address, string path, string[] query, string[] body) {
 			UnityWebRequest uwr;
+			byte[] data = Encoding.ASCII.GetBytes(GetBodyJson(body));
 			if(address == null) {
-				uwr = UnityWebRequest.Put(Http.address + port + "/v1/" + path + GetParameters(query), GetBody(body).data);
-			} else {
-				uwr = UnityWebRequest.Put("http://" + address + port + "/v1/" + path + GetParameters(query), GetBody(body).data);
+				address = Http.address;
 			}
+			UnityEngine.Debug.Log("http://" + address + port + "/v1/" + path + GetParameters(query));
+			uwr = new UnityWebRequest(
+				"http://" + address + port + "/v1/" + path + GetParameters(query),
+				UnityWebRequest.kHttpVerbPUT,
+				new DownloadHandlerBuffer(),
+				body == null || body.Length == 0 ? null : (UploadHandler) new UploadHandlerRaw(data)
+			);
 			uwr.method = UnityWebRequest.kHttpVerbPUT;
 			uwr.SetRequestHeader("Content-Type", "application/json");
 			uwr.SetRequestHeader("Accept", "application/json");
 			return uwr;
 		}
 
-		public static IEnumerator Delete(string path, Action<UnityWebRequest> response) {
-			UnityWebRequest uwr = UnityWebRequest.Delete(Http.address + path);
+		public static UnityWebRequest CreateDelete(string address, string path, params string[] query) {
+			UnityWebRequest uwr;
+			if(address == null) {
+				address = Http.address;
+			}
+			uwr = UnityWebRequest.Delete("http://" + address + port + "/v1/" + path + GetParameters(query));
+			uwr.method = UnityWebRequest.kHttpVerbDELETE;
 			uwr.SetRequestHeader("Content-Type", "application/json");
 			uwr.SetRequestHeader("Accept", "application/json");
-			yield return uwr.SendWebRequest();
-			while(!uwr.isDone) {
-				yield return null;
-			}
-			response(uwr);
+			return uwr;
 		}
 
 		private static string GetParameters(string[] parameter) {
