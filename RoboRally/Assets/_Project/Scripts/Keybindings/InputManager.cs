@@ -13,7 +13,7 @@ namespace RoboRally.Keybindings {
 
 		public static InputManager Instance = null;
 
-		public static string SAVE_FOLDER;
+		public string SAVE_FOLDER;
 
 		public GameObject BindingsContainer;
 		public Color DefaultColor;

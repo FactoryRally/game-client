@@ -45,7 +45,7 @@ namespace RoboRally.Utils {
 		public bool IsEmpty = true;
 		public Direction TileDirection = Direction.Up;
 		public Direction RotatorDirection = Direction.Left;
-		public int Level = 0;
+		public int Level = 1;
 
 	}
 }

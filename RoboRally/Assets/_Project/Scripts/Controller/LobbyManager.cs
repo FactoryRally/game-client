@@ -133,7 +133,6 @@ namespace RoboRally.Controller {
 			state = LobbyCallState.LOADING;
 			instances = addresses.Count;
 			instancesInfo = 0;
-			Debug.Log("ALDA");
 			foreach(string address in addresses) {
 				StartCoroutine(RequestGamesAsync(address));
 			}

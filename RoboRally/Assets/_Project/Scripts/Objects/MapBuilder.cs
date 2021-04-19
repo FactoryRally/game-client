@@ -9,20 +9,29 @@ namespace RoboRally.Objects {
 		private static MapBuilder _instance;
 		public static MapBuilder Instance { get { return _instance; } }
 
-		public Map SelectedMap = new Map();
+		public Map SelectedMap = new Map(24, 16);
 
-		public GameObject GameGrid;
+		public int WallDistanceModifier = 5;
+
+		public GameObject Floor;
+		public GameObject SpaceFiller;
+		public GameObject WallPrefab;
 		public List<GameObject> TilePrefabs = new List<GameObject>();
 		public List<GameObject> Tiles = new List<GameObject>();
+		private List<GameObject> Walls = new List<GameObject>();
 
 
-		void Start() {
+		void Awake() {
 			if(_instance != null && _instance != this) {
 				Destroy(this.gameObject);
 				return;
 			} else {
 				_instance = this;
 			}
+		}
+
+		void Start() {
+			BuildMap();
 		}
 
 
@@ -32,26 +41,42 @@ namespace RoboRally.Objects {
 
 
 		public GameObject PrefabByType(TileType type) {
-			for(int i = 0; i < Tiles.Count; i++) {
-				if(Tiles[i] == null || Tiles[i].GetComponent<TileObject>())
+			for(int i = 0; i < TilePrefabs.Count; i++) {
+				if(TilePrefabs[i] == null || TilePrefabs[i].GetComponent<TileObject>() == null)
 					continue;
-				if(Tiles[i].GetComponent<TileObject>().TileType == type) {
-					return Tiles[i];
+				if(TilePrefabs[i].GetComponent<TileObject>().TileType == type) {
+					return TilePrefabs[i];
 				}
 			}
 			return null;
 		}
 
-		public void BuildMap(bool clear = true) {
+		public void BuildMap(bool clear = true, bool buildWalls = true) {
 			if(clear)
 				ClearMap();
+			Floor.transform.localScale = new Vector3(
+				SelectedMap.Width + 2 * WallDistanceModifier, 
+				1, 
+				SelectedMap.Height + 2 * WallDistanceModifier
+			);
+			Floor.transform.position = GetCenter() + 2 * Vector3.down;
+			SpaceFiller.transform.localScale = new Vector3(
+				SelectedMap.Width,
+				2,
+				SelectedMap.Height
+			);
+			SpaceFiller.transform.position = GetCenter() + 0.5f * Vector3.down;
 			for(int x = 0; x < SelectedMap.Width; x++) {
 				for(int y = 0; y < SelectedMap.Height; y++) {
 					Tile tile = SelectedMap[x, y];
 					GameObject tilePrefab = PrefabByType(tile.Type);
+					if(tilePrefab == null) {
+						this.Tiles.Add(null);
+						continue;
+					}
 					GameObject tileObject = Instantiate(
 						tilePrefab,
-						new Vector3(x, y),
+						new Vector3(x, tile.Level, y),
 						DirectionToQuaternion(tile.TileDirection),
 						transform
 					);
@@ -59,6 +84,8 @@ namespace RoboRally.Objects {
 					this.Tiles.Add(tileObject);
 				}
 			}
+			if(buildWalls)
+				SetupWalls();
 		}
 
 		public void ClearMap() {
@@ -66,10 +93,42 @@ namespace RoboRally.Objects {
 				Destroy(tile);
 			}
 			this.Tiles.Clear();
+			foreach(GameObject wall in this.Walls) {
+				Destroy(wall);
+			}
+			this.Walls.Clear();
+		}
+
+		private void SetupWalls() {
+			for(int i = 0; i < 4; i++) {
+				GameObject wall = Instantiate(
+					WallPrefab,
+					GetSide(i) + 4 * Vector3.up,
+					Quaternion.Euler(0, i * 90, 0)
+				);
+				wall.name = "Wall_" + i;
+				int width = i % 2 == 0 ? SelectedMap.Height : SelectedMap.Width;
+				wall.GetComponent<Wall>().SetWidth(width + 2 * WallDistanceModifier);
+				this.Walls.Add(wall);
+			}
+		}
+
+		public Vector3 GetSide(int side) {
+			switch(side) {
+				case 0:
+					return GetCenter() + new Vector3((-SelectedMap.Width - 1) / 2f - WallDistanceModifier, 0, 0);
+				case 1:
+					return GetCenter() + new Vector3(0, 0, (SelectedMap.Height + 1) / 2f + WallDistanceModifier);
+				case 2:
+					return GetCenter() + new Vector3((SelectedMap.Width + 1) / 2f + WallDistanceModifier, 0, 0);
+				case 3:
+					return GetCenter() + new Vector3(0, 0, (-SelectedMap.Height - 1) / 2f - WallDistanceModifier);
+			}
+			return GetCenter() + new Vector3(-SelectedMap.Width / 2f - 1, 0, 0);
 		}
 
 		public Vector3 GetCenter() {
-			return new Vector3(SelectedMap.Width / 2f, 0, SelectedMap.Height / 2f);
+			return new Vector3((SelectedMap.Width - 1) / 2f, 0, (SelectedMap.Height - 1) / 2f);
 		}
 
 		public static Quaternion DirectionToQuaternion(Direction direction) {

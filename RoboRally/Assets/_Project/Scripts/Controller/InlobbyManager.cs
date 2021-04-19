@@ -64,6 +64,7 @@ namespace RoboRally.Controller {
 			} else if(request.downloadHandler != null) {
 				Debug.Log("StartGame: " + request.downloadHandler.text);
 			}
+			SceneManager.LoadScene("Game");
 		}
 	}
 }

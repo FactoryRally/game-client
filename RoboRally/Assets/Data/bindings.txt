@@ -40,13 +40,33 @@
     "Snap": false
   },
   {
-    "Name": "Jump",
-    "PositiveButton": 32,
-    "NegativeButton": 0,
+    "Name": "CameraWS",
+    "PositiveButton": 119,
+    "NegativeButton": 115,
     "AltPositiveButton": 0,
     "AltNegativeButton": 0,
-    "Gravity": 0.0,
-    "Sensitivity": 0.0,
-    "Snap": false
+    "Gravity": 5.0,
+    "Sensitivity": 2.5,
+    "Snap": true
+  },
+  {
+    "Name": "CameraVertical",
+    "PositiveButton": 32,
+    "NegativeButton": 304,
+    "AltPositiveButton": 0,
+    "AltNegativeButton": 303,
+    "Gravity": 5.0,
+    "Sensitivity": 2.5,
+    "Snap": true
+  },
+  {
+    "Name": "CameraAD",
+    "PositiveButton": 97,
+    "NegativeButton": 100,
+    "AltPositiveButton": 0,
+    "AltNegativeButton": 0,
+    "Gravity": 5.0,
+    "Sensitivity": 2.5,
+    "Snap": true
   }
 ]
