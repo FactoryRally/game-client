@@ -170,6 +170,8 @@ namespace RoboRally.Controller {
 						state = LobbyCallState.LOADED;
 					}
 				}
+			} else if(!request.isHttpError) {
+				// TODO
 			} else if(request.downloadHandler != null) {
 				Debug.Log("RequestGames: " + request.downloadHandler.text);
 			}
