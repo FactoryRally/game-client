@@ -39,7 +39,7 @@ namespace RoboRally.Controller {
 			GetGames(true);
 		}
 
-		public void Start() { 
+		public void Start() {
 
 		}
 
@@ -142,32 +142,35 @@ namespace RoboRally.Controller {
 			List<string> games = new List<string>();
 			UnityWebRequest request = Http.CreateGet(address, "games", null);
 			yield return request.SendWebRequest();
-			instances--;
-			int[] gameIds = JsonConvert.DeserializeObject<int[]>(request.downloadHandler.text);
-			if(gameIds == null) {
-
-			} else {
-				instancesInfo += gameIds.Length;
-				for(int i = 0; i < gameIds.Length; i++) {
-					StartCoroutine(RequestGameInfo(address, gameIds[i]));
+			if(request.responseCode == 200) {
+				Debug.Log("RequestGames: " + request.downloadHandler.text);
+				instances--;
+				int[] gameIds = JsonConvert.DeserializeObject<int[]>(request.downloadHandler.text);
+				if(gameIds != null) {
+					instancesInfo += gameIds.Length;
+					for(int i = 0; i < gameIds.Length; i++) {
+						StartCoroutine(RequestGameInfo(address, gameIds[i]));
+					}
 				}
-			}
-			float ttl = 5f;
-			float time = 0;
-			while(instancesInfo > 0) {
-				yield return new WaitForSeconds(0.05f);
-				time += 0.05f;
-				if(time >= ttl) {
-					instances = 0;
-					break;
+				float ttl = 5f;
+				float time = 0;
+				while(instancesInfo > 0) {
+					yield return new WaitForSeconds(0.05f);
+					time += 0.05f;
+					if(time >= ttl) {
+						instances = 0;
+						break;
+					}
 				}
-			}
-			if(state == LobbyCallState.LOADING) {
-				if(this.games.Count == 0) {
-					state = LobbyCallState.NO_GAMES_FOUND;
-				} else {
-					state = LobbyCallState.LOADED;
+				if(state == LobbyCallState.LOADING) {
+					if(this.games.Count == 0) {
+						state = LobbyCallState.NO_GAMES_FOUND;
+					} else {
+						state = LobbyCallState.LOADED;
+					}
 				}
+			} else if(request.downloadHandler.text != null) {
+				Debug.LogError("RequestGames: " + request.downloadHandler.text);
 			}
 		}
 
@@ -175,12 +178,15 @@ namespace RoboRally.Controller {
 			UnityWebRequest request = Http.CreateGet(address, "games/" + gameId + "/status", null);
 			yield return request.SendWebRequest();
 			if(request.responseCode == 200) {
+				Debug.Log("RequestGameInfo_" + gameId + ": " + request.downloadHandler.text);
 				(GameInfo, string, int) t = (
 					JsonConvert.DeserializeObject<GameInfo>(request.downloadHandler.text),
 					address,
 					gameId
 				);
 				this.games.Add(t);
+			} else if(request.downloadHandler.text != null) {
+				Debug.LogError("RequestGameInfo_" + gameId + ": " + request.downloadHandler.text);
 			}
 			instancesInfo--;
 		}
@@ -201,7 +207,8 @@ namespace RoboRally.Controller {
 				null
 			);
 			yield return request.SendWebRequest();
-			if(request.downloadHandler != null && !request.downloadHandler.text.Contains("error")) {
+			if(request.responseCode == 200) {
+				Debug.Log("JoinLobby: " + request.downloadHandler.text);
 				IngameData.JoinData = JsonConvert.DeserializeObject<JoinResponse>(request.downloadHandler.text);
 				IngameData.PlayerName = playerName;
 				IngameData.ID = gameId;
@@ -209,6 +216,8 @@ namespace RoboRally.Controller {
 				if(IngameData.JoinData != null) {
 					SceneManager.LoadScene("Lobby");
 				}
+			} else if(request.downloadHandler.text != null) {
+				Debug.LogError("JoinLobby: " + request.downloadHandler.text);
 			}
 		}
 	}

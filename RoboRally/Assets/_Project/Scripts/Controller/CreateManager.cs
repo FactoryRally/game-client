@@ -41,10 +41,9 @@ namespace RoboRally.Controller {
 			};
 			UnityWebRequest request = Http.CreatePost("localhost", "games", null, body);
 			yield return request.SendWebRequest();
-			if(AutoJoin) {
-				if(request.downloadHandler == null || request.downloadHandler.text == null) {
-					Debug.Log("Was not able to join the Game!");
-				} else {
+			if(request.responseCode == 200) {
+				Debug.Log("CreateLobby: " + request.downloadHandler.text);
+				if(AutoJoin) {
 					try {
 						int id = int.Parse(request.downloadHandler.text);
 						string address = LobbyManager.GetLocalIPAddress();
@@ -54,6 +53,8 @@ namespace RoboRally.Controller {
 					} catch(FormatException) {
 						Debug.Log("Was not able to join the Game!");
 					}
+				} else {
+					Debug.LogError("CreateLobby: " + request.downloadHandler.text);
 				}
 			}
 		}

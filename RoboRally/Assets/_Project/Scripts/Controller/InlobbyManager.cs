@@ -35,8 +35,11 @@ namespace RoboRally.Controller {
 				"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
 			);
 			yield return request.SendWebRequest();
-			if(request.downloadHandler != null) {
-				Debug.Log("Deleted");
+			Debug.Log(request.downloadHandler.text);
+			if(request.responseCode == 200) {
+				Debug.Log("LeaveGame: " + request.downloadHandler.text);
+			} else if(request.downloadHandler.text != null) {
+				Debug.LogError("LeaveGame: " + request.downloadHandler.text);
 			}
 			SceneManager.LoadScene("Menu_Main");
 		}
@@ -49,15 +52,17 @@ namespace RoboRally.Controller {
 			UnityWebRequest request = Http.CreatePut(
 				address,
 				"games/" + gameId + "/actions",
-				new string[] { 
+				new string[] {
 					"action=3",
 					"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
 				},
 				null
 			);
 			yield return request.SendWebRequest();
-			if(request.downloadHandler != null) {
-				Debug.Log(request.downloadHandler.text);
+			if(request.responseCode == 200) {
+				Debug.Log("StartGame: " + request.downloadHandler.text);
+			} else if(request.downloadHandler.text != null) {
+				Debug.LogError("StartGame: " + request.downloadHandler.text);
 			}
 		}
 	}
