@@ -53,9 +53,9 @@ namespace RoboRally.Controller {
 					} catch(FormatException) {
 						Debug.Log("Was not able to join the Game!");
 					}
-				} else {
-					Debug.LogError("CreateLobby: " + request.downloadHandler.text);
 				}
+			} else if(request.downloadHandler != null) {
+				Debug.Log("CreateLobby: " + request.downloadHandler.text);
 			}
 		}
 	}

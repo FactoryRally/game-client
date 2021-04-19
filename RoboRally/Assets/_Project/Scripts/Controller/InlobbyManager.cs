@@ -38,8 +38,8 @@ namespace RoboRally.Controller {
 			Debug.Log(request.downloadHandler.text);
 			if(request.responseCode == 200) {
 				Debug.Log("LeaveGame: " + request.downloadHandler.text);
-			} else if(request.downloadHandler.text != null) {
-				Debug.LogError("LeaveGame: " + request.downloadHandler.text);
+			} else if(request.downloadHandler != null) {
+				Debug.Log("LeaveGame: " + request.downloadHandler.text);
 			}
 			SceneManager.LoadScene("Menu_Main");
 		}
@@ -61,8 +61,8 @@ namespace RoboRally.Controller {
 			yield return request.SendWebRequest();
 			if(request.responseCode == 200) {
 				Debug.Log("StartGame: " + request.downloadHandler.text);
-			} else if(request.downloadHandler.text != null) {
-				Debug.LogError("StartGame: " + request.downloadHandler.text);
+			} else if(request.downloadHandler != null) {
+				Debug.Log("StartGame: " + request.downloadHandler.text);
 			}
 		}
 	}

@@ -133,6 +133,7 @@ namespace RoboRally.Controller {
 			state = LobbyCallState.LOADING;
 			instances = addresses.Count;
 			instancesInfo = 0;
+			Debug.Log("ALDA");
 			foreach(string address in addresses) {
 				StartCoroutine(RequestGamesAsync(address));
 			}
@@ -169,8 +170,8 @@ namespace RoboRally.Controller {
 						state = LobbyCallState.LOADED;
 					}
 				}
-			} else if(request.downloadHandler.text != null) {
-				Debug.LogError("RequestGames: " + request.downloadHandler.text);
+			} else if(request.downloadHandler != null) {
+				Debug.Log("RequestGames: " + request.downloadHandler.text);
 			}
 		}
 
@@ -185,8 +186,8 @@ namespace RoboRally.Controller {
 					gameId
 				);
 				this.games.Add(t);
-			} else if(request.downloadHandler.text != null) {
-				Debug.LogError("RequestGameInfo_" + gameId + ": " + request.downloadHandler.text);
+			} else if(request.downloadHandler != null) {
+				Debug.Log("RequestGameInfo_" + gameId + ": " + request.downloadHandler.text);
 			}
 			instancesInfo--;
 		}
@@ -216,8 +217,8 @@ namespace RoboRally.Controller {
 				if(IngameData.JoinData != null) {
 					SceneManager.LoadScene("Lobby");
 				}
-			} else if(request.downloadHandler.text != null) {
-				Debug.LogError("JoinLobby: " + request.downloadHandler.text);
+			} else if(request.downloadHandler != null) {
+				Debug.Log("JoinLobby: " + request.downloadHandler.text);
 			}
 		}
 	}
