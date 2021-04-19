@@ -68,5 +68,15 @@
     "Gravity": 5.0,
     "Sensitivity": 2.5,
     "Snap": true
+  },
+  {
+    "Name": "CameraSwitch",
+    "PositiveButton": 99,
+    "NegativeButton": 324,
+    "AltPositiveButton": 0,
+    "AltNegativeButton": 0,
+    "Gravity": 5.0,
+    "Sensitivity": 2.5,
+    "Snap": true
   }
 ]

@@ -29680,6 +29680,14 @@ MonoBehaviour:
     Gravity: 5
     Sensitivity: 2.5
     Snap: 1
+  - Name: CameraToggle
+    PositiveButton: 99
+    NegativeButton: 325
+    AltPositiveButton: 0
+    AltNegativeButton: 0
+    Gravity: 5
+    Sensitivity: 2.5
+    Snap: 1
 --- !u!1 &1754317463
 GameObject:
   m_ObjectHideFlags: 0

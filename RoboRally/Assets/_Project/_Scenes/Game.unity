@@ -403,12 +403,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HideCursor: 1
-  speed: 10
+  speed: 15
   speedH: 2
   speedV: 2
   ClampX: 10
   ClampY: 10
-  ClampHeight: {x: 1, y: 9}
+  ClampHeight: {x: 2, y: 15}
   MaxXAngle: 85
 --- !u!1 &889956220
 GameObject:
