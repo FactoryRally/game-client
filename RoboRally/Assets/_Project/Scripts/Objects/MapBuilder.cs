@@ -32,7 +32,14 @@ namespace RoboRally.Objects {
 
 
 		public GameObject PrefabByType(TileType type) {
-			return TilePrefabs[type] == null ? TilePrefabs[TileType.Normal] : TilePrefabs[type];
+			for(int i = 0; i < Tiles.Count; i++) {
+				if(Tiles[i] == null || Tiles[i].GetComponent<TileObject>())
+					continue;
+				if(Tiles[i].GetComponent<TileObject>().TileType == type) {
+					return Tiles[i];
+				}
+			}
+			return null;
 		}
 
 		public void BuildMap(bool clear = true) {
