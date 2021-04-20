@@ -1,4 +1,5 @@
-﻿using RoboRally.Utils;
+﻿using Newtonsoft.Json;
+using RoboRally.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace RoboRally.Controller {
 		private static InlobbyManager _instance;
 		public static InlobbyManager Instance { get { return _instance; } }
 
-		void Start() {
+		void Awake() {
 			if(_instance != null && _instance != this) {
 				Destroy(this.gameObject);
 				return;
@@ -24,6 +25,7 @@ namespace RoboRally.Controller {
 
 		}
 
+
 		public void LeaveLobby(string address, int gameId, int playerId) {
 			StartCoroutine(LeaveLobbyAsync(address, gameId, playerId));
 		}
@@ -35,7 +37,6 @@ namespace RoboRally.Controller {
 				"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
 			);
 			yield return request.SendWebRequest();
-			Debug.Log(request.downloadHandler.text);
 			if(request.responseCode == 200) {
 				Debug.Log("LeaveGame: " + request.downloadHandler.text);
 			} else if(request.downloadHandler != null) {
