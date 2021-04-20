@@ -41,7 +41,7 @@ namespace Tgm.Roborally.Api.Model
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = false)]
-        public Robots? Type { get; set; }
+        public Robots Type { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="RobotInfo" /> class.
         /// </summary>
@@ -64,7 +64,7 @@ namespace Tgm.Roborally.Api.Model
         /// <param name="handCards">The cards in the hand of the robot.</param>
         /// <param name="attitude">The height level of the robot (default to 0).</param>
         /// <param name="type">type.</param>
-        public RobotInfo(Direction direction = default(Direction), string name = default(string), int id = default(int), Position location = default(Position), int energyCubes = 3, int health = 10, bool active = true, bool _virtual = false, int priority = default(int), bool onTurn = default(bool), bool isMine = default(bool), int handCards = default(int), int attitude = 0, Robots? type = default(Robots?))
+        public RobotInfo(Direction direction = default(Direction), string name = default(string), int id = default(int), Position location = default(Position), int energyCubes = 3, int health = 10, bool active = true, bool _virtual = false, int priority = default(int), bool onTurn = default(bool), bool isMine = default(bool), int handCards = default(int), int attitude = 0, Robots type = Robots.Dicer)
         {
             this.Direction = direction;
             // to ensure "name" is required (not null)

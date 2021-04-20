@@ -166,6 +166,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SendEvents: 1
+  RobotPrefs:
+  - RobotType: 1
+    Prefab: {fileID: 4081948369042412105, guid: 537adce7f8c67614c930c86807b39b70,
+      type: 3}
+  - RobotType: 2
+    Prefab: {fileID: 380267355125742759, guid: 0858932b87767b14fa0792a3cbc06f50, type: 3}
 --- !u!1 &294435503
 GameObject:
   m_ObjectHideFlags: 0

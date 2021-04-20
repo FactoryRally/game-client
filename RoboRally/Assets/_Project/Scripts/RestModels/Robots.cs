@@ -31,7 +31,7 @@ namespace Tgm.Roborally.Api.Model
     /// </summary>
     
     [JsonConverter(typeof(StringEnumConverter))]
-    
+ 
     public enum Robots
     {
         /// <summary>

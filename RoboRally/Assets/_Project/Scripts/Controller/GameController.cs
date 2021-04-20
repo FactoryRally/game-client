@@ -4,6 +4,7 @@ using RoboRally.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Tgm.Roborally.Api.Model;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -15,6 +16,15 @@ namespace RoboRally.Controller {
 		public static GameController Instance { get { return _instance; } }
 
 		public bool SendEvents = true;
+
+		[Serializable]
+		public struct RobotPrefab {
+			public Robots RobotType;
+			public GameObject Prefab;
+		}
+		public List<RobotPrefab> RobotPrefs = new List<RobotPrefab>();
+		public Dictionary<Robots, GameObject> roboPrefabs => RobotPrefs.ToDictionary(t => t.RobotType, t => t.Prefab);
+		private Dictionary<int, GameObject> IngameRobots = new Dictionary<int, GameObject>();
 
 		void Start() {
 			if(_instance != null && _instance != this) {
@@ -28,6 +38,23 @@ namespace RoboRally.Controller {
 
 		void Update() {
 
+		}
+
+
+		public void SpawnRobot(RobotInfo robotInfo) {
+			if(robotInfo.Type == 0)
+				robotInfo.Type = (Robots) 1;
+			GameObject robotPrefab = roboPrefabs[robotInfo.Type];
+			GameObject robot = Instantiate(
+				robotPrefab,
+				new Vector3(
+					robotInfo.Location.X,
+					IngameData.SelectedMap[robotInfo.Location.X, robotInfo.Location.Y].Level + 1,
+					robotInfo.Location.Y
+				),
+				MapBuilder.DirectionToQuaternion(robotInfo.Direction)
+			);
+			IngameRobots.Add(robotInfo.Id, robot);
 		}
 
 		public void GetEvents(string address, int gameId) {
@@ -50,6 +77,49 @@ namespace RoboRally.Controller {
 					Debug.Log("GetEvent: No events to fetch");
 				}
 				yield return new WaitForSeconds(0.25f);
+			}
+		}
+
+
+		public void GetRobots(string address, int gameId, System.Action<int[]> action = null) {
+			StartCoroutine(GetRobotsAsync(address, gameId, action));
+		}
+
+		public IEnumerator GetRobotsAsync(string address, int gameId, System.Action<int[]> action) {
+			UnityWebRequest request = Http.CreateGet(
+				address,
+				"games/" + gameId + "/entities/robots",
+				"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
+			);
+			yield return request.SendWebRequest();
+			if(!request.isHttpError && request.downloadHandler != null) {
+				Debug.Log("GetRobots: " + request.downloadHandler.text);
+				int[] robotIds = JsonConvert.DeserializeObject<int[]>(request.downloadHandler.text);
+				if(action != null)
+					action(robotIds);
+			} else if(request.downloadHandler != null) {
+				Debug.Log("GetRobots: " + request.downloadHandler.text);
+			}
+		}
+
+		public void GetRobotInfo(string address, int gameId, int robotId, System.Action<RobotInfo> action = null) {
+			StartCoroutine(GetRobotInfoAsync(address, gameId, robotId, action));
+		}
+
+		public IEnumerator GetRobotInfoAsync(string address, int gameId, int robotId, System.Action<RobotInfo> action) {
+			UnityWebRequest request = Http.CreateGet(
+				address,
+				"games/" + gameId + "/entities/robots/" + robotId + "/info",
+				"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
+			);
+			yield return request.SendWebRequest();
+			if(!request.isHttpError && request.downloadHandler != null) {
+				Debug.Log("GetRobotInfo: " + request.downloadHandler.text);
+				RobotInfo robotInfo = JsonConvert.DeserializeObject<RobotInfo>(request.downloadHandler.text);
+				if(action != null)
+					action(robotInfo);
+			} else if(request.downloadHandler != null) {
+				Debug.Log("GetRobotInfo: " + request.downloadHandler.text);
 			}
 		}
 
@@ -164,6 +234,20 @@ namespace RoboRally.Controller {
 			GetMap(IngameData.Address, IngameData.ID, () => {
 				MapBuilder.Instance.SelectedMap = IngameData.SelectedMap;
 				MapBuilder.Instance.BuildMap();
+				GetRobots(
+					IngameData.Address, 
+					IngameData.ID,
+					(int[] robotIds) => {
+						foreach(int robotId in robotIds) {
+							GetRobotInfo(
+								IngameData.Address,
+								IngameData.ID,
+								robotId,
+								SpawnRobot
+							);
+						}
+					}
+				);
 			});
 		}
 	}
