@@ -41,7 +41,7 @@ namespace RoboRally.Controller {
 			};
 			UnityWebRequest request = Http.CreatePost("localhost", "games", null, body);
 			yield return request.SendWebRequest();
-			if(request.responseCode == 200) {
+			if(!request.isHttpError) {
 				Debug.Log("CreateLobby: " + request.downloadHandler.text);
 				if(AutoJoin) {
 					try {
