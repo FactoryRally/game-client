@@ -42,7 +42,7 @@ namespace RoboRally.Controller {
 					"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
 				);
 				yield return request.SendWebRequest();
-				if(!request.isHttpError) {
+				if(!request.isHttpError && request.downloadHandler != null) {
 					Debug.Log(request.downloadHandler.text);
 					GenericEvent genericEvent = JsonConvert.DeserializeObject<GenericEvent>(request.downloadHandler.text);
 					HandleEvent(genericEvent);
@@ -66,7 +66,7 @@ namespace RoboRally.Controller {
 				"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
 			);
 			yield return request.SendWebRequest();
-			if(!request.isHttpError) {
+			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("GetMap: " + request.downloadHandler.text);
 				IngameData.SelectedMap = JsonConvert.DeserializeObject<Map>(request.downloadHandler.text);
 				action();

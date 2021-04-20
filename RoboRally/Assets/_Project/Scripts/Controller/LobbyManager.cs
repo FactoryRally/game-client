@@ -142,7 +142,7 @@ namespace RoboRally.Controller {
 			List<string> games = new List<string>();
 			UnityWebRequest request = Http.CreateGet(address, "games", null);
 			yield return request.SendWebRequest();
-			if(!request.isHttpError) {
+			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("RequestGames: " + request.downloadHandler.text);
 				instances--;
 				int[] gameIds = JsonConvert.DeserializeObject<int[]>(request.downloadHandler.text);
@@ -169,7 +169,7 @@ namespace RoboRally.Controller {
 						state = LobbyCallState.LOADED;
 					}
 				}
-			} else if(!request.isHttpError) {
+			} else if(!request.isHttpError && request.downloadHandler != null) {
 				// TODO
 			} else if(request.downloadHandler != null) {
 				Debug.Log("RequestGames: " + request.downloadHandler.text);
@@ -179,7 +179,7 @@ namespace RoboRally.Controller {
 		public IEnumerator RequestGameInfo(string address, int gameId) {
 			UnityWebRequest request = Http.CreateGet(address, "games/" + gameId + "/status", null);
 			yield return request.SendWebRequest();
-			if(!request.isHttpError) {
+			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("RequestGameInfo_" + gameId + ": " + request.downloadHandler.text);
 				(GameInfo, string, int) t = (
 					JsonConvert.DeserializeObject<GameInfo>(request.downloadHandler.text),
@@ -209,7 +209,7 @@ namespace RoboRally.Controller {
 				null
 			);
 			yield return request.SendWebRequest();
-			if(!request.isHttpError) {
+			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("JoinLobby: " + request.downloadHandler.text);
 				IngameData.JoinData = JsonConvert.DeserializeObject<JoinResponse>(request.downloadHandler.text);
 				IngameData.PlayerName = playerName;

@@ -37,7 +37,7 @@ namespace RoboRally.Controller {
 				"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
 			);
 			yield return request.SendWebRequest();
-			if(!request.isHttpError) {
+			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("LeaveGame: " + request.downloadHandler.text);
 			} else if(request.downloadHandler != null) {
 				Debug.Log("LeaveGame: " + request.downloadHandler.text);
@@ -60,7 +60,7 @@ namespace RoboRally.Controller {
 				null
 			);
 			yield return request.SendWebRequest();
-			if(!request.isHttpError) {
+			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("StartGame: " + request.downloadHandler.text);
 			} else if(request.downloadHandler != null) {
 				Debug.Log("StartGame: " + request.downloadHandler.text);
