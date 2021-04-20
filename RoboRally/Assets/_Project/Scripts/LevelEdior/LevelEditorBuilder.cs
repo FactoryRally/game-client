@@ -3,6 +3,7 @@ using RoboRally.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Tgm.Roborally.Api.Model;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -36,7 +37,7 @@ namespace RoboRally.LevelEdior {
 		[MyBox.ReadOnly]
 		public Quaternion TileRotation = Quaternion.identity;
 		[MyBox.ReadOnly]
-		public Direction RotaterDirection = Direction.Left;
+		public Rotation RotaterDirection = Rotation.Left;
 		[MyBox.ReadOnly]
 		public int TileLevel = 0;
 
@@ -100,7 +101,7 @@ namespace RoboRally.LevelEdior {
 							GridObjects[c, r] = Instantiate(
 								tile,
 								new Vector3(c, CurrentMap[c, r].Level + 1, CurrentMap.Height - r - 1),
-								DirectionToQuaternion(CurrentMap[c, r].TileDirection)
+								DirectionToQuaternion((Direction) CurrentMap[c, r].Direction)
 							);
 							GridObjects[c, r].transform.parent = GridChilds.transform;
 						}
@@ -124,7 +125,7 @@ namespace RoboRally.LevelEdior {
 						GridObjects[c, r] = Instantiate(
 							tile,
 							new Vector3(c, CurrentMap[c, r].Level + 1, CurrentMap.Height - r - 1),
-							DirectionToQuaternion(CurrentMap[c, r].TileDirection)
+							DirectionToQuaternion((Direction) CurrentMap[c, r].Direction)
 						);
 						GridObjects[c, r].transform.parent = GridChilds.transform;
 					}

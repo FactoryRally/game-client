@@ -43,10 +43,12 @@ namespace RoboRally.Objects {
 			Vector3 currentPos = transform.position;
 			Vector3 center = MapBuilder.Instance.GetCenter();
 			Vector3 movement = new Vector3();
+			Vector3 forwardIgnoreY = new Vector3(transform.forward.x, 0, transform.forward.z).normalized;
+			Vector3 leftIgnoreY = - new Vector3(transform.right.x, 0, transform.right.z).normalized;
 			movement =
-				transform.forward * InputManager.GetAxis("CameraWS") * speed * Time.deltaTime +
+				forwardIgnoreY * InputManager.GetAxis("CameraWS") * speed * Time.deltaTime +
 				transform.up * InputManager.GetAxis("CameraVertical") * speed / 1.5f * Time.deltaTime +
-				- transform.right * InputManager.GetAxis("CameraAD") * speed * Time.deltaTime;
+				leftIgnoreY * InputManager.GetAxis("CameraAD") * speed * Time.deltaTime;
 			currentPos += movement;
 			currentPos = new Vector3(
 				Mathf.Clamp(currentPos.x, -ClampX + center.x, ClampX + center.x),

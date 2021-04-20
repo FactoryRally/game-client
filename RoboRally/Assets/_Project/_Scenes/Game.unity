@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63fbc72855d600c42a4ebbe841382e46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SendEvents: 1
 --- !u!1 &294435503
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,7 +465,12 @@ MonoBehaviour:
   - {fileID: 1323694697703804312, guid: f83f6de458fe9694789472ac6f2622dd, type: 3}
   - {fileID: 5122854371339160215, guid: 956d19f608739234bae334b7ebcb2630, type: 3}
   - {fileID: 1269660217465922884, guid: a6cb247d570c78b4f9cc9fe30950cb2e, type: 3}
-  - {fileID: 0}
+  - {fileID: 6953653339647195147, guid: 8dabb520fdeb20a409980295ae215c38, type: 3}
+  - {fileID: 6953653339647195147, guid: 1c1dc3dbbeca1eb419dfd0674e76416b, type: 3}
+  - {fileID: 6953653339647195147, guid: 40720d0a9d2a5fa4780287cf6f9670bb, type: 3}
+  - {fileID: 6953653339647195147, guid: 22b10c60cccbea14d979249971027fb2, type: 3}
+  - {fileID: 6953653339647195147, guid: b0e4da34f571bbb4ba521c1c3cd2b96c, type: 3}
+  - {fileID: 6953653339647195147, guid: 44a47938ecc80ea4da03aad9222ae7a5, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

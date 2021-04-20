@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using RoboRally.Utils;
+using Tgm.Roborally.Api.Model;
 
 namespace RoboRally.LevelEdior
 {
@@ -20,7 +21,7 @@ public class LevelEditorMenu : MonoBehaviour {
 
 	private int LastTileLevel = 0;
 	private Direction LastDirectionValue = Direction.Up;
-	private Direction LastRotaterDirectionValue = Direction.Left;
+	private Rotation LastRotaterDirectionValue = Rotation.Left;
 
 	[MyBox.Separator("Map Config")]
 	public TMP_InputField WidthInput;
@@ -128,7 +129,7 @@ public class LevelEditorMenu : MonoBehaviour {
 		if((int) LastRotaterDirectionValue == RotationDropdown.value) {
 			RotationDropdown.value = (int) leb.RotaterDirection;
 		} else {
-			leb.RotaterDirection = (Direction) RotationDropdown.value;
+			leb.RotaterDirection = (Rotation) RotationDropdown.value;
 		}
 		LastRotaterDirectionValue = leb.RotaterDirection;
 

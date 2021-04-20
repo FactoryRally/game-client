@@ -2,6 +2,7 @@
 using RoboRally.Utils;
 using System.Collections;
 using System.Collections.Generic;
+using Tgm.Roborally.Api.Model;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -42,13 +43,17 @@ namespace RoboRally.Objects {
 		}
 
 
-		public GameObject PrefabByType(TileType type) {
-			if(type == TileType.Empty) // Empty is another form of Default which means Normal
-				type = TileType.Normal;
+		public GameObject PrefabByType(TileType type, int order) {
 			for(int i = 0; i < TilePrefabs.Count; i++) {
 				if(TilePrefabs[i] == null || TilePrefabs[i].GetComponent<TileObject>() == null)
 					continue;
 				if(TilePrefabs[i].GetComponent<TileObject>().TileType == type) {
+					if(type == TileType.Checkpoint && order != -1) { // for Checkpoints check Order first
+						if(TilePrefabs[i].name.EndsWith("_" + order)) {
+							return TilePrefabs[i];
+						}
+						continue;
+					}
 					return TilePrefabs[i];
 				}
 			}
@@ -58,22 +63,11 @@ namespace RoboRally.Objects {
 		public void BuildMap(bool clear = true, bool buildWalls = true) {
 			if(clear)
 				ClearMap();
-			Floor.transform.localScale = new Vector3(
-				SelectedMap.Width + 2 * WallDistanceModifier, 
-				1, 
-				SelectedMap.Height + 2 * WallDistanceModifier
-			);
-			Floor.transform.position = GetCenter() + 2 * Vector3.down;
-			SpaceFiller.transform.localScale = new Vector3(
-				SelectedMap.Width,
-				2,
-				SelectedMap.Height
-			);
-			SpaceFiller.transform.position = GetCenter() + 0.5f * Vector3.down;
+
 			for(int x = 0; x < SelectedMap.Width; x++) {
 				for(int y = 0; y < SelectedMap.Height; y++) {
 					Tile tile = SelectedMap[x, y];
-					GameObject tilePrefab = PrefabByType(tile.Type);
+					GameObject tilePrefab = PrefabByType(tile.Type, tile.Order);
 					if(tilePrefab == null) {
 						this.Tiles.Add(null);
 						continue;
@@ -81,13 +75,14 @@ namespace RoboRally.Objects {
 					GameObject tileObject = Instantiate(
 						tilePrefab,
 						new Vector3(x, tile.Level, y),
-						DirectionToQuaternion(tile.TileDirection),
+						DirectionToQuaternion((Direction) tile.Direction),
 						transform
 					);
 					tileObject.name = "[" + x + ", " + y + "]" + tile.Type;
 					this.Tiles.Add(tileObject);
 				}
 			}
+
 			if(buildWalls)
 				SetupWalls();
 		}
@@ -104,6 +99,18 @@ namespace RoboRally.Objects {
 		}
 
 		private void SetupWalls() {
+			Floor.transform.localScale = new Vector3(
+				SelectedMap.Width + 2 * WallDistanceModifier,
+				1,
+				SelectedMap.Height + 2 * WallDistanceModifier
+			);
+			Floor.transform.position = GetCenter() + 2 * Vector3.down;
+			SpaceFiller.transform.localScale = new Vector3(
+				SelectedMap.Width,
+				2,
+				SelectedMap.Height
+			);
+			SpaceFiller.transform.position = GetCenter() + 0.5f * Vector3.down;
 			for(int i = 0; i < 4; i++) {
 				GameObject wall = Instantiate(
 					WallPrefab,

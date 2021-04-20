@@ -76,6 +76,9 @@ namespace RoboRally.Controller {
 		}
 
 		public void HandleEvent(GenericEvent genericEvent) {
+			if(genericEvent == null)
+				return;
+			Debug.Log("EventType: " + genericEvent.Type + " - " + (int) genericEvent.Type);
 			switch((int) genericEvent.Type) {
 				case 1:
 					MovementEvent moveEvent = genericEvent.Data as MovementEvent;
@@ -132,7 +135,6 @@ namespace RoboRally.Controller {
 				case 24:
 					break;
 				case 25:
-					HandleMapCreateEvent();
 					break;
 				case 26:
 					ShutdownEvent shutdownEvent = genericEvent.Data as ShutdownEvent;
@@ -146,6 +148,7 @@ namespace RoboRally.Controller {
 				case 30:
 					break;
 				case 31:
+					HandleMapCreateEvent();
 					break;
 				case 32:
 					break;
