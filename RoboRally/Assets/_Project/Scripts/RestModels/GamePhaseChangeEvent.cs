@@ -20,7 +20,8 @@ using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace Tgm.Roborally.Api.Model
 {
