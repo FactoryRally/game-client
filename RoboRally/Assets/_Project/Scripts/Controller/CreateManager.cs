@@ -46,7 +46,7 @@ namespace RoboRally.Controller {
 				if(AutoJoin) {
 					try {
 						int id = int.Parse(request.downloadHandler.text);
-						string address = LobbyManager.GetLocalIPAddress();
+						string address = Http.GetLocalIPAddress();
 						LobbyManager.Instance.JoinLobby(address, id, password, playerName);
 						IngameData.IsHost = true;
 						IngameData.ID = id;

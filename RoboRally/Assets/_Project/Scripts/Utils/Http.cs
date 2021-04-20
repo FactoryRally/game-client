@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -17,17 +20,22 @@ namespace RoboRally.Utils {
 
 		public static string serverPath = "";
 
+		public static bool IsDebug = true;
+
 
 		public static void StartServer() {
-			if(Http.running)
+			if(PortInUse(5050))
 				return;
 			Http.running = true;
 			ProcessStartInfo startInfo = new ProcessStartInfo();
 			startInfo.CreateNoWindow = true;
 			startInfo.UseShellExecute = true;
 			startInfo.FileName = serverPath;
-			startInfo.WindowStyle = ProcessWindowStyle.Normal;
-			// startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+			if(IsDebug) {
+				startInfo.WindowStyle = ProcessWindowStyle.Normal;
+			} else {
+				startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+			}
 
 			try {
 				server = Process.Start(startInfo);
@@ -47,6 +55,35 @@ namespace RoboRally.Utils {
 			if(server != null && !server.HasExited)
 				server.Kill();
 			Http.running = false;
+		}
+
+		public static bool PortInUse(int port) {
+			// Source: https://softwarebydefault.com/2013/02/22/port-in-use/
+			bool inUse = false;
+
+			IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties();
+			IPEndPoint[] ipEndPoints = ipProperties.GetActiveTcpListeners();
+
+
+			foreach(IPEndPoint endPoint in ipEndPoints) {
+				if(endPoint.Port == port) {
+					inUse = true;
+					break;
+				}
+			}
+
+
+			return inUse;
+		}
+
+		public static string GetLocalIPAddress() {
+			var host = Dns.GetHostEntry(Dns.GetHostName());
+			foreach(var ip in host.AddressList) {
+				if(ip.AddressFamily == AddressFamily.InterNetwork) {
+					return ip.ToString();
+				}
+			}
+			throw new Exception("No network adapters with an IPv4 address in the system!");
 		}
 
 		public static UnityWebRequest CreateGet(string address, string path, params string[] query) {

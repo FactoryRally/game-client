@@ -51,11 +51,6 @@ namespace RoboRally.Menu {
 			}
 		}
 
-		void OnApplicationQuit() {
-			Http.StopServer();
-		}
-
-
 		public void OpenJoinMenu() {
 			MenuStack.Add(JoinMenu);
 			Next();

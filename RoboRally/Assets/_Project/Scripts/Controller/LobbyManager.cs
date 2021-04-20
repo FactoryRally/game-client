@@ -15,6 +15,9 @@ using UnityEngine.SceneManagement;
 namespace RoboRally.Controller {
 	public class LobbyManager : MonoBehaviour {
 
+		private static LobbyManager _instance;
+		public static LobbyManager Instance { get { return _instance; } }
+
 		public List<string> localAddresses = new List<string>();
 
 		public List<string> hostAddresses = new List<string>();
@@ -23,9 +26,6 @@ namespace RoboRally.Controller {
 		public LobbyCallState state = LobbyCallState.NONE;
 		private int maxSubnet = 24;
 		public AddressFinder af;
-
-		private static LobbyManager _instance;
-		public static LobbyManager Instance { get { return _instance; } }
 
 
 		public void Awake() {
@@ -93,16 +93,6 @@ namespace RoboRally.Controller {
 					state = LobbyCallState.SCANNED;
 				}
 			);
-		}
-
-		public static string GetLocalIPAddress() {
-			var host = Dns.GetHostEntry(Dns.GetHostName());
-			foreach(var ip in host.AddressList) {
-				if(ip.AddressFamily == AddressFamily.InterNetwork) {
-					return ip.ToString();
-				}
-			}
-			throw new Exception("No network adapters with an IPv4 address in the system!");
 		}
 
 		public List<IPSegment> GetInterfaces(bool showVPN) {
