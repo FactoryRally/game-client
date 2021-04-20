@@ -80,7 +80,7 @@ namespace Tgm.Roborally.Api.Model
         /// Not every game can be connected to hardware (for example to many bots)  If this is true it means you can use this game with hardware
         /// </summary>
         /// <value>Not every game can be connected to hardware (for example to many bots)  If this is true it means you can use this game with hardware</value>
-        [DataMember(Name = "hardware-compatible", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "hardware-compatible", IsRequired = false, EmitDefaultValue = false)]
         public bool HardwareCompatible { get; set; }
 
         /// <summary>
@@ -101,14 +101,14 @@ namespace Tgm.Roborally.Api.Model
         /// The maximum count of players that can participate in this game
         /// </summary>
         /// <value>The maximum count of players that can participate in this game</value>
-        [DataMember(Name = "max-players", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "max-players", IsRequired = false, EmitDefaultValue = false)]
         public int MaxPlayers { get; set; }
 
         /// <summary>
         /// The numbers of players in the game
         /// </summary>
         /// <value>The numbers of players in the game</value>
-        [DataMember(Name = "current-players", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "current-players", IsRequired = false, EmitDefaultValue = false)]
         public int CurrentPlayers { get; set; }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Tgm.Roborally.Api.Model
         /// True if the game has a password in order to join 
         /// </summary>
         /// <value>True if the game has a password in order to join </value>
-        [DataMember(Name = "password-protected", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "password-protected", IsRequired = false, EmitDefaultValue = false)]
         public bool PasswordProtected { get; set; }
 
         /// <summary>

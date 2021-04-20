@@ -52,14 +52,14 @@ namespace Tgm.Roborally.Api.Model
         /// The index of the register currently executed
         /// </summary>
         /// <value>The index of the register currently executed</value>
-        [DataMember(Name = "currentRegister", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "currentRegister", IsRequired = false, EmitDefaultValue = false)]
         public int CurrentRegister { get; set; }
 
         /// <summary>
         /// The index of the robot currently executing
         /// </summary>
         /// <value>The index of the robot currently executing</value>
-        [DataMember(Name = "currentRobot", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "currentRobot", IsRequired = false, EmitDefaultValue = false)]
         public int CurrentRobot { get; set; }
 
         /// <summary>
