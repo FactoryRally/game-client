@@ -46,7 +46,7 @@ namespace RoboRally.Objects {
 			movement =
 				transform.forward * InputManager.GetAxis("CameraWS") * speed * Time.deltaTime +
 				transform.up * InputManager.GetAxis("CameraVertical") * speed / 1.5f * Time.deltaTime +
-				-transform.right * InputManager.GetAxis("CameraAD") * speed * Time.deltaTime;
+				- transform.right * InputManager.GetAxis("CameraAD") * speed * Time.deltaTime;
 			currentPos += movement;
 			currentPos = new Vector3(
 				Mathf.Clamp(currentPos.x, -ClampX + center.x, ClampX + center.x),

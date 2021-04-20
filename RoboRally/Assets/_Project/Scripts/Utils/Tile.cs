@@ -18,6 +18,8 @@ namespace RoboRally.Utils {
 		Puddle,
 		Pit,
 		Ramp,
+		Spawn,
+		Checkpoint
 	}
 
 	public enum Direction {

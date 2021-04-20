@@ -70,9 +70,9 @@
     "Snap": true
   },
   {
-    "Name": "CameraSwitch",
+    "Name": "CameraToggle",
     "PositiveButton": 99,
-    "NegativeButton": 324,
+    "NegativeButton": 325,
     "AltPositiveButton": 0,
     "AltNegativeButton": 0,
     "Gravity": 5.0,
