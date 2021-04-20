@@ -24,7 +24,7 @@ namespace RoboRally.Utils {
 			}
 		}
 
-		public static bool IsHost = false;
+		public static bool IsHost = true;
 
 		public static int ID = -1;
 
