@@ -40,6 +40,12 @@ namespace RoboRally.Menu {
 		}
 
 
+		public void ShowBySearch(string searchText) {
+			foreach(JoinLobbyItem item in items) {
+				item.gameObject.SetActive(item.GameNameText.text.Contains(searchText));
+			}
+		}
+
 		public void Reload() {
 			foreach((GameInfo game, string address, int id) game in lm.games) {
 				GameObject lobbyItem = Instantiate(LobbyItemPrefab, LobbyContent.transform);
@@ -48,6 +54,7 @@ namespace RoboRally.Menu {
 				if(jle == null)
 					continue;
 				jle.GameID = game.id;
+				jle.JoinButton.interactable = (game.game.State == GameState.LOBBY);
 				jle.IsLocked = game.game.PasswordProtected;
 				jle.GameNameText.text = game.game.Name;
 				jle.PlayersAmountText.text = game.game.CurrentPlayers + "/" + game.game.MaxPlayers;

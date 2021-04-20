@@ -423,7 +423,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.91764456, g: 0.7104397, b: 0.9716981, a: 0.78431374}
     m_PressedColor: {r: 0.91764456, g: 0.7104397, b: 0.9716981, a: 0.78431374}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -933,6 +933,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GameID: 0
+  address: localhost
+  password: 
+  playerName: 
   IsLocked: 1
   JoinButton: {fileID: 6541541189040787056}
   LockIcon: {fileID: 6541541189367829702}
