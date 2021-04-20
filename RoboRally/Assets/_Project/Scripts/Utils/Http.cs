@@ -85,7 +85,6 @@ namespace RoboRally.Utils {
 			if(address == null) {
 				address = Http.address;
 			}
-			UnityEngine.Debug.Log("http://" + address + port + "/v1/" + path + GetParameters(query));
 			uwr = new UnityWebRequest(
 				"http://" + address + port + "/v1/" + path + GetParameters(query),
 				UnityWebRequest.kHttpVerbPUT,

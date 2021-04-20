@@ -8,6 +8,8 @@ namespace RoboRally.Utils {
 	public class IngameData {
 
 		public static JoinResponse JoinData = null;
+
+		public static Map SelectedMap = new Map();
 		
 		public static List<string> PlayerNames = new List<string>();
 

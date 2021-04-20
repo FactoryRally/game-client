@@ -1,7 +1,9 @@
-﻿using RoboRally.Utils;
+﻿using Newtonsoft.Json;
+using RoboRally.Utils;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace RoboRally.Objects {
 	public class MapBuilder : MonoBehaviour {
@@ -9,7 +11,7 @@ namespace RoboRally.Objects {
 		private static MapBuilder _instance;
 		public static MapBuilder Instance { get { return _instance; } }
 
-		public Map SelectedMap = new Map(24, 16);
+		public Map SelectedMap = new Map(10, 10);
 
 		public int WallDistanceModifier = 5;
 
@@ -31,7 +33,7 @@ namespace RoboRally.Objects {
 		}
 
 		void Start() {
-			BuildMap();
+
 		}
 
 
@@ -41,6 +43,8 @@ namespace RoboRally.Objects {
 
 
 		public GameObject PrefabByType(TileType type) {
+			if(type == TileType.Empty) // Empty is another form of Default which means Normal
+				type = TileType.Normal;
 			for(int i = 0; i < TilePrefabs.Count; i++) {
 				if(TilePrefabs[i] == null || TilePrefabs[i].GetComponent<TileObject>() == null)
 					continue;
