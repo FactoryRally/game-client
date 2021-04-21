@@ -45,6 +45,7 @@ namespace RoboRally.Controller {
 			if(robotInfo.Type == 0)
 				robotInfo.Type = (Robots) 1;
 			GameObject robotPrefab = roboPrefabs[robotInfo.Type];
+			Debug.Log("Robot Level" + IngameData.SelectedMap[robotInfo.Location.X, robotInfo.Location.Y].Level);
 			GameObject robot = Instantiate(
 				robotPrefab,
 				new Vector3(
