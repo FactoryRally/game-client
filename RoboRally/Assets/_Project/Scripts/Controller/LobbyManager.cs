@@ -130,7 +130,7 @@ namespace RoboRally.Controller {
 
 		public IEnumerator RequestGamesAsync(string address) {
 			List<string> games = new List<string>();
-			UnityWebRequest request = Http.CreateGet(address, "games", null);
+			UnityWebRequest request = Http.CreateGet("games", null);
 			yield return request.SendWebRequest();
 			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("RequestGames: " + request.downloadHandler.text);
@@ -167,7 +167,7 @@ namespace RoboRally.Controller {
 		}
 
 		public IEnumerator RequestGameInfo(string address, int gameId) {
-			UnityWebRequest request = Http.CreateGet(address, "games/" + gameId + "/status", null);
+			UnityWebRequest request = Http.CreateGet("games/" + gameId + "/status", null);
 			yield return request.SendWebRequest();
 			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("RequestGameInfo_" + gameId + ": " + request.downloadHandler.text);
@@ -188,14 +188,12 @@ namespace RoboRally.Controller {
 		}
 
 		public IEnumerator JoinLobbyAsync(string address, int gameId, string password, string playerName) {
-			if(password != null) {
-				password = "password=" + password;
-			}
-			playerName = "name=" + playerName;
 			UnityWebRequest request = Http.CreatePost(
-				address,
 				"games/" + gameId + "/players",
-				new string[] { password, playerName },
+				new Dictionary<string,object> {
+					{"password",password},
+					{"name",playerName}
+				},
 				null
 			);
 			yield return request.SendWebRequest();

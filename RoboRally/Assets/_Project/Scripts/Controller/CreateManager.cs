@@ -39,7 +39,7 @@ namespace RoboRally.Controller {
 				"password=" + password.ToString(),
 				"fill-with-bots=" + coms.ToString().ToLower()
 			};
-			UnityWebRequest request = Http.CreatePost("localhost", "games", null, body);
+			UnityWebRequest request = Http.CreatePost("games", null, body);
 			yield return request.SendWebRequest();
 			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("CreateLobby: " + request.downloadHandler.text);

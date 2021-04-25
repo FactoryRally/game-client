@@ -34,7 +34,9 @@ namespace RoboRally.Controller {
 			UnityWebRequest request = Http.CreateDelete(
 				address,
 				"games/" + gameId + "/players/" + playerId,
-				"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
+				new Dictionary<string, object>(){
+					{"pat",IngameData.JoinData.Pat}
+				}
 			);
 			yield return request.SendWebRequest();
 			if(!request.isHttpError && request.downloadHandler != null) {
@@ -51,11 +53,10 @@ namespace RoboRally.Controller {
 
 		public IEnumerator StartGameAsync(string address, int gameId) {
 			UnityWebRequest request = Http.CreatePut(
-				address,
 				"games/" + gameId + "/actions",
-				new string[] {
-					"action=3",
-					"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
+				new Dictionary<string, object>{
+					{"action",3},
+					{"pat=",IngameData.JoinData.Pat}
 				},
 				null
 			);

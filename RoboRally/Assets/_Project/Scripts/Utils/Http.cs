@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
+using MyBox;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -14,9 +16,11 @@ namespace RoboRally.Utils {
 
 		public static Process server;
 
-		public static bool running = false;
-		public const string address = "localhost";
-		public const string port = ":5050";
+		public static bool   running  = false;
+		public static string address  = "localhost";
+		public static int    port     = 5050;
+		public static string protocol = "http";
+		public static string basePath => $"{protocol}://{address}:{port}/v1/";
 
 		public static string serverPath = "";
 
@@ -24,7 +28,7 @@ namespace RoboRally.Utils {
 
 
 		public static void StartServer() {
-			if(PortInUse(5050))
+			if(PortInUse(port))
 				return;
 			Http.running = true;
 			ProcessStartInfo startInfo = new ProcessStartInfo();
@@ -57,7 +61,7 @@ namespace RoboRally.Utils {
 			Http.running = false;
 		}
 
-		public static bool PortInUse(int port) {
+		private static bool PortInUse(int port) {
 			// Source: https://softwarebydefault.com/2013/02/22/port-in-use/
 			bool inUse = false;
 
@@ -86,26 +90,18 @@ namespace RoboRally.Utils {
 			throw new Exception("No network adapters with an IPv4 address in the system!");
 		}
 
-		public static UnityWebRequest CreateGet(string address, string path, params string[] query) {
-			UnityWebRequest uwr;
-			if(address == null) {
-				address = Http.address;
-			}
-			uwr = UnityWebRequest.Get("http://" + address + port + "/v1/" + path + GetParameters(query));
+		public static UnityWebRequest CreateGet(string path, Dictionary<string,object> query) {
+			UnityWebRequest uwr = UnityWebRequest.Get(basePath + path + GetParameters(query));
 			uwr.method = UnityWebRequest.kHttpVerbGET;
 			uwr.SetRequestHeader("Content-Type", "application/json");
 			uwr.SetRequestHeader("Accept", "application/json");
 			return uwr;
 		}
 
-		public static UnityWebRequest CreatePost(string address, string path, string[] query, string[] body) {
-			UnityWebRequest uwr;
+		public static UnityWebRequest CreatePost(string path, Dictionary<string,object> query, string[] body) {
 			byte[] data = Encoding.ASCII.GetBytes(GetBodyJson(body));
-			if(address == null) {
-				address = Http.address;
-			}
-			uwr = new UnityWebRequest(
-				"http://" + address + port + "/v1/" + path + GetParameters(query),
+			UnityWebRequest uwr = new UnityWebRequest(
+				basePath + path + GetParameters(query),
 				UnityWebRequest.kHttpVerbPOST,
 				new DownloadHandlerBuffer(),
 				body == null || body.Length == 0 ? null : (UploadHandler) new UploadHandlerRaw(data)
@@ -116,14 +112,10 @@ namespace RoboRally.Utils {
 			return uwr;
 		}
 
-		public static UnityWebRequest CreatePut(string address, string path, string[] query, string[] body) {
-			UnityWebRequest uwr;
+		public static UnityWebRequest CreatePut(string path, Dictionary<string,object> query, string[] body) {
 			byte[] data = Encoding.ASCII.GetBytes(GetBodyJson(body));
-			if(address == null) {
-				address = Http.address;
-			}
-			uwr = new UnityWebRequest(
-				"http://" + address + port + "/v1/" + path + GetParameters(query),
+			UnityWebRequest uwr = new UnityWebRequest(
+				basePath + path + GetParameters(query),
 				UnityWebRequest.kHttpVerbPUT,
 				new DownloadHandlerBuffer(),
 				body == null || body.Length == 0 ? null : (UploadHandler) new UploadHandlerRaw(data)
@@ -134,12 +126,12 @@ namespace RoboRally.Utils {
 			return uwr;
 		}
 
-		public static UnityWebRequest CreateDelete(string address, string path, params string[] query) {
+		public static UnityWebRequest CreateDelete(string address, string path, Dictionary<string,object> query) {
 			UnityWebRequest uwr;
 			if(address == null) {
 				address = Http.address;
 			}
-			uwr = UnityWebRequest.Delete("http://" + address + port + "/v1/" + path + GetParameters(query));
+			uwr = UnityWebRequest.Delete(basePath + path + GetParameters(query));
 			uwr.method = UnityWebRequest.kHttpVerbDELETE;
 			uwr.SetRequestHeader("Content-Type", "application/json");
 			uwr.SetRequestHeader("Accept", "application/json");
@@ -147,29 +139,39 @@ namespace RoboRally.Utils {
 		}
 
 		private static string GetParameters(string[] parameter) {
-			if(parameter == null)
+			if(parameter == null || parameter.Length == 0)
 				return "";
 			string body = "?";
-			if(parameter.Length == 0) {
-				body = "";
-			} else {
-				for(int i = 0; i < parameter.Length; i++) {
-					if(parameter[i] != null)
-						body += parameter[i] + "&";
-				}
-				body = body.Substring(0, body.Length - 1);
+			
+			foreach (string t in parameter) {
+				if(t != null)
+					body += t + "&";
 			}
+			body = body.Substring(0, body.Length - 1);
+			
 			return body;
+		}
+		
+		private static string GetParameters(Dictionary<string,object> parameter) {
+			if(parameter == null || parameter.Count == 0)
+				return "";
+			string query = "?";
+			parameter
+				.Select(e => $"{e.Key}={UnityWebRequest.EscapeURL(e.Value == null ?"":e.Value.ToString())}&")
+				.ForEach(e => query = $"{query}{e}");
+			query = query.Substring(0, query.Length - 1);
+		
+			return query;
 		}
 
 		private static WWWForm GetBody(string[] bodys) {
 			if(bodys == null)
 				return new WWWForm();
 			WWWForm form = new WWWForm();
-			for(int i = 0; i < bodys.Length; i++) {
-				if(bodys[i].Split('=')[1].Length == 0)
+			foreach (string t in bodys) {
+				if(t.Split('=')[1].Length == 0)
 					continue;
-				form.AddField(bodys[i].Split('=')[0], bodys[i].Split('=')[1]);
+				form.AddField(t.Split('=')[0], t.Split('=')[1]);
 			}
 			return form;
 		}

@@ -65,9 +65,10 @@ namespace RoboRally.Controller {
 		public IEnumerator GetEventsAsync(string address, int gameId) {
 			while(SendEvents) {
 				UnityWebRequest request = Http.CreateGet(
-					address,
 					"games/" + gameId + "/events/head",
-					"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
+					new Dictionary<string, object>() {
+						{"pat",IngameData.JoinData.Pat}
+					}
 				);
 				yield return request.SendWebRequest();
 				if(!request.isHttpError && request.downloadHandler != null) {
@@ -88,9 +89,10 @@ namespace RoboRally.Controller {
 
 		public IEnumerator GetRobotsAsync(string address, int gameId, System.Action<int[]> action) {
 			UnityWebRequest request = Http.CreateGet(
-				address,
 				"games/" + gameId + "/entities/robots",
-				"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
+				new Dictionary<string, object>() {
+					{"pat",IngameData.JoinData.Pat}
+				}
 			);
 			yield return request.SendWebRequest();
 			if(!request.isHttpError && request.downloadHandler != null) {
@@ -109,9 +111,10 @@ namespace RoboRally.Controller {
 
 		public IEnumerator GetRobotInfoAsync(string address, int gameId, int robotId, System.Action<RobotInfo> action) {
 			UnityWebRequest request = Http.CreateGet(
-				address,
 				"games/" + gameId + "/entities/robots/" + robotId + "/info",
-				"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
+				new Dictionary<string, object>() {
+					{"pat",IngameData.JoinData.Pat}
+				}
 			);
 			yield return request.SendWebRequest();
 			if(!request.isHttpError && request.downloadHandler != null) {
@@ -124,17 +127,18 @@ namespace RoboRally.Controller {
 			}
 		}
 
-		public void GetMap(string address, int gameId, System.Action action) {
+		public void GetMap(int gameId, System.Action action) {
 			if(IngameData.JoinData == null)
 				return;
-			StartCoroutine(GetMapAsync(address, gameId, action));
+			StartCoroutine(GetMapAsync(gameId, action));
 		}
 
-		public IEnumerator GetMapAsync(string address, int gameId, System.Action action) {
+		public IEnumerator GetMapAsync(int gameId, System.Action action) {
 			UnityWebRequest request = Http.CreateGet(
-				address,
 				"games/" + gameId + "/map/",
-				"pat=" + UnityWebRequest.EscapeURL(IngameData.JoinData.Pat)
+				new Dictionary<string, object>() {
+					{"pat",IngameData.JoinData.Pat}
+				}
 			);
 			yield return request.SendWebRequest();
 			if(!request.isHttpError && request.downloadHandler != null) {
@@ -232,7 +236,7 @@ namespace RoboRally.Controller {
 		}
 
 		public void HandleMapCreateEvent() {
-			GetMap(IngameData.Address, IngameData.ID, () => {
+			GetMap(IngameData.ID, () => {
 				MapBuilder.Instance.SelectedMap = IngameData.SelectedMap;
 				MapBuilder.Instance.BuildMap();
 				GetRobots(
