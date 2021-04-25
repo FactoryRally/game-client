@@ -26,6 +26,7 @@ namespace RoboRally.Controller {
 
 		public void CreateLobby(string name, string password, bool namesVis, bool coms, int maxPlayers, string playerName) {
 			Http.serverPath = Application.dataPath + "/Server/Tgm.Roborally.Server.exe";
+			// TODO: Http.serverPath = Application.dataPath + "/Server/FactoryRally.Server.exe";
 			Http.StartServer();
 			StartCoroutine(CreateLobbyAsync(name, password, namesVis, coms, maxPlayers, playerName));
 		}
