@@ -56,7 +56,7 @@ namespace RoboRally.Controller {
 				"games/" + gameId + "/actions",
 				new Dictionary<string, object>{
 					{"action",3},
-					{"pat=",IngameData.JoinData.Pat}
+					{"pat",IngameData.JoinData.Pat}
 				},
 				null
 			);
