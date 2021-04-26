@@ -42,6 +42,7 @@ public class SettingsController : MonoBehaviour {
 		if(!Directory.Exists(SAVE_FOLDER)) {
 			Directory.CreateDirectory(SAVE_FOLDER);
 		}
+		
 		string json = JsonConvert.SerializeObject(Settings.Instance, Formatting.Indented);
 		File.WriteAllText(SAVE_FOLDER + "/settings.json", json);
 	}

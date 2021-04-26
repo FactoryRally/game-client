@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1957,6 +1957,7 @@ GameObject:
   - component: {fileID: 1899667452}
   - component: {fileID: 1899667451}
   - component: {fileID: 1899667453}
+  - component: {fileID: 1899667454}
   m_Layer: 0
   m_Name: LobbyUIController
   m_TagString: Untagged
@@ -2003,6 +2004,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e804de727807c38429d7a7cff86e61e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerList: {fileID: 858674261}
+  PlayerCardPrefab: {fileID: 8771331104286777239, guid: 8fdd67c9f0209774dab776b2cf4b7c10,
+    type: 3}
+--- !u!114 &1899667454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899667450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe4284a57c5a0d4e94e69386f57c79d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnMapCreate:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMovement:
+    m_PersistentCalls:
+      m_Calls: []
+  OnShoot:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPurchase:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDrawCard:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPickRobot:
+    m_PersistentCalls:
+      m_Calls: []
+  OnChangeRegister:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRandomDistrib:
+    m_PersistentCalls:
+      m_Calls: []
+  OnChangePhase:
+    m_PersistentCalls:
+      m_Calls: []
+  OnJoin:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1899667453}
+        m_MethodName: OnPlayerJoins
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1971247656
 GameObject:
   m_ObjectHideFlags: 0

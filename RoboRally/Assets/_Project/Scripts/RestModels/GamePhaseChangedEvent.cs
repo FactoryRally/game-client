@@ -35,8 +35,8 @@ namespace Tgm.Roborally.Api.Model
         /// <summary>
         /// Gets or Sets Phase
         /// </summary>
-        [DataMember(Name = "phase", IsRequired = true, EmitDefaultValue = false)]
-        public RoundPhase Phase { get; set; }
+        [DataMember(Name = "phase", IsRequired = false, EmitDefaultValue = false)]
+        public RoundPhase? Phase { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="GamePhaseChangedEvent" /> class.
         /// </summary>

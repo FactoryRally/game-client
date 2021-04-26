@@ -29,5 +29,6 @@ namespace RoboRally.Utils {
 		public static int ID = -1;
 
 		public static string Address = "";
+		public static int    MyRobotId;
 	}
 }

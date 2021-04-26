@@ -193,22 +193,18 @@ namespace RoboRally.Controller {
 				new Dictionary<string,object> {
 					{"password",password},
 					{"name",playerName}
-				},
-				null
+				}
 			);
-			yield return request.SendWebRequest();
-			if(!request.isHttpError && request.downloadHandler != null) {
-				Debug.Log("JoinLobby: " + request.downloadHandler.text);
-				IngameData.JoinData = JsonConvert.DeserializeObject<JoinResponse>(request.downloadHandler.text);
+			return Http.SendWithCallback(request, (JoinResponse e) => {
+				IngameData.JoinData   = e;
 				IngameData.PlayerName = playerName;
-				IngameData.ID = gameId;
-				IngameData.Address = address;
-				if(IngameData.JoinData != null) {
+				IngameData.ID         = gameId;
+				IngameData.Address    = address;
+				if (IngameData.JoinData != null) {
 					SceneManager.LoadScene("Lobby");
 				}
-			} else if(request.downloadHandler != null) {
-				Debug.Log("JoinLobby: " + request.downloadHandler.text);
-			}
+				FindObjectOfType<GlobalEventHandler>().StartListening(address, gameId);
+			});
 		}
 	}
 }

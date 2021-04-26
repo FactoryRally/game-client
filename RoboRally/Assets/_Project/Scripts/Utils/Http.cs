@@ -7,9 +7,13 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
+using JetBrains.Annotations;
 using MyBox;
+using Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using Debug = UnityEngine.Debug;
 
 namespace RoboRally.Utils {
 	public class Http {
@@ -26,11 +30,17 @@ namespace RoboRally.Utils {
 
 		public static bool IsDebug = true;
 
+		public static Dictionary<string, object> AuthOnlyParams => new Dictionary<string, object>(){{"pat", IngameData.JoinData.Pat}};
+
+		public static Dictionary<string, object> Auth(Dictionary<string, object> parameters) {
+			parameters.Add("pat",IngameData.JoinData.Pat);
+			return parameters;
+		}
 
 		public static void StartServer() {
 			if(PortInUse(port))
 				return;
-			Http.running = true;
+			Http.running = true;  
 			ProcessStartInfo startInfo = new ProcessStartInfo();
 			startInfo.CreateNoWindow = true;
 			startInfo.UseShellExecute = true;
@@ -43,7 +53,7 @@ namespace RoboRally.Utils {
 
 			try {
 				server = Process.Start(startInfo);
-				server.Exited += new EventHandler(OnServerStop);
+				server.Exited += new System.EventHandler(OnServerStop);
 			} catch(Exception e) {
 				UnityEngine.Debug.Log("Was not able to start the server!");
 			}
@@ -98,7 +108,7 @@ namespace RoboRally.Utils {
 			return uwr;
 		}
 
-		public static UnityWebRequest CreatePost(string path, Dictionary<string,object> query, string[] body) {
+		public static UnityWebRequest CreatePost(string path, Dictionary<string,object> query, string[] body = null) {
 			byte[] data = Encoding.ASCII.GetBytes(GetBodyJson(body));
 			UnityWebRequest uwr = new UnityWebRequest(
 				basePath + path + GetParameters(query),
@@ -112,7 +122,7 @@ namespace RoboRally.Utils {
 			return uwr;
 		}
 
-		public static UnityWebRequest CreatePut(string path, Dictionary<string,object> query, string[] body) {
+		public static UnityWebRequest CreatePut(string path, Dictionary<string,object> query = null, string[] body = null) {
 			byte[] data = Encoding.ASCII.GetBytes(GetBodyJson(body));
 			UnityWebRequest uwr = new UnityWebRequest(
 				basePath + path + GetParameters(query),
@@ -201,6 +211,32 @@ namespace RoboRally.Utils {
 			}
 			json += "}";
 			return json;
+		}
+
+		public static IEnumerator Send(UnityWebRequest uwr,Action<UnityWebRequest> OnSuccess = null,Action<UnityWebRequest> OnError = null) {
+			yield return uwr.SendWebRequest();
+			if (!uwr.isHttpError)
+				OnSuccess?.Invoke(uwr);
+			else {
+				if(uwr.downloadHandler == null)
+					Debug.Log($"[WARNING] Http Request failed ({uwr.error}) : {uwr.url} (NO CONTENT)");
+				else
+					Debug.Log($"[WARNING] Http Request failed ({uwr.error}) : {uwr.url}\n{uwr.downloadHandler.text}");
+				OnError?.Invoke(uwr);
+			}
+		}
+
+		public static IEnumerator SendWithCallback<T>(UnityWebRequest request, [CanBeNull] Action<T> action, Action<UnityWebRequest> onError = null) {
+			return Send(request, response => {
+				if (response.downloadHandler == null) {
+					Debug.Log($"[WARNING] Http Request didn't produced content \'{response.url}\'");
+					onError?.Invoke(request);
+				}
+				else {
+					T body = JsonConvert.DeserializeObject<T>(response.downloadHandler.text);
+					action?.Invoke(body);
+				}
+			}, onError);
 		}
 	}
 }

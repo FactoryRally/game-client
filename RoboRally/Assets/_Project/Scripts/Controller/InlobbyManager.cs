@@ -2,16 +2,19 @@
 using RoboRally.Utils;
 using System.Collections;
 using System.Collections.Generic;
+using Tgm.Roborally.Api.Model;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace RoboRally.Controller {
 	public class InlobbyManager : MonoBehaviour {
 
 		private static InlobbyManager _instance;
-		public static InlobbyManager Instance { get { return _instance; } }
-
+		public static  InlobbyManager Instance { get { return _instance; } }
+		public         GameObject      PlayerList;
+		public         GameObject     PlayerCardPrefab;
 		void Awake() {
 			if(_instance != null && _instance != this) {
 				Destroy(this.gameObject);
@@ -45,6 +48,7 @@ namespace RoboRally.Controller {
 				Debug.Log("LeaveGame: " + request.downloadHandler.text);
 			}
 			SceneManager.LoadScene("Menu_Main");
+			FindObjectOfType<GlobalEventHandler>().StopListening();
 		}
 
 		public void StartGame(string address, int gameId) {
@@ -54,19 +58,20 @@ namespace RoboRally.Controller {
 		public IEnumerator StartGameAsync(string address, int gameId) {
 			UnityWebRequest request = Http.CreatePut(
 				"games/" + gameId + "/actions",
-				new Dictionary<string, object>{
-					{"action",3},
-					{"pat",IngameData.JoinData.Pat}
-				},
-				null
+				Http.Auth(new Dictionary<string, object>{
+					{"action",ActionType.STARTGAME},
+				})
 			);
-			yield return request.SendWebRequest();
-			if(!request.isHttpError && request.downloadHandler != null) {
-				Debug.Log("StartGame: " + request.downloadHandler.text);
-			} else if(request.downloadHandler != null) {
-				Debug.Log("StartGame: " + request.downloadHandler.text);
-			}
-			SceneManager.LoadScene("Game");
+			yield return Http.Send(request, e => {
+				SceneManager.LoadScene("Game");
+			});
+			
+		}
+
+		public void OnPlayerJoins(JoinEvent joinEvent) {
+			Debug.Log("Player Joined");
+			GameObject obj = Instantiate(PlayerCardPrefab, PlayerList.transform);
+			obj.GetComponentInChildren<Text>().text = "Player "+joinEvent.JoinedId;
 		}
 	}
 }
