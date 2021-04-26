@@ -21,6 +21,7 @@ public class EventHandler : MonoBehaviour {
 	public  UChangePhaseEvent    OnChangePhase    = new UChangePhaseEvent();
 	public  UJoinEvent           OnJoin           = new UJoinEvent();
 	private GlobalEventHandler   _globalEventHandler;
+	public  GenericUEvent               OnGameStart = new GenericUEvent();
 
 	// Start is called before the first frame update
     void Start() {

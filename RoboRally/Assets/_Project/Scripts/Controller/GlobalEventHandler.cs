@@ -45,6 +45,7 @@ public class GlobalEventHandler : MonoBehaviour {
     public void HandleEvent(GenericEvent genericEvent) {
 		if(genericEvent == null)
     				return;
+		Debug.Log("[Event] : "+JsonConvert.SerializeObject(genericEvent));
 		if (_localHandler == null) {
 			unusedEvents.Enqueue(genericEvent);
 			Debug.Log($"[Debug] Enqueue event for later use ({genericEvent.Type})");
@@ -85,6 +86,9 @@ public class GlobalEventHandler : MonoBehaviour {
 				break;
 			case Join:
 				_localHandler.OnJoin.Invoke(Read<JoinEvent>());
+				break;
+			case GameStart:
+				_localHandler.OnGameStart.Invoke();
 				break;
 		}
 	}

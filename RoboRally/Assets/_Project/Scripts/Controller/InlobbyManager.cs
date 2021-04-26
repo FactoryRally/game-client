@@ -62,10 +62,11 @@ namespace RoboRally.Controller {
 					{"action",ActionType.STARTGAME},
 				})
 			);
-			yield return Http.Send(request, e => {
-				SceneManager.LoadScene("Game");
-			});
-			
+			return Http.Send(request);
+		}
+
+		public void OnGameStarted() {
+			SceneManager.LoadScene("Game");
 		}
 
 		public void OnPlayerJoins(JoinEvent joinEvent) {
