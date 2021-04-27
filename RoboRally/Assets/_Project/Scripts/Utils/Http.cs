@@ -130,6 +130,20 @@ namespace RoboRally.Utils {
 			return uwr;
 		}
 
+		public static UnityWebRequest CreatePost(string address, string path, Dictionary<string, object> query, string[] body = null) {
+			byte[] data = Encoding.ASCII.GetBytes(GetBodyJson(body));
+			UnityWebRequest uwr = new UnityWebRequest(
+				$"{protocol}://{address}:{port}/v1/" + path + GetParameters(query),
+				UnityWebRequest.kHttpVerbPOST,
+				new DownloadHandlerBuffer(),
+				body == null || body.Length == 0 ? null : (UploadHandler) new UploadHandlerRaw(data)
+			);
+			uwr.method = UnityWebRequest.kHttpVerbPOST;
+			uwr.SetRequestHeader("Content-Type", "application/json");
+			uwr.SetRequestHeader("Accept", "application/json");
+			return uwr;
+		}
+
 		public static UnityWebRequest CreatePut(string path, Dictionary<string,object> query = null, string[] body = null) {
 			byte[] data = Encoding.ASCII.GetBytes(GetBodyJson(body));
 			UnityWebRequest uwr = new UnityWebRequest(
@@ -217,7 +231,7 @@ namespace RoboRally.Utils {
 			return json;
 		}
 
-		public static IEnumerator Send(UnityWebRequest uwr,Action<UnityWebRequest> OnSuccess = null,Action<UnityWebRequest> OnError = null) {
+		public static IEnumerator Send(UnityWebRequest uwr, Action<UnityWebRequest> OnSuccess = null, Action<UnityWebRequest> OnError = null) {
 			yield return uwr.SendWebRequest();
 			if (!uwr.isHttpError)
 				OnSuccess?.Invoke(uwr);

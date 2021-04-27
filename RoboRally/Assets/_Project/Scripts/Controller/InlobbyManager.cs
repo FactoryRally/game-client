@@ -17,6 +17,7 @@ namespace RoboRally.Controller {
 		public static InlobbyManager Instance { get { return _instance; } }
 		public GameObject PlayerList;
 		public GameObject PlayerCardPrefab;
+		public Player PlayerMe = null;
 
 		void Awake() {
 			if(_instance != null && _instance != this) {
@@ -25,6 +26,10 @@ namespace RoboRally.Controller {
 			} else {
 				_instance = this;
 			}
+		}
+
+		void Start() {
+			HandleAllPlayers(IngameData.ID);
 		}
 
 		void Update() {
@@ -49,6 +54,7 @@ namespace RoboRally.Controller {
 			} else if(request.downloadHandler != null) {
 				Debug.Log("LeaveGame: " + request.downloadHandler.text);
 			}
+			PlayerMe = null;
 			SceneManager.LoadScene("Menu_Main");
 			FindObjectOfType<GlobalEventHandler>().StopListening();
 		}
@@ -81,9 +87,31 @@ namespace RoboRally.Controller {
 			yield return request.SendWebRequest();
 			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("GetPlayer: " + request.downloadHandler.text);
-				callBack(request.downloadHandler.text);
+				if(callBack != null)
+					callBack(request.downloadHandler.text);
 			} else if(request.downloadHandler != null) {
 				Debug.Log("GetPlayer: " + request.downloadHandler.text);
+			}
+		}
+
+		public void GetPlayerIds(int gameId, System.Action<string> callBack = null) {
+			StartCoroutine(GetPlayerIdsAsync(gameId, callBack));
+		}
+
+		public IEnumerator GetPlayerIdsAsync(int gameId, System.Action<string> callBack) {
+			UnityWebRequest request = Http.CreateGet(
+				$"/games​/{gameId}​/players​/",
+				new Dictionary<string, object>() {
+					{"pat", IngameData.JoinData.Pat}
+				}
+			);
+			yield return request.SendWebRequest();
+			if(!request.isHttpError && request.downloadHandler != null) {
+				Debug.Log("GetPlayerIds: " + request.downloadHandler.text);
+				if(callBack != null)
+					callBack(request.downloadHandler.text);
+			} else if(request.downloadHandler != null) {
+				Debug.Log("GetPlayerIds: " + request.downloadHandler.text);
 			}
 		}
 
@@ -98,6 +126,9 @@ namespace RoboRally.Controller {
 				joinEvent.JoinedId,
 				(string playerData) => {
 					Player player = JsonConvert.DeserializeObject<Player>(playerData);
+					if(PlayerMe != null && PlayerMe.Equals(player))
+						return;
+					PlayerMe = player;
 					if(joinEvent.Unjoin) {
 						for(int i = 0; i < transform.childCount; i++) {
 							GameObject obj = transform.GetChild(i).gameObject;
@@ -110,6 +141,36 @@ namespace RoboRally.Controller {
 					}
 				}
 			);
+		}
+
+		public void HandleAllPlayers(int gameId) {
+			GetPlayerIds(
+				gameId,
+				(string playerIdsText) => {
+					int[] playerIds = JsonConvert.DeserializeObject<int[]>(playerIdsText);
+					if(playerIds == null)
+						return;
+					foreach(int playerId in playerIds) {
+						GetPlayer(gameId, playerId, 
+							(string playerData) => {
+								HandlePlayer(playerData);
+							}
+						);
+					}
+				}
+			);
+		}
+
+		public void HandlePlayer(string playerData) {
+			Player player = JsonConvert.DeserializeObject<Player>(playerData);
+			HandlePlayer(player);
+		}
+
+		public void HandlePlayer(Player player) {
+			if(player == null)
+				return;
+			GameObject obj = Instantiate(PlayerCardPrefab, PlayerList.transform);
+			obj.GetComponentInChildren<TMP_Text>().text = player.DisplayName + " (ID: " + player.Id + ")";
 		}
 	}
 }
