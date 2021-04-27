@@ -1,8 +1,10 @@
 ﻿using Newtonsoft.Json;
 using RoboRally.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Tgm.Roborally.Api.Model;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -12,9 +14,10 @@ namespace RoboRally.Controller {
 	public class InlobbyManager : MonoBehaviour {
 
 		private static InlobbyManager _instance;
-		public static  InlobbyManager Instance { get { return _instance; } }
-		public         GameObject      PlayerList;
-		public         GameObject     PlayerCardPrefab;
+		public static InlobbyManager Instance { get { return _instance; } }
+		public GameObject PlayerList;
+		public GameObject PlayerCardPrefab;
+
 		void Awake() {
 			if(_instance != null && _instance != this) {
 				Destroy(this.gameObject);
@@ -29,16 +32,15 @@ namespace RoboRally.Controller {
 		}
 
 
-		public void LeaveLobby(string address, int gameId, int playerId) {
-			StartCoroutine(LeaveLobbyAsync(address, gameId, playerId));
+		public void LeaveLobby(int gameId, int playerId) {
+			StartCoroutine(LeaveLobbyAsync(gameId, playerId));
 		}
 
-		public IEnumerator LeaveLobbyAsync(string address, int gameId, int playerId) {
+		public IEnumerator LeaveLobbyAsync(int gameId, int playerId) {
 			UnityWebRequest request = Http.CreateDelete(
-				address,
-				"games/" + gameId + "/players/" + playerId,
-				new Dictionary<string, object>(){
-					{"pat",IngameData.JoinData.Pat}
+				$"games/{gameId}/players/{playerId}",
+				new Dictionary<string, object>() {
+					{"pat", IngameData.JoinData.Pat}
 				}
 			);
 			yield return request.SendWebRequest();
@@ -51,18 +53,38 @@ namespace RoboRally.Controller {
 			FindObjectOfType<GlobalEventHandler>().StopListening();
 		}
 
-		public void StartGame(string address, int gameId) {
-			StartCoroutine(StartGameAsync(address, gameId));
+		public void StartGame(int gameId) {
+			StartCoroutine(StartGameAsync(gameId));
 		}
 
-		public IEnumerator StartGameAsync(string address, int gameId) {
+		public IEnumerator StartGameAsync(int gameId) {
 			UnityWebRequest request = Http.CreatePut(
-				"games/" + gameId + "/actions",
+				$"games/{gameId}/actions",
 				Http.Auth(new Dictionary<string, object>{
 					{"action",ActionType.STARTGAME},
 				})
 			);
 			return Http.Send(request);
+		}
+
+		public void GetPlayer(int gameId, int playerId, System.Action<string> callBack = null) {
+			StartCoroutine(GetPlayerAsync(gameId, playerId, callBack));
+		}
+
+		public IEnumerator GetPlayerAsync(int gameId, int playerId, System.Action<string> callBack) {
+			UnityWebRequest request = Http.CreateGet(
+				$"games/{gameId}/players/{playerId}",
+				new Dictionary<string, object>() {
+					{"pat", IngameData.JoinData.Pat}
+				}
+			);
+			yield return request.SendWebRequest();
+			if(!request.isHttpError && request.downloadHandler != null) {
+				Debug.Log("GetPlayer: " + request.downloadHandler.text);
+				callBack(request.downloadHandler.text);
+			} else if(request.downloadHandler != null) {
+				Debug.Log("GetPlayer: " + request.downloadHandler.text);
+			}
 		}
 
 		public void OnGameStarted() {
@@ -71,8 +93,23 @@ namespace RoboRally.Controller {
 
 		public void OnPlayerJoins(JoinEvent joinEvent) {
 			Debug.Log("Player Joined");
-			GameObject obj = Instantiate(PlayerCardPrefab, PlayerList.transform);
-			obj.GetComponentInChildren<Text>().text = "Player "+joinEvent.JoinedId;
+			GetPlayer(
+				IngameData.ID, 
+				joinEvent.JoinedId,
+				(string playerData) => {
+					Player player = JsonConvert.DeserializeObject<Player>(playerData);
+					if(joinEvent.Unjoin) {
+						for(int i = 0; i < transform.childCount; i++) {
+							GameObject obj = transform.GetChild(i).gameObject;
+							if(obj.GetComponentInChildren<Text>().text.EndsWith("ID: " + joinEvent.JoinedId + ")"))
+								Destroy(obj);
+						}
+					} else {
+						GameObject obj = Instantiate(PlayerCardPrefab, PlayerList.transform);
+						obj.GetComponentInChildren<TMP_Text>().text = player.DisplayName + " (ID: " + joinEvent.JoinedId + ")";
+					}
+				}
+			);
 		}
 	}
 }

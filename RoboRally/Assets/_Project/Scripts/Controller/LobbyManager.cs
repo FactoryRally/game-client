@@ -126,11 +126,12 @@ namespace RoboRally.Controller {
 			foreach(string address in addresses) {
 				StartCoroutine(RequestGamesAsync(address));
 			}
+
 		}
 
 		public IEnumerator RequestGamesAsync(string address) {
 			List<string> games = new List<string>();
-			UnityWebRequest request = Http.CreateGet("games", null);
+			UnityWebRequest request = Http.CreateGet(address, "games", null);
 			yield return request.SendWebRequest();
 			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("RequestGames: " + request.downloadHandler.text);
@@ -167,16 +168,19 @@ namespace RoboRally.Controller {
 		}
 
 		public IEnumerator RequestGameInfo(string address, int gameId) {
-			UnityWebRequest request = Http.CreateGet("games/" + gameId + "/status", null);
+			UnityWebRequest request = Http.CreateGet(address, "games/" + gameId + "/status", null);
 			yield return request.SendWebRequest();
 			if(!request.isHttpError && request.downloadHandler != null) {
 				Debug.Log("RequestGameInfo_" + gameId + ": " + request.downloadHandler.text);
-				(GameInfo, string, int) t = (
-					JsonConvert.DeserializeObject<GameInfo>(request.downloadHandler.text),
-					address,
-					gameId
-				);
-				this.games.Add(t);
+				GameInfo gameInfo = JsonConvert.DeserializeObject<GameInfo>(request.downloadHandler.text);
+				if(gameInfo != null) {
+					(GameInfo, string, int) t = (
+						gameInfo,
+						address,
+						gameId
+					);
+					this.games.Add(t);
+				}
 			} else if(request.downloadHandler != null) {
 				Debug.Log("RequestGameInfo_" + gameId + ": " + request.downloadHandler.text);
 			}

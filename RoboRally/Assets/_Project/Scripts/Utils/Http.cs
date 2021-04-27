@@ -108,6 +108,14 @@ namespace RoboRally.Utils {
 			return uwr;
 		}
 
+		public static UnityWebRequest CreateGet(string address, string path, Dictionary<string, object> query) {
+			UnityWebRequest uwr = UnityWebRequest.Get($"{protocol}://{address}:{port}/v1/" + path + GetParameters(query));
+			uwr.method = UnityWebRequest.kHttpVerbGET;
+			uwr.SetRequestHeader("Content-Type", "application/json");
+			uwr.SetRequestHeader("Accept", "application/json");
+			return uwr;
+		}
+
 		public static UnityWebRequest CreatePost(string path, Dictionary<string,object> query, string[] body = null) {
 			byte[] data = Encoding.ASCII.GetBytes(GetBodyJson(body));
 			UnityWebRequest uwr = new UnityWebRequest(
@@ -136,12 +144,8 @@ namespace RoboRally.Utils {
 			return uwr;
 		}
 
-		public static UnityWebRequest CreateDelete(string address, string path, Dictionary<string,object> query) {
-			UnityWebRequest uwr;
-			if(address == null) {
-				address = Http.address;
-			}
-			uwr = UnityWebRequest.Delete(basePath + path + GetParameters(query));
+		public static UnityWebRequest CreateDelete(string path, Dictionary<string,object> query) {
+			UnityWebRequest uwr = UnityWebRequest.Delete(basePath + path + GetParameters(query));
 			uwr.method = UnityWebRequest.kHttpVerbDELETE;
 			uwr.SetRequestHeader("Content-Type", "application/json");
 			uwr.SetRequestHeader("Accept", "application/json");
