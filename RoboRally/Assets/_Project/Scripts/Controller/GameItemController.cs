@@ -8,7 +8,10 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class GameItemController : MonoBehaviour {
+
     private readonly Dictionary<int, RobotCommand> programmingCards = new Dictionary<int, RobotCommand>();
+
+
     public void GetCommand(int id, Action<RobotCommand> callback) {
         if (programmingCards.ContainsKey(id)) callback(programmingCards[id]);
         else StartCoroutine(RequestProgrammingCardAsync(IngameData.ID, id, command => {
@@ -18,7 +21,7 @@ public class GameItemController : MonoBehaviour {
     }
 
     public IEnumerator RequestProgrammingCardAsync(int game, int cardId, Action<RobotCommand> callback) {
-        UnityWebRequest uwp = Http.CreateGet($"games/{game}/statements/{cardId}",Http.AuthOnlyParams);
+        UnityWebRequest uwp = Http.CreateGet($"games/{game}/statements/{cardId}", Http.AuthOnlyParams);
         return Http.SendWithCallback(uwp, callback);
     }
 }

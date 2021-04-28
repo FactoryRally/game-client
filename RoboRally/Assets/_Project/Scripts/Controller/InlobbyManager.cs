@@ -44,9 +44,7 @@ namespace RoboRally.Controller {
 		public IEnumerator LeaveLobbyAsync(int gameId, int playerId) {
 			UnityWebRequest request = Http.CreateDelete(
 				$"games/{gameId}/players/{playerId}",
-				new Dictionary<string, object>() {
-					{"pat", IngameData.JoinData.Pat}
-				}
+				Http.AuthOnlyParams
 			);
 			yield return request.SendWebRequest();
 			if(!request.isHttpError && request.downloadHandler != null) {
@@ -67,52 +65,34 @@ namespace RoboRally.Controller {
 			UnityWebRequest request = Http.CreatePut(
 				$"games/{gameId}/actions",
 				Http.Auth(new Dictionary<string, object>{
-					{"action",ActionType.STARTGAME},
+					{"action", ActionType.STARTGAME},
 				})
 			);
 			return Http.Send(request);
 		}
 
-		public void GetPlayer(int gameId, int playerId, System.Action<string> callBack = null) {
+		public void GetPlayer(int gameId, int playerId, System.Action<Player> callBack = null) {
 			StartCoroutine(GetPlayerAsync(gameId, playerId, callBack));
 		}
 
-		public IEnumerator GetPlayerAsync(int gameId, int playerId, System.Action<string> callBack) {
+		public IEnumerator GetPlayerAsync(int gameId, int playerId, System.Action<Player> callBack) {
 			UnityWebRequest request = Http.CreateGet(
 				$"games/{gameId}/players/{playerId}",
-				new Dictionary<string, object>() {
-					{"pat", IngameData.JoinData.Pat}
-				}
+				Http.AuthOnlyParams
 			);
-			yield return request.SendWebRequest();
-			if(!request.isHttpError && request.downloadHandler != null) {
-				Debug.Log("GetPlayer: " + request.downloadHandler.text);
-				if(callBack != null)
-					callBack(request.downloadHandler.text);
-			} else if(request.downloadHandler != null) {
-				Debug.Log("GetPlayer: " + request.downloadHandler.text);
-			}
+			return Http.SendWithCallback(request, callBack);
 		}
 
-		public void GetPlayerIds(int gameId, System.Action<string> callBack = null) {
+		public void GetPlayerIds(int gameId, System.Action<int[]> callBack = null) {
 			StartCoroutine(GetPlayerIdsAsync(gameId, callBack));
 		}
 
-		public IEnumerator GetPlayerIdsAsync(int gameId, System.Action<string> callBack) {
+		public IEnumerator GetPlayerIdsAsync(int gameId, System.Action<int[]> callBack) {
 			UnityWebRequest request = Http.CreateGet(
-				$"/games​/{gameId}​/players​/",
-				new Dictionary<string, object>() {
-					{"pat", IngameData.JoinData.Pat}
-				}
+				$"games/{gameId}/players",
+				Http.AuthOnlyParams
 			);
-			yield return request.SendWebRequest();
-			if(!request.isHttpError && request.downloadHandler != null) {
-				Debug.Log("GetPlayerIds: " + request.downloadHandler.text);
-				if(callBack != null)
-					callBack(request.downloadHandler.text);
-			} else if(request.downloadHandler != null) {
-				Debug.Log("GetPlayerIds: " + request.downloadHandler.text);
-			}
+			return Http.SendWithCallback(request, callBack);
 		}
 
 		public void OnGameStarted() {
@@ -124,8 +104,7 @@ namespace RoboRally.Controller {
 			GetPlayer(
 				IngameData.ID, 
 				joinEvent.JoinedId,
-				(string playerData) => {
-					Player player = JsonConvert.DeserializeObject<Player>(playerData);
+				(Player player) => {
 					if(PlayerMe != null && PlayerMe.Equals(player))
 						return;
 					PlayerMe = player;
@@ -146,24 +125,18 @@ namespace RoboRally.Controller {
 		public void HandleAllPlayers(int gameId) {
 			GetPlayerIds(
 				gameId,
-				(string playerIdsText) => {
-					int[] playerIds = JsonConvert.DeserializeObject<int[]>(playerIdsText);
+				(int[] playerIds) => {
 					if(playerIds == null)
 						return;
 					foreach(int playerId in playerIds) {
 						GetPlayer(gameId, playerId, 
-							(string playerData) => {
-								HandlePlayer(playerData);
+							(Player player) => {
+								HandlePlayer(player);
 							}
 						);
 					}
 				}
 			);
-		}
-
-		public void HandlePlayer(string playerData) {
-			Player player = JsonConvert.DeserializeObject<Player>(playerData);
-			HandlePlayer(player);
 		}
 
 		public void HandlePlayer(Player player) {
