@@ -20,6 +20,7 @@ public class EventHandler : MonoBehaviour {
 	public  GenericUEvent        OnRandomDistrib  = new GenericUEvent();
 	public  UChangePhaseEvent    OnChangePhase    = new UChangePhaseEvent();
 	public  UJoinEvent           OnJoin           = new UJoinEvent();
+	public  UProgrammingTimerStartEvent OnProgrammingTimerStart = new UProgrammingTimerStartEvent();
 	public  GenericUEvent        OnGameStart      = new GenericUEvent();
 	private GlobalEventHandler   _globalEventHandler;
 

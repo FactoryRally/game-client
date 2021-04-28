@@ -33,7 +33,9 @@ public class UChangeRegisterEvent : UnityEvent<ChangeRegisterEvent> {}
 [Serializable]
 public class UChangePhaseEvent : UnityEvent<GamePhaseChangedEvent> {}
 [Serializable]
-public class UJoinEvent : UnityEvent<JoinEvent> {}
+public class UJoinEvent : UnityEvent<JoinEvent> { }
+[Serializable]
+public class UProgrammingTimerStartEvent : UnityEvent<ProgrammingTimerStartEvent> { }
 
 #endregion
 
@@ -86,6 +88,9 @@ public class GlobalEventHandler : MonoBehaviour {
 				break;
 			case Join:
 				_localHandler.OnJoin.Invoke(Read<JoinEvent>());
+				break;
+			case ProgrammingTimerStart:
+				_localHandler.OnProgrammingTimerStart.Invoke(Read<ProgrammingTimerStartEvent>());
 				break;
 			case GameStart:
 				_localHandler.OnGameStart.Invoke();
