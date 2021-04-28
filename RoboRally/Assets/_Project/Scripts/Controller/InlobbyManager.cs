@@ -140,7 +140,7 @@ namespace RoboRally.Controller {
 		}
 
 		public void HandlePlayer(Player player) {
-			if(player == null)
+			if(player == null || player.Id == PlayerMe.Id)
 				return;
 			GameObject obj = Instantiate(PlayerCardPrefab, PlayerList.transform);
 			obj.GetComponentInChildren<TMP_Text>().text = player.DisplayName + " (ID: " + player.Id + ")";
