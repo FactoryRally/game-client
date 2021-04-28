@@ -105,7 +105,9 @@ public class GlobalEventHandler : MonoBehaviour {
 		while(FetchEvents) {
 			UnityWebRequest request = Http.CreateGet(
 				"games/" + gameId + "/events/head",
-				Http.AuthOnlyParams
+				Http.Auth(new Dictionary<string, object>() {
+					{"wait", true }
+				})
 			);
 			yield return Http.SendWithCallback<GenericEvent>(request,HandleEvent);
 			yield return new WaitForSeconds(0.25f);
