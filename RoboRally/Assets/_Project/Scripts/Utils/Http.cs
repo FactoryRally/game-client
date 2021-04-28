@@ -108,10 +108,32 @@ namespace RoboRally.Utils {
 			return uwr;
 		}
 
+		public static UnityWebRequest CreateGet(string address, string path, Dictionary<string, object> query) {
+			UnityWebRequest uwr = UnityWebRequest.Get($"{protocol}://{address}:{port}/v1/" + path + GetParameters(query));
+			uwr.method = UnityWebRequest.kHttpVerbGET;
+			uwr.SetRequestHeader("Content-Type", "application/json");
+			uwr.SetRequestHeader("Accept", "application/json");
+			return uwr;
+		}
+
 		public static UnityWebRequest CreatePost(string path, Dictionary<string,object> query, string[] body = null) {
 			byte[] data = Encoding.ASCII.GetBytes(GetBodyJson(body));
 			UnityWebRequest uwr = new UnityWebRequest(
 				basePath + path + GetParameters(query),
+				UnityWebRequest.kHttpVerbPOST,
+				new DownloadHandlerBuffer(),
+				body == null || body.Length == 0 ? null : (UploadHandler) new UploadHandlerRaw(data)
+			);
+			uwr.method = UnityWebRequest.kHttpVerbPOST;
+			uwr.SetRequestHeader("Content-Type", "application/json");
+			uwr.SetRequestHeader("Accept", "application/json");
+			return uwr;
+		}
+
+		public static UnityWebRequest CreatePost(string address, string path, Dictionary<string, object> query, string[] body = null) {
+			byte[] data = Encoding.ASCII.GetBytes(GetBodyJson(body));
+			UnityWebRequest uwr = new UnityWebRequest(
+				$"{protocol}://{address}:{port}/v1/" + path + GetParameters(query),
 				UnityWebRequest.kHttpVerbPOST,
 				new DownloadHandlerBuffer(),
 				body == null || body.Length == 0 ? null : (UploadHandler) new UploadHandlerRaw(data)
@@ -136,12 +158,8 @@ namespace RoboRally.Utils {
 			return uwr;
 		}
 
-		public static UnityWebRequest CreateDelete(string address, string path, Dictionary<string,object> query) {
-			UnityWebRequest uwr;
-			if(address == null) {
-				address = Http.address;
-			}
-			uwr = UnityWebRequest.Delete(basePath + path + GetParameters(query));
+		public static UnityWebRequest CreateDelete(string path, Dictionary<string,object> query) {
+			UnityWebRequest uwr = UnityWebRequest.Delete(basePath + path + GetParameters(query));
 			uwr.method = UnityWebRequest.kHttpVerbDELETE;
 			uwr.SetRequestHeader("Content-Type", "application/json");
 			uwr.SetRequestHeader("Accept", "application/json");
@@ -213,7 +231,7 @@ namespace RoboRally.Utils {
 			return json;
 		}
 
-		public static IEnumerator Send(UnityWebRequest uwr,Action<UnityWebRequest> OnSuccess = null,Action<UnityWebRequest> OnError = null) {
+		public static IEnumerator Send(UnityWebRequest uwr, Action<UnityWebRequest> OnSuccess = null, Action<UnityWebRequest> OnError = null) {
 			yield return uwr.SendWebRequest();
 			if (!uwr.isHttpError)
 				OnSuccess?.Invoke(uwr);
