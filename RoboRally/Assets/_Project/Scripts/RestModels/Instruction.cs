@@ -35,18 +35,25 @@ namespace Tgm.Roborally.Api.Model
     
     public enum Instruction
     {
-        /// <summary>
-        /// Enum Move for value: move
-        /// </summary>
-        [EnumMember(Value = "move")]
-        Move = 1,
+		/// <summary>
+		///     Enum Move for move
+		/// </summary>
+		[EnumMember(Value = "move")] Move = 1,
 
-        /// <summary>
-        /// Enum Rotate for value: rotate
-        /// </summary>
-        [EnumMember(Value = "rotate")]
-        Rotate = 2
+		/// <summary>
+		///     Enum Rotate for rotate
+		/// </summary>
+		[EnumMember(Value = "rotate")] Rotate = 2,
 
-    }
+		/// <summary>
+		///     Enum Shoot for shoot
+		/// </summary>
+		[EnumMember(Value = "shoot")] Shoot = 3,
+
+		/// <summary>
+		///     Enum Repeat for repeat
+		/// </summary>
+		[EnumMember(Value = "repeat")] Repeat = 4
+	}
 
 }
