@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Tgm.Roborally.Api.Model;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -22,9 +23,9 @@ public class ProgrammingCard : MonoBehaviour{
     }
 
     private int                _cardId;
-    public  Text               title;
+    public  TMP_Text           title;
     public  Image              img;
-    public  Text               description;
+    public  TMP_Text           description;
     private GameItemController _controller;
     private RectTransform      _transform;
     
