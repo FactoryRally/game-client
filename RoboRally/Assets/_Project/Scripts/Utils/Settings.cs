@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace RoboRally.Scripts.Utils {
 	public class Settings {
@@ -22,6 +23,20 @@ namespace RoboRally.Scripts.Utils {
 		}
 
 		public bool IsDebug = false;
+
+		public int Frames = 60;
+
+		public Resolution Res = new Resolution() { width = 1920, height = 1080 };
+
+		public FullScreenMode ScreenMode = FullScreenMode.MaximizedWindow;
+
+		public int TextureQuality = 3;
+
+		public AnisotropicFiltering Filtering = AnisotropicFiltering.Enable;
+
+		public int AntiAliasing = 2;
+
+		public int VSync = 1;
 
 	}
 }

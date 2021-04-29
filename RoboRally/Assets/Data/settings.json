@@ -1,3 +1,14 @@
 {
-  "IsDebug": false
+  "IsDebug": false,
+  "Frames": 60,
+  "Res": {
+    "width": 1920,
+    "height": 1080,
+    "refreshRate": 0
+  },
+  "ScreenMode": 2,
+  "TextureQuality": 3,
+  "Filtering": 1,
+  "AntiAliasing": 2,
+  "VSync": 1
 }

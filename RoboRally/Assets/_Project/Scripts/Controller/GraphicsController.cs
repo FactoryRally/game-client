@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RoboRally.Scripts.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -22,11 +23,11 @@ namespace RoboRally.Controller {
 		public static int DefaultFrames = 60;
 		public static int CurrentFrames;
 		public static int[] PossibleFrames = {
-		30,
-		60,
-		90,
-		120
-	};
+			30,
+			60,
+			90,
+			120
+		};
 
 
 		#endregion
@@ -105,7 +106,6 @@ namespace RoboRally.Controller {
 
 		private bool Changes = true;
 
-
 		void Awake() {
 			if(Instance == null) {
 				Instance = this;
@@ -113,7 +113,9 @@ namespace RoboRally.Controller {
 			} else {
 				Destroy(gameObject);
 			}
+		}
 
+		void Start() {
 			lwrp = GraphicsSettings.renderPipelineAsset as UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset;
 			DefaultResolution = Screen.currentResolution;
 			PossibleResolutions = Screen.resolutions;
@@ -243,53 +245,24 @@ namespace RoboRally.Controller {
 
 
 		public void SaveGarphicSettings() {
-			PlayerPrefs.SetInt("frames", CurrentFrames);
-			PlayerPrefs.SetString("resolution", CurrentResolution.width + "x" + CurrentResolution.height);
-			PlayerPrefs.SetInt("screenMode", (int) CurrentWindowMode);
-			PlayerPrefs.SetInt("textureQuality", CurrentTextureQuality);
-			PlayerPrefs.SetInt("anisotropicFiltering", (int) CurrentAnisotropicFilteringMode);
-			PlayerPrefs.SetInt("antiAliasing", (int) CurrentAntiAliasing);
-			PlayerPrefs.SetInt("vSync", (int) CurrentVSync);
-			PlayerPrefs.Save();
+			Settings.Instance.Frames = CurrentFrames;
+			Settings.Instance.Res = CurrentResolution;
+			Settings.Instance.ScreenMode = CurrentWindowMode;
+			Settings.Instance.TextureQuality = CurrentTextureQuality;
+			Settings.Instance.Filtering = CurrentAnisotropicFilteringMode;
+			Settings.Instance.AntiAliasing = CurrentAntiAliasing;
+			Settings.Instance.VSync = CurrentVSync;
+			SettingsController.Instance.SaveSettings();
 		}
 
 		public void LoadGraphicSettings() {
-			int frames = PlayerPrefs.GetInt("frames", -1);
-			if(frames != -1) {
-				CurrentFrames = frames;
-			}
-
-			string res = PlayerPrefs.GetString("resolution", null);
-			if(res != null && res.IndexOf('x') > 0) {
-				int xIndex = res.IndexOf('x');
-				CurrentResolution.width = int.Parse(res.Substring(0, xIndex));
-				CurrentResolution.height = int.Parse(res.Substring(xIndex + 1, res.Length - xIndex - 1));
-			}
-
-			int mode = PlayerPrefs.GetInt("screenMode", -1);
-			if(mode != -1) {
-				CurrentWindowMode = (FullScreenMode) mode;
-			}
-
-			int tq = PlayerPrefs.GetInt("textureQuality", -1);
-			if(tq >= 0 && tq <= 3) {
-				CurrentTextureQuality = tq;
-			}
-
-			int af = PlayerPrefs.GetInt("anisotropicFilter", -1);
-			if(af != -1) {
-				CurrentAnisotropicFilteringMode = (AnisotropicFiltering) af;
-			}
-
-			int aa = PlayerPrefs.GetInt("antiAliasing", -1);
-			if(af != -1) {
-				CurrentAntiAliasing = aa;
-			}
-
-			int vsync = PlayerPrefs.GetInt("vSync", -1);
-			if(vsync >= 0 && vsync <= 1) {
-				CurrentVSync = vsync;
-			}
+			CurrentFrames = Settings.Instance.Frames;
+			CurrentResolution = Settings.Instance.Res;
+			CurrentWindowMode = Settings.Instance.ScreenMode;
+			CurrentTextureQuality = Settings.Instance.TextureQuality;
+			CurrentAnisotropicFilteringMode = Settings.Instance.Filtering;
+			CurrentAntiAliasing = Settings.Instance.AntiAliasing;
+			CurrentVSync = Settings.Instance.VSync;
 		}
 	}
 }

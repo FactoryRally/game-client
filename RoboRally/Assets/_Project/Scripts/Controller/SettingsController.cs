@@ -39,10 +39,13 @@ public class SettingsController : MonoBehaviour {
 
 	private void OnApplicationQuit() {
 		Http.StopServer();
+		SaveSettings();
+	}
+
+	public void SaveSettings() {
 		if(!Directory.Exists(SAVE_FOLDER)) {
 			Directory.CreateDirectory(SAVE_FOLDER);
 		}
-		
 		string json = JsonConvert.SerializeObject(Settings.Instance, Formatting.Indented);
 		File.WriteAllText(SAVE_FOLDER + "/settings.json", json);
 	}
