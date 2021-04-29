@@ -64,8 +64,8 @@ namespace RoboRally.Objects {
 			if(clear)
 				ClearMap();
 
-			for(int x = 0; x < SelectedMap.Width; x++) {
-				for(int y = 0; y < SelectedMap.Height; y++) {
+			for(int y = 0; y < SelectedMap.Height; y++) {
+				for(int x = 0; x < SelectedMap.Width; x++) {
 					Tile tile = SelectedMap[x, y];
 					GameObject tilePrefab = PrefabByType(tile.Type, tile.Order);
 					if(tilePrefab == null) {
@@ -74,7 +74,7 @@ namespace RoboRally.Objects {
 					}
 					GameObject tileObject = Instantiate(
 						tilePrefab,
-						new Vector3(x, tile.Level, y),
+						new Vector3(y, tile.Level, x),
 						DirectionToQuaternion((Direction) tile.Direction),
 						transform
 					);
@@ -144,13 +144,13 @@ namespace RoboRally.Objects {
 
 		public static Quaternion DirectionToQuaternion(Direction direction) {
 			switch(direction) {
-				case Direction.Up:
-					return Quaternion.Euler(0, 0, 0);
 				case Direction.Right:
-					return Quaternion.Euler(0, 90, 0);
+					return Quaternion.Euler(0, 0, 0);
 				case Direction.Down:
-					return Quaternion.Euler(0, 180, 0);
+					return Quaternion.Euler(0, 90, 0);
 				case Direction.Left:
+					return Quaternion.Euler(0, 180, 0);
+				case Direction.Up:
 					return Quaternion.Euler(0, 270, 0);
 				default:
 					return Quaternion.Euler(0, 0, 0);
@@ -161,16 +161,24 @@ namespace RoboRally.Objects {
 			float y = quaternion.eulerAngles.y;
 			switch(y) {
 				case 0:
-					return Direction.Up;
-				case 90:
 					return Direction.Right;
-				case 180:
+				case 90:
 					return Direction.Down;
-				case 270:
+				case 180:
 					return Direction.Left;
+				case 270:
+					return Direction.Up;
 				default:
 					Debug.Log(y);
 					return Direction.Up;
+			}
+		}
+
+		public static Quaternion RotationToQuaternion(Rotation rotation) {
+			if(rotation == Rotation.Left) {
+				return Quaternion.Euler(0, -90, 0);
+			} else {
+				return Quaternion.Euler(0, +90, 0);
 			}
 		}
 	}
