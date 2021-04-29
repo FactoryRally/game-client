@@ -28,7 +28,7 @@ public class HandDisplay : MonoBehaviour {
     }
 
     private void OnChoose(int card) {
-        StartCoroutine(SetRegisterAsync(IngameData.ID, registers.NextRegister, card));
+        StartCoroutine(SetRegisterAsync(IngameData.GameId, registers.NextRegister, card));
     }
 
     private IEnumerator SetRegisterAsync(int gameID, int registerIndex, int card) {

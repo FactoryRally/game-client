@@ -36,7 +36,7 @@ namespace RoboRally.Controller {
                 		string address = Http.GetLocalIPAddress();
                 		LobbyManager.Instance.JoinLobby(address, id, password, playerName);
                 		IngameData.IsHost = true;
-                		IngameData.ID = id;
+                		IngameData.GameId = id;
                 	} catch(FormatException) {
                 		Debug.Log("Was not able to join the Game!");
                 	}

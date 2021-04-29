@@ -26,7 +26,8 @@ namespace RoboRally.Utils {
 
 		public static bool IsHost = true;
 
-		public static int ID = -1;
+		public static int GameId = -1;
+		public static int PlayerId = -1;
 
 		public static string Address = "";
 		public static int    MyRobotId;

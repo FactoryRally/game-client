@@ -29,7 +29,7 @@ namespace RoboRally.Controller {
 		}
 
 		void Start() {
-			HandleAllPlayers(IngameData.ID);
+			HandleAllPlayers(IngameData.GameId);
 		}
 
 		void Update() {
@@ -102,12 +102,13 @@ namespace RoboRally.Controller {
 		public void OnPlayerJoins(JoinEvent joinEvent) {
 			Debug.Log("Player Joined");
 			GetPlayer(
-				IngameData.ID, 
+				IngameData.GameId, 
 				joinEvent.JoinedId,
 				(Player player) => {
 					if(PlayerMe != null && PlayerMe.Equals(player))
 						return;
 					PlayerMe = player;
+					IngameData.PlayerId = player.Id;
 					if(joinEvent.Unjoin) {
 						for(int i = 0; i < transform.childCount; i++) {
 							GameObject obj = transform.GetChild(i).gameObject;

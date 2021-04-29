@@ -204,7 +204,7 @@ namespace RoboRally.Controller {
 			return Http.SendWithCallback(request, (JoinResponse e) => {
 				IngameData.JoinData   = e;
 				IngameData.PlayerName = playerName;
-				IngameData.ID         = gameId;
+				IngameData.GameId         = gameId;
 				IngameData.Address    = address;
 				if (IngameData.JoinData != null) {
 					SceneManager.LoadScene("Lobby");

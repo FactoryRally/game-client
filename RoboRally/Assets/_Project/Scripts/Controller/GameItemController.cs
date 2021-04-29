@@ -14,7 +14,7 @@ public class GameItemController : MonoBehaviour {
 
     public void GetCommand(int id, Action<RobotCommand> callback) {
         if (programmingCards.ContainsKey(id)) callback(programmingCards[id]);
-        else StartCoroutine(RequestProgrammingCardAsync(IngameData.ID, id, command => {
+        else StartCoroutine(RequestProgrammingCardAsync(IngameData.GameId, id, command => {
             programmingCards[id] = command;
             callback(command);
         }));

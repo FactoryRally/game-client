@@ -106,13 +106,13 @@ namespace RoboRally.Controller {
 		}
 
 		public void HandleMapCreateEvent() {
-			GetMap(IngameData.ID, map => {
+			GetMap(IngameData.GameId, map => {
 				IngameData.SelectedMap          = map;
 				MapBuilder.Instance.SelectedMap = map;
 				MapBuilder.Instance.BuildMap();
 				GetRobots(
 					IngameData.Address, 
-					IngameData.ID,
+					IngameData.GameId,
 					SpawnRobots
 				);
 			});
@@ -122,7 +122,7 @@ namespace RoboRally.Controller {
 			foreach(int robotId in robotIds) {
 				GetRobotInfo(
 					IngameData.Address,
-					IngameData.ID,
+					IngameData.GameId,
 					robotId,
 					SpawnRobot
 				);
