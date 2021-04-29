@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace RoboRally.Objects {
 	public class CameraMovement : MonoBehaviour {
@@ -29,8 +30,15 @@ namespace RoboRally.Objects {
 
 
 		void Update() {
+			if(SceneManager.GetSceneByName("Menu_Game").isLoaded) {
+				IsCam = false;
+				Cursor.visible = true;
+				Cursor.lockState = CursorLockMode.None;
+				return;
+			}
 			if(InputManager.GetButtonDown("CameraToggle")) {
 				IsCam = !IsCam;
+				Cursor.visible = !IsCam;
 				if(IsCam)
 					Cursor.lockState = CursorLockMode.Locked;
 				else

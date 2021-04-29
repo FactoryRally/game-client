@@ -13,9 +13,8 @@ namespace RoboRally.Controller {
 		public bool AutoJoin = true;
 
 		public void CreateLobby(string name, string password, bool namesVis, bool coms, int maxPlayers, string playerName) {
-			Http.serverPath = Application.dataPath + "/Server/Tgm.Roborally.Server.exe";
 			Http.address = "localhost";
-			// TODO: Http.serverPath = Application.dataPath + "/Server/FactoryRally.Server.exe";
+			Http.serverPath = Application.dataPath + "/Server/FactoryRally.exe";
 			Http.StartServer();
 			StartCoroutine(CreateLobbyAsync(name, password, namesVis, coms, maxPlayers, playerName));
 		}

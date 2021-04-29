@@ -10,6 +10,7 @@ using System.Net.Http;
 using Tgm.Roborally.Api.Model;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 namespace RoboRally.Controller {
 	public partial class GameController : MonoBehaviour {
@@ -33,6 +34,7 @@ namespace RoboRally.Controller {
 			} else {
 				_instance = this;
 			}
+			SceneManager.sceneUnloaded += OnSceneUnloaded;
 		}
 
 		public void SpawnRobot(RobotInfo robotInfo) {
@@ -96,17 +98,17 @@ namespace RoboRally.Controller {
 		}
 
 		public void OnPickRobot(RobotPickEvent ev) {
-			if (ev.Player.Equals(IngameData.JoinData.Id))
+			if(ev.Player.Equals(IngameData.JoinData.Id))
 				IngameData.MyRobotId = ev.Robot;
 		}
 
 		public void HandleMapCreateEvent() {
 			GetMap(IngameData.GameId, map => {
-				IngameData.SelectedMap          = map;
+				IngameData.SelectedMap = map;
 				MapBuilder.Instance.SelectedMap = map;
 				MapBuilder.Instance.BuildMap();
 				GetRobots(
-					IngameData.Address, 
+					IngameData.Address,
 					IngameData.GameId,
 					SpawnRobots
 				);
@@ -121,6 +123,15 @@ namespace RoboRally.Controller {
 					robotId,
 					SpawnRobot
 				);
+			}
+		}
+
+		private void OnSceneUnloaded(Scene current) {
+			if(current.name.Equals("Game")) {
+				LeaveController.Instance?.LeaveGame();
+				IngameData.Reset();
+				Http.address = "localhost";
+				GlobalEventHandler.Instance?.StopListening();
 			}
 		}
 	}

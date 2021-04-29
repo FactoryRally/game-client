@@ -33,7 +33,8 @@ namespace RoboRally.Menu.Elements {
 			}
 			if(wait <= Time.time && wait != 0) {
 				wait = 0;
-				source.PlayOneShot(clip);
+				if(source)
+					source.PlayOneShot(clip);
 				isPress = false;
 			}
 		}

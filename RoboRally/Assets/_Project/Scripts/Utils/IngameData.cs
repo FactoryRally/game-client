@@ -13,7 +13,7 @@ namespace RoboRally.Utils {
 		
 		public static List<string> PlayerNames = new List<string>();
 
-		public static string _playerName = "";
+		private static string _playerName = "";
 		public static string PlayerName {
 			get { return _playerName; }
 			set {
@@ -30,6 +30,17 @@ namespace RoboRally.Utils {
 		public static int PlayerId = -1;
 
 		public static string Address = "";
-		public static int    MyRobotId;
+		public static int    MyRobotId = -1;
+
+		public static void Reset() {
+			IngameData.Address = "localhost";
+			IngameData.GameId = -1;
+			IngameData.PlayerId = -1;
+			IngameData.IsHost = true;
+			IngameData.JoinData = null;
+			IngameData.MyRobotId = -1;
+			IngameData.PlayerNames = new List<string>();
+			IngameData.SelectedMap = new Map();
+		}
 	}
 }

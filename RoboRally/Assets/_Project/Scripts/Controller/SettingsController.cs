@@ -26,15 +26,17 @@ public class SettingsController : MonoBehaviour {
 			Settings settings = JsonConvert.DeserializeObject<Settings>(saveString);
 			if(settings == null)
 				settings = new Settings();
+		} else {	
+			Settings settings = new Settings();
 		}
+		GraphicSettings.Setup();
 	}
 
 	void Start() {
-		Http.IsDebug = Settings.Instance.IsDebug;
 	}
 
 	void Update() {
-
+		Http.IsDebug = Settings.Instance.IsDebug;
 	}
 
 	private void OnApplicationQuit() {
