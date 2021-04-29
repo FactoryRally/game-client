@@ -62,37 +62,37 @@ public class GlobalEventHandler : MonoBehaviour {
 			case Movement:
 				_localHandler.OnMovement.Invoke(Read<MovementEvent>());
 				break;
-			case UpgradePurchase:
+			case Upgradepurchase:
 				_localHandler.OnPurchase.Invoke(Read<PurchaseEvent>());
 				break;
-			case LazerShot:
+			case Lazershot:
 				_localHandler.OnShoot.Invoke(Read<ShootEvent>());
 				break;
-			case MapCreated:
+			case Mapcreated:
 				_localHandler.OnMapCreate.Invoke();
 				break;
-			case TakeCardEvent:
+			case Takecardevent:
 				_localHandler.OnDrawCard.Invoke(Read<DrawCardEvent>());
 				break;
-			case LockIn:
+			case Lockin:
 				_localHandler.OnPickRobot.Invoke(Read<RobotPickEvent>());
 				break;
-			case ChangeRegister:
+			case Changeregister:
 				_localHandler.OnChangeRegister.Invoke(Read<ChangeRegisterEvent>());
 				break;
-			case RandomCardDistribution:
+			case Randomcarddistribution:
 				_localHandler.OnRandomDistrib.Invoke();
 				break;
-			case GameRoundPhaseChanged:
+			case Gameroundphasechanged:
 				_localHandler.OnChangePhase.Invoke(Read<GamePhaseChangedEvent>());
 				break;
 			case Join:
 				_localHandler.OnJoin.Invoke(Read<JoinEvent>());
 				break;
-			case ProgrammingTimerStart:
+			case Programmingtimerstart:
 				_localHandler.OnProgrammingTimerStart.Invoke(Read<ProgrammingTimerStartEvent>());
 				break;
-			case GameStart:
+			case Gamestart:
 				_localHandler.OnGameStart.Invoke();
 				break;
 		}
