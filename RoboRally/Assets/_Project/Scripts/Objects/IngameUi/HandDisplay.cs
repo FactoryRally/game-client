@@ -18,6 +18,8 @@ public class HandDisplay : MonoBehaviour {
 
 
     public void DrawCards(DrawCardEvent ev) {
+        if(ev.Robot != IngameData.MyRobotId)
+            return;
         foreach (int card in ev.Cards) {
             GameObject      cardUObject = Instantiate(cardPrefab, gameObject.transform);
             ProgrammingCard cardScript  = cardUObject.GetComponent<ProgrammingCard>();
@@ -41,6 +43,8 @@ public class HandDisplay : MonoBehaviour {
     }
 
     public void OnChangeRegister(ChangeRegisterEvent ev) {
+        if(ev.RobotId != IngameData.MyRobotId)
+            return;
         if (ev.Action == ChangeRegisterEvent.ActionEnum.Fill) {
             registers.AddCard(handCards[ev.Card]);
             handCards.Remove(ev.Card);
