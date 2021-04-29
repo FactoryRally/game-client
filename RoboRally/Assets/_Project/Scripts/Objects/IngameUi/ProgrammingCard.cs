@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public delegate void OnChoose(int card);
-public class ProgrammingCard : MonoBehaviour{
+public class ProgrammingCard : MonoBehaviour {
 
     private OnChoose _choose;
     public OnChoose onChoose {
@@ -36,14 +36,14 @@ public class ProgrammingCard : MonoBehaviour{
         GetComponent<Button>().onClick.AddListener(OnMouseDown);
     }
     
-    public void OnMouseEnter()
-    {
+    public void OnMouseEnter() {
         _transform.localScale.Set(1.75f,1.75f,1.75f);
     }
 
     private void OnMouseExit() {
         _transform.localScale.Set(1,1,1);
     }
+
     private void OnMouseDown() {
         Debug.Log("Clicky : "+_choose+"("+_cardId+")");
         _choose(_cardId);
@@ -54,5 +54,6 @@ public class ProgrammingCard : MonoBehaviour{
         title.text       = card.Name;
         description.text = card.Description;
         card.Parameters.ForEach(e => description.text = description.text.Replace($"{{{e.Name}}}",e.Value.ToString()));
+        Canvas.ForceUpdateCanvases();
     }
 }

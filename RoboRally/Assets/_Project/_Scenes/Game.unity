@@ -344,10 +344,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RobotPrefs:
-  - RobotType: 1
+  - RobotType: 2
     Prefab: {fileID: 4081948369042412105, guid: 537adce7f8c67614c930c86807b39b70,
       type: 3}
-  - RobotType: 2
+  - RobotType: 1
     Prefab: {fileID: 380267355125742759, guid: 0858932b87767b14fa0792a3cbc06f50, type: 3}
 --- !u!1 &81234796
 GameObject:
@@ -597,7 +597,7 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 780
+  m_PreferredWidth: 695
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
@@ -1385,18 +1385,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 20
-    m_Right: 20
+    m_Left: 5
+    m_Right: 5
     m_Top: 2
     m_Bottom: 20
   m_ChildAlignment: 3
-  m_Spacing: 5
+  m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 1
-  m_ChildScaleHeight: 1
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
 --- !u!1 &846060689
 GameObject:
   m_ObjectHideFlags: 0
@@ -2125,18 +2125,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 20
-    m_Right: 20
-    m_Top: 20
+    m_Left: 5
+    m_Right: 5
+    m_Top: 2
     m_Bottom: 20
   m_ChildAlignment: 3
-  m_Spacing: 5
+  m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
+  m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 1
+  m_ChildScaleHeight: 0
 --- !u!114 &1457752474
 MonoBehaviour:
   m_ObjectHideFlags: 0
