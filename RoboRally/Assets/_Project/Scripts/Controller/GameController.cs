@@ -39,23 +39,18 @@ namespace RoboRally.Controller {
 			if(robotInfo.Type == 0)
 				robotInfo.Type = (Robots) 1;
 			GameObject robotPrefab = roboPrefabs[robotInfo.Type];
-			Debug.Log("Robot Level" + IngameData.SelectedMap[robotInfo.Location.X, robotInfo.Location.Y].Level);
 			GameObject robot = Instantiate(
 				robotPrefab,
 				new Vector3(
-					robotInfo.Location.X,
+					robotInfo.Location.Y,
 					IngameData.SelectedMap[robotInfo.Location.X, robotInfo.Location.Y].Level + 1,
-					robotInfo.Location.Y
+					robotInfo.Location.X
 				),
 				MapBuilder.DirectionToQuaternion(robotInfo.Direction)
 			);
+			robot.GetComponent<Robot>().RobotId = robotInfo.Id;
 			IngameRobots.Add(robotInfo.Id, robot);
 		}
-
-		
-
-		
-
 
 		public void GetRobots(string address, int gameId, System.Action<int[]> action = null) {
 			StartCoroutine(GetRobotsAsync(address, gameId, action));
