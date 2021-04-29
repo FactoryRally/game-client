@@ -64,7 +64,7 @@ namespace Tgm.Roborally.Api.Model
         /// <param name="handCards">The cards in the hand of the robot.</param>
         /// <param name="attitude">The height level of the robot (default to 0).</param>
         /// <param name="type">type.</param>
-        public RobotInfo(Direction direction = default(Direction), string name = default(string), int id = default(int), Position location = default(Position), int energyCubes = 3, int health = 10, bool active = true, bool _virtual = false, int priority = default(int), bool onTurn = default(bool), bool isMine = default(bool), int handCards = default(int), int attitude = 0, Robots type = Robots.Dicer)
+        public RobotInfo(Direction direction = default(Direction), string name = default(string), int id = default(int), Position location = default(Position), int energyCubes = 3, int health = 10, bool active = true, bool _virtual = false, int priority = default(int), bool onTurn = default(bool), bool isMine = default(bool), int handCards = default(int), int attitude = 0, Robots type = Robots.Tank)
         {
             this.Direction = direction;
             // to ensure "name" is required (not null)
