@@ -26,26 +26,48 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Tgm.Roborally.Api.Model
 {
-    /// <summary>
-    /// Defines Robots
-    /// </summary>
-    
-    [JsonConverter(typeof(StringEnumConverter))]
- 
-    public enum Robots
-    {
-        /// <summary>
-        /// Enum Dicer for value: dicer
-        /// </summary>
-        [EnumMember(Value = "dicer")]
-        Dicer = 1,
+	/// <summary>
+	/// Defines Robots
+	/// </summary>
 
-        /// <summary>
-        /// Enum Tank for value: tank
-        /// </summary>
-        [EnumMember(Value = "tank")]
-        Tank = 2
+	[JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+	public enum Robots {
 
-    }
+		/// <summary>
+		/// Enum Tank for tank
+		/// </summary>
+		[EnumMember(Value = "tank")]
+		Tank = 1,
+
+		/// <summary>
+		/// Enum Drone for drone
+		/// </summary>
+		[EnumMember(Value = "drone")]
+		Drone = 2,
+
+		/// <summary>
+		/// Enum Bulldozer for bulldozer
+		/// </summary>
+		[EnumMember(Value = "bulldozer")]
+		Bulldozer = 3,
+
+		/// <summary>
+		/// Enum Turtle for turtle
+		/// </summary>
+		[EnumMember(Value = "turtle")]
+		Turtle = 4,
+
+		/// <summary>
+		/// Enum WallE for wallE
+		/// </summary>
+		[EnumMember(Value = "wallE")]
+		WallE = 5,
+
+		/// <summary>
+		/// Enum Mech for mech
+		/// </summary>
+		[EnumMember(Value = "mech")]
+		Mech = 6
+	}
 
 }
