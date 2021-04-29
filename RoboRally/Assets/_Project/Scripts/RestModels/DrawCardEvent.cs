@@ -40,12 +40,12 @@ namespace Tgm.Roborally.Api.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="DrawCardEvent" /> class.
         /// </summary>
-        /// <param name="player">This id uniquely identifys the player (in a game).   **Not** to be confused with the &#x60;uid&#x60; which is used for authentication (required).</param>
+        /// <param name="robotId">This id uniquely identifys the player (in a game).   **Not** to be confused with the &#x60;uid&#x60; which is used for authentication (required).</param>
         /// <param name="count">The number of cards drawn (required).</param>
         /// <param name="cards">The drawn cards. **This is only visible for the player himself**.</param>
-        public DrawCardEvent(int player = default(int), int count = default(int), List<int> cards = default(List<int>))
+        public DrawCardEvent(int robotId = default(int), int count = default(int), List<int> cards = default(List<int>))
         {
-            this.Player = player;
+            this.RobotId = robotId;
             this.Count = count;
             this.Cards = cards;
         }
@@ -55,7 +55,7 @@ namespace Tgm.Roborally.Api.Model
         /// </summary>
         /// <value>This id uniquely identifys the player (in a game).   **Not** to be confused with the &#x60;uid&#x60; which is used for authentication</value>
         [DataMember(Name = "player", IsRequired = true, EmitDefaultValue = false)]
-        public int Player { get; set; }
+        public int RobotId { get; set; }
 
         /// <summary>
         /// The number of cards drawn
@@ -79,7 +79,7 @@ namespace Tgm.Roborally.Api.Model
         {
             var sb = new StringBuilder();
             sb.Append("class DrawCardEvent {\n");
-            sb.Append("  Player: ").Append(Player).Append("\n");
+            sb.Append("  Player: ").Append(RobotId).Append("\n");
             sb.Append("  Count: ").Append(Count).Append("\n");
             sb.Append("  Cards: ").Append(Cards).Append("\n");
             sb.Append("}\n");
@@ -117,8 +117,8 @@ namespace Tgm.Roborally.Api.Model
 
             return 
                 (
-                    this.Player == input.Player ||
-                    this.Player.Equals(input.Player)
+                    this.RobotId == input.RobotId ||
+                    this.RobotId.Equals(input.RobotId)
                 ) && 
                 (
                     this.Count == input.Count ||
@@ -141,7 +141,7 @@ namespace Tgm.Roborally.Api.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                hashCode = hashCode * 59 + this.Player.GetHashCode();
+                hashCode = hashCode * 59 + this.RobotId.GetHashCode();
                 hashCode = hashCode * 59 + this.Count.GetHashCode();
                 if (this.Cards != null)
                     hashCode = hashCode * 59 + this.Cards.GetHashCode();
@@ -157,13 +157,13 @@ namespace Tgm.Roborally.Api.Model
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
             // Player (int) maximum
-            if(this.Player > (int)8)
+            if(this.RobotId > (int)8)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Player, must be a value less than or equal to 8.", new [] { "Player" });
             }
 
             // Player (int) minimum
-            if(this.Player < (int)0)
+            if(this.RobotId < (int)0)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Player, must be a value greater than or equal to 0.", new [] { "Player" });
             }
