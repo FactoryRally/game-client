@@ -20,7 +20,7 @@ public class SettingsController : MonoBehaviour {
 			_instance = this;
 			DontDestroyOnLoad(this);
 		}
-		SAVE_FOLDER = Application.dataPath + "/Data/";
+		SAVE_FOLDER = Application.streamingAssetsPath;
 		if(File.Exists(SAVE_FOLDER + "/settings.json")) {
 			string saveString = File.ReadAllText(SAVE_FOLDER + "/settings.json");
 			Settings settings = JsonConvert.DeserializeObject<Settings>(saveString);

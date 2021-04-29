@@ -23,7 +23,7 @@ namespace RoboRally.Menu {
 			GameObject obj = GameObject.FindGameObjectWithTag("LobbyController");
 			if(obj)
 				lm = obj.GetComponent<LobbyManager>();
-			SAVE_FOLDER = Application.dataPath + "/Data/";
+			SAVE_FOLDER = Application.streamingAssetsPath;
 			LoadHosts();
 		}
 

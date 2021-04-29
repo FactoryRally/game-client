@@ -27,7 +27,7 @@ namespace RoboRally.Keybindings {
 		private List<String> LastNames = new List<String>();
 
 		private void Awake() {
-			SAVE_FOLDER = Application.dataPath + "/Data/";
+			SAVE_FOLDER = Application.streamingAssetsPath;
 			if(Instance == null) {
 				Instance = this;
 				DontDestroyOnLoad(this);
